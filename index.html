@@ -5,20 +5,43 @@
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 <body>
 
-  <div class="w3-card-4 w3-blue-gray">
-    <div class=" w3-animate-zoom w3-container w3-center">
-      <h4 class="w3-animate-zoom">Club Apache Costa Rica</h4>
-      <img class="w3-animate-zoom w3-round-xxlarge" src="images/descarga.jpg" alt="logo club" style="width:20%">
-      <p>Club con ambiente familiar, no permitimos alcohol ni irresponsabilidad al conducir</p>
-      <div class="w3-section">
-        <button  class="w3-round-xxlarge w3-button w3-green w3-animate-zoom"><a href="https://api.whatsapp.com/send?phone=+50660465688"target="_blank">WhatsApp</button>
-        <button  class="w3-round-xxlarge w3-button w3-blue w3-animate-zoom"><a href="https://m.facebook.com/clubapachecostarica"target="_blank">Facebook</button>
-      </div>
-    </div>
+<div class="w3-container">
+
+  <input class="w3-input w3-border w3-padding" type="text" placeholder="Ingresa un criterio de búsqueda" id="myInput" onkeyup="myFunction()">
+  <ul class="w3-ul w3-margin-top" id="myUL">
+    <li>
+      <div class="w3-card-4 w3-blue-gray">
+        <div class=" w3-animate-zoom w3-container w3-center">
+          <h4 class="w3-animate-zoom">Club Apache Costa Rica</h4>
+          <img class="w3-animate-zoom w3-round-xxlarge" src="images/descarga.jpg" alt="logo club" style="width:20%">
+          <p>Club con ambiente familiar, no permitimos alcohol ni irresponsabilidad al conducir</p>
+          <div class="w3-section">
+            <button  class="w3-round-xxlarge w3-button w3-green w3-animate-zoom"><a href="https://api.whatsapp.com/send?phone=+50660465688"target="_blank">WhatsApp</button>
+            <button  class="w3-round-xxlarge w3-button w3-blue w3-animate-zoom"><a href="https://m.facebook.com/clubapachecostarica"target="_blank">Facebook</button>
+          </div>
+        </div>
   </div>
-  <br/>
+    </li>
+  </ul>
+</div>
 
-
+<script>
+function myFunction() {
+  var input, filter, ul, li, a, i;
+  input = document.getElementById("myInput");
+  filter = input.value.toUpperCase();
+  ul = document.getElementById("myUL");
+  li = ul.getElementsByTagName("li");
+  for (i = 0; i < li.length; i++) {
+    txtValue = li[i].textContent || li[i].innerText;
+    if (txtValue.toUpperCase().indexOf(filter) > -1) {
+      li[i].style.display = "";
+    } else {
+      li[i].style.display = "none";
+    }
+  }
+}
+</script>
 
 </body>
 </html>
