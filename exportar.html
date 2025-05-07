@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reporte Compacto de Mantenimiento</title>
+    <style>
+        /* --- Variables de Color (Asegúrate que estén definidas) --- */
+        :root {
+            --color-background-light: #F0F2F5;      /* Gris Pálido Fresco */
+            --color-text-on-light: #023047;       /* Azul Oscuro Profundo */
+            --color-primary-accent: #FB8500;      /* Naranja Quemado */
+            --color-primary-accent-hover: #E67E22; /* Naranja Quemado más oscuro */
+            --color-secondary-accent: #FFCB2E;    /* Amarillo Limpio */
+            --color-card-background: #FFFFFF;     /* Blanco Puro */
+            --color-border: #D1D5DB;              /* Gris Suave */
+            --color-text-on-accent: #FFFFFF;      /* Blanco Puro */
+            --font-main: 'Roboto', sans-serif;
+            /* ...otros colores de error, éxito, etc. ... */
+        }
+
+        body {
+            font-family: var(--font-main, Roboto, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif);
+            margin: 0; 
+            padding: 15px;
+            line-height: 1.6; 
+            background-color: var(--color-background-light); 
+            color: var(--color-text-on-light); 
+            font-size: 14px;
+        }
+        .container { 
+            max-width: 800px; 
+            margin: 20px auto; 
+            padding: 25px; 
+            border: 1px solid var(--color-border); 
+            border-radius: 8px; 
+            background-color: var(--color-card-background); 
+            box-shadow: 0 2px 6px rgba(0,0,0,0.08); 
+        }
+        h1 { 
+            text-align: center; 
+            color: var(--color-text-on-light);
+            border-bottom: 2px solid var(--color-primary-accent);
+            padding-bottom: 10px; 
+            margin-top: 0;
+            margin-bottom: 10px; 
+            font-size: 1.9em; 
+            font-weight: 500;
+        }
+        .report-date { text-align: center; font-size: 0.9em; color: #555; margin-bottom: 25px; }
+        .report-date strong { color: var(--color-primary-accent); }
+        
+        h2 { font-size: 1.5em; border-bottom: 1px solid var(--color-border); text-align: left; margin-top: 25px; margin-bottom: 15px; padding-bottom: 8px; color: var(--color-text-on-light); font-weight: 500; }
+        h3 { margin-top: 0; color: var(--color-primary-accent); border-bottom: none; padding-bottom: 3px; font-size: 1.2em; margin-bottom: 10px; font-weight: 500; }
+        .moto-info { margin-bottom: 25px; padding-bottom: 15px; border-bottom: 1px solid var(--color-border); }
+        .moto-info p { margin: 6px 0; font-size: 0.95em; }
+        .moto-info strong { font-weight: 500; color: var(--color-text-on-light); opacity:0.9; margin-right: 5px; }
+        
+        .mantenimiento-item { margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px dotted var(--color-border); }
+        .mantenimiento-item:last-child { border-bottom: none; }
+        .mantenimiento-item p.estado-actual { margin: 4px 0 10px 0; font-size: 0.95em; font-style: italic; color: #444; }
+        .mantenimiento-item p.estado-actual strong { font-weight: 500; color: #333; font-style: normal;}
+
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 0.9em; }
+        th, td { border: 1px solid var(--color-border); padding: 8px 10px; text-align: left; vertical-align: top; word-wrap: break-word; }
+        th { background-color: #E8ECEF; color: var(--color-text-on-light); font-weight: 500; }
+        tbody tr:nth-child(odd) { background-color: #f9f9fc; }
+        
+        .print-button-container { text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid var(--color-border); display:flex; flex-wrap:wrap; justify-content:center; gap:15px;}
+        .button-print, .button-json { 
+            display: inline-block; 
+            padding: 10px 25px; 
+            font-size: 1em; font-weight:500;
+            cursor: pointer; 
+            color: var(--color-text-on-accent); 
+            border: none; 
+            border-radius: 5px; 
+            transition: background-color 0.3s ease, box-shadow 0.3s ease; 
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1); 
+        }
+        .button-print { background-color: var(--color-primary-accent); }
+        .button-print:hover { background-color: var(--color-primary-accent-hover); box-shadow: 0 4px 8px rgba(0,0,0,0.15); }
+        
+        .button-json { background-color: var(--color-secondary-accent); color: var(--color-text-on-light); /* Texto oscuro sobre amarillo */ }
+        .button-json:hover { background-color: #F4A600; /* Amarillo más oscuro */ box-shadow: 0 4px 8px rgba(0,0,0,0.15); }
+        
+        footer { text-align: center; font-size: 0.8em; color: #777; margin-top: 30px; padding-top: 15px; border-top: 1px dotted var(--color-border); }
+        footer a { color: var(--color-primary-accent); text-decoration: none; }
+        footer a:hover { text-decoration: underline; }
+
+        #status-message { padding: 10px; margin-bottom: 15px; border-radius: 4px; text-align: center; border: 1px solid transparent;}
+        #status-message.info { background-color: #e0e7ff; color: #303f9f; border-color: #adc0ff;}
+        #status-message.success { background-color: #D5F5E3; color: #239B56; border-color: #2ECC71; } /* Usando variables de éxito */
+        #status-message.error { background-color: #FADBD8; color: #C0392B; border-color: #E74C3C; } /* Usando variables de error */
+
+        @media print {
+            body { margin: 0; padding:0; border: none; font-size: 9pt; background-color: #fff; line-height: 1.3; color: #000; font-family: Arial, sans-serif;}
+            .container { border: none; box-shadow: none; max-width: 100%; width: 100%; margin: 0; padding: 10mm 5mm; }
+            .print-button-container, #status-message, footer, .report-date { display: none !important; }
+            h1 { font-size: 16pt; text-align: center; border-bottom: 1px solid #333; margin-bottom: 15px; padding-bottom: 5px;}
+            h2 { font-size: 13pt; text-align: left; border-bottom: 1px solid #666; margin-top: 20px; margin-bottom: 10px; padding-bottom:3px; }
+            h3 { font-size: 11pt; color: #222; font-weight: bold; margin-top: 0; margin-bottom: 6px; padding: 0;}
+            .moto-info { margin-bottom: 15px; padding-bottom:10px; border-bottom: 1px solid #ccc;}
+            .moto-info p { margin: 3px 0; font-size: 9pt; }
+            .mantenimiento-item { margin-bottom: 12px; padding-bottom: 8px; border: none; page-break-inside: avoid; }
+            .mantenimiento-item p.estado-actual { margin: 2px 0 6px 0; font-size: 9pt; }
+            table { page-break-inside: avoid; font-size: 8pt; margin-top: 6px; width: 100%; border: 1px solid #666; }
+            th, td { padding: 4px 6px; border: 1px solid #999; }
+            th { background-color: #E0E0E0 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            tbody tr:nth-child(odd) { background-color: #F3F3F3 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            a { text-decoration: none; color: #000; }
+            a[href^="http"]:after { content: ""; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Reporte de Mantenimiento</h1>
+        <p class="report-date">Motocicleta: <strong id="moto-placa-titulo">N/A</strong> &nbsp;|&nbsp; Reporte del: <span id="fecha-actual">--</span></p>
+
+        <div id="status-message" style="display: none;"></div>
+
+        <div class="moto-info">
+            <h2>Datos de la Motocicleta</h2>
+            <p><strong>Matrícula:</strong> <span id="moto-placa-display">N/A</span></p>
+            <p><strong>Marca:</strong> <span id="moto-marca">N/A</span></p>
+            <p><strong>Modelo:</strong> <span id="moto-modelo">N/A</span></p>
+            <p><strong>Año:</strong> <span id="moto-anio">N/A</span></p>
+            <p><strong>Color:</strong> <span id="moto-color">N/A</span></p>
+            <p><strong>VIN:</strong> <span id="moto-vin">N/A</span></p>
+            <p><strong>KM Registrado (Moto):</strong> <span id="moto-km">N/A</span></p>
+        </div>
+
+        <h2>Detalles de Mantenimiento Realizados</h2>
+        <div id="mantenimiento-detalles">
+            <p style="text-align:center;">Cargando mantenimientos...</p>
+        </div>
+
+        <div class="print-button-container">
+            <button id="imprimir-btn" class="button-print" style="display: none;">Imprimir / Guardar PDF</button>
+            <button id="guardar-json-btn" class="button-json" style="display: none;">Guardar como JSON</button>
+        </div>
+        
+        <footer>
+            <p>Reporte generado el <span id="footer-fecha"></span>.</p>
+            <p class="promo-footer" style="margin-top: 8px; font-size: 0.9em;">
+                Reporte de <strong>SBKR</strong>. Registra los mantenimientos de tu moto y accede a más funciones: 
+                <a href="index.html" title="Ir a la aplicación SBKR">Visita la App</a>.
+            </p>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log("Exportar Script (v5.3 - Botón Guardar JSON) Cargado");
+
+            const statusMessageDiv = document.getElementById('status-message');
+            const detallesContainer = document.getElementById('mantenimiento-detalles');
+            const printButton = document.getElementById('imprimir-btn');
+            const saveJsonButton = document.getElementById('guardar-json-btn'); // Nuevo botón
+            const placaTituloSpan = document.getElementById('moto-placa-titulo');
+            const placaDisplaySpan = document.getElementById('moto-placa-display');
+            const marcaSpan = document.getElementById('moto-marca');
+            const modeloSpan = document.getElementById('moto-modelo');
+            const anioSpan = document.getElementById('moto-anio');
+            const colorSpan = document.getElementById('moto-color');
+            const vinSpan = document.getElementById('moto-vin');
+            const kmSpan = document.getElementById('moto-km');
+            const fechaActualSpan = document.getElementById('fecha-actual');
+            const footerFechaSpan = document.getElementById('footer-fecha');
+
+            const essentialElements = [ detallesContainer, printButton, saveJsonButton, placaTituloSpan, fechaActualSpan, footerFechaSpan, placaDisplaySpan, marcaSpan, modeloSpan, anioSpan, colorSpan, vinSpan, kmSpan ];
+            if (essentialElements.some(el => !el)) {
+                console.error("Faltan elementos HTML esenciales para el reporte (incluyendo botón JSON).");
+                if(statusMessageDiv) { statusMessageDiv.textContent="Error de estructura HTML en la página."; statusMessageDiv.className='error'; statusMessageDiv.style.display='block'; }
+                return;
+            }
+
+            const urlParams = new URLSearchParams(window.location.search);
+            const matricula = urlParams.get('matricula')?.toUpperCase().trim();
+
+            function showStatus(message, type = 'info') {
+                if(statusMessageDiv){
+                    statusMessageDiv.textContent=message;
+                    statusMessageDiv.className=type;
+                    statusMessageDiv.style.display='block';
+                    if(type==='error' && printButton) printButton.style.display='none';
+                    if(type==='error' && saveJsonButton) saveJsonButton.style.display='none';
+                } else { console.warn("statusMessageDiv no encontrado:", message); }
+            }
+
+            if (!matricula) { 
+                showStatus('Error: No se especificó matrícula en la URL.', 'error'); 
+                detallesContainer.innerHTML = '<p style="text-align:center; color:var(--color-error);">Falta matrícula para generar el reporte.</p>'; 
+                return; 
+            }
+
+            showStatus(`Buscando datos para la motocicleta: ${matricula}`, 'info');
+            detallesContainer.innerHTML = '<p style="text-align:center;">Cargando...</p>';
+            placaTituloSpan.textContent = matricula;
+            placaDisplaySpan.textContent = matricula;
+
+            const MOTORCYCLES_DB_KEY = 'motorcyclesDB';
+            const MANTENIMIENTOS_PREFIX = 'MANTENIMIENTOS_';
+            const mantenimientosKey = `${MANTENIMIENTOS_PREFIX}${matricula}`;
+
+            let motoData = {}; 
+            let mantenimientosData = []; 
+            let motoDataFound = false; 
+            let mantenimientosDataFiltrados = []; // Para guardar los que tienen historial
+
+            // --- Cargar Datos ---
+            try { 
+                const dbString = localStorage.getItem(MOTORCYCLES_DB_KEY); 
+                const database = dbString ? JSON.parse(dbString) : {}; 
+                if(database[matricula]){ motoData = database[matricula]; motoDataFound = true; }
+                else { console.warn(`Matrícula ${matricula} no encontrada en ${MOTORCYCLES_DB_KEY}`); }
+            } catch(e){ console.error(`Error al leer ${MOTORCYCLES_DB_KEY}:`,e); showStatus(`Error al cargar datos de la motocicleta ${matricula}.`,'error'); }
+
+            try { 
+                const stored = localStorage.getItem(mantenimientosKey); 
+                if(stored){
+                    const parsed = JSON.parse(stored); 
+                    if(Array.isArray(parsed)){ mantenimientosData = parsed.filter(i=>typeof i ==='object' && i !== null && typeof i.elemento ==='string'); }
+                } else { console.warn(`Clave de mantenimientos no encontrada: ${mantenimientosKey}`);}
+            } catch(e){ console.error(`Error al leer ${mantenimientosKey}:`,e); showStatus(`Error al cargar datos de mantenimiento para ${matricula}.`,'error'); }
+
+            // --- Formatear Fecha y Hora Actual ---
+            function getFormattedDateTime(lang = navigator.language || 'es-CR'){
+                // ... (código de getFormattedDateTime sin cambios)
+                const dateOptions = { year: 'numeric', month: 'long', day: 'numeric' };
+                const timeOptions = { hour: 'numeric', minute: '2-digit', hour12: true };
+                try { const now = new Date(); return { fecha: now.toLocaleDateString(lang, dateOptions), hora: now.toLocaleTimeString(lang, timeOptions) };
+                } catch (error) { console.error("Error formateando fecha/hora con locale:", error, "Usando fallback."); const now = new Date(); const pad = (n) => n.toString().padStart(2, '0'); const hours = now.getHours(); const minutes = pad(now.getMinutes()); const ampm = hours >= 12 ? 'PM' : 'AM'; const formattedHours = hours % 12 || 12; return { fecha: `${pad(now.getDate())}/${pad(now.getMonth()+1)}/${now.getFullYear()}`, hora: `${formattedHours}:${minutes} ${ampm}`}; }
+            }
+            const { fecha, hora } = getFormattedDateTime();
+            if (fechaActualSpan) fechaActualSpan.textContent = fecha;
+            if (footerFechaSpan) footerFechaSpan.textContent = `${fecha} a las ${hora}`;
+
+            // --- Procesar y Mostrar Datos ---
+            if (!motoDataFound && mantenimientosData.length === 0) { 
+                showStatus(`No se encontró ningún dato para la motocicleta ${matricula}.`, 'error'); 
+                detallesContainer.innerHTML = `<p style="text-align:center;">Sin datos disponibles.</p>`; 
+                return; 
+            } else { 
+                showStatus(`Reporte para la motocicleta: ${matricula}`, 'success'); 
+            }
+
+            if (motoDataFound) { /* ... (mostrar datos de moto sin cambios) ... */ 
+                marcaSpan.textContent = motoData.marca || 'N/A'; modeloSpan.textContent = motoData.modelo || 'N/A'; anioSpan.textContent = motoData.anio || 'N/A'; colorSpan.textContent = motoData.color || 'N/A'; vinSpan.textContent = motoData.vin || 'N/A'; kmSpan.textContent = motoData.kmActual ? `${parseFloat(motoData.kmActual).toLocaleString('es-CR')} km` : 'N/A';
+            } else if (marcaSpan) { marcaSpan.textContent='(No encontrados)'; modeloSpan.textContent='(N/R)'; anioSpan.textContent='(N/R)'; colorSpan.textContent='(N/R)'; vinSpan.textContent='(N/R)'; kmSpan.textContent='N/A'; }
+
+            detallesContainer.innerHTML = ''; 
+            let itemsConHistorialMostrados = 0;
+            mantenimientosDataFiltrados = []; // Reiniciar para esta carga
+
+            if (mantenimientosData.length > 0) {
+                mantenimientosData.sort((a, b) => (a.elemento || '').localeCompare(b.elemento || ''));
+                mantenimientosData.forEach(item => {
+                    if (item.historial && Array.isArray(item.historial) && item.historial.length > 0) {
+                        itemsConHistorialMostrados++;
+                        mantenimientosDataFiltrados.push(item); // Guardar solo los que se muestran
+                        const itemContainer = document.createElement('div'); itemContainer.className = 'mantenimiento-item';
+                        const tituloItem = document.createElement('h3'); tituloItem.textContent = item.elemento || 'Categoría Desconocida'; itemContainer.appendChild(tituloItem);
+                        const estadoActualP = document.createElement('p'); estadoActualP.className = 'estado-actual'; estadoActualP.innerHTML = `<strong>Último Estado Registrado:</strong> ${item.actual||'(No definido)'}`; itemContainer.appendChild(estadoActualP);
+                        const tabla = document.createElement('table'); const thead = tabla.createTHead(); const headerRow = thead.insertRow();
+                        headerRow.insertCell().outerHTML = '<th>Fecha</th>'; headerRow.insertCell().outerHTML = '<th>KM</th>'; headerRow.insertCell().outerHTML = '<th>Detalle</th>';
+                        const tbody = tabla.createTBody();
+                        item.historial.sort((a,b)=>{ /* ... (lógica de ordenamiento del historial sin cambios) ... */ 
+                            const dateA_str = a.fecha?.includes('/') ? a.fecha.split('/').reverse().join('-') : a.fecha; const dateB_str = b.fecha?.includes('/') ? b.fecha.split('/').reverse().join('-') : b.fecha; const dateA = dateA_str ? new Date(dateA_str) : null; const dateB = dateB_str ? new Date(dateB_str) : null; const isValidA = dateA instanceof Date && !isNaN(dateA); const isValidB = dateB instanceof Date && !isNaN(dateB);
+                            if (isValidA && isValidB && dateA.getTime() !== dateB.getTime()) return dateB - dateA; if (isValidA && !isValidB) return -1; if (!isValidA && isValidB) return 1;
+                            const kmA = parseFloat(a.km); const kmB = parseFloat(b.km); if (!isNaN(kmA) && !isNaN(kmB) && kmA !== kmB) return kmB - kmA; return 0;
+                        });
+                        item.historial.forEach(h => { const row = tbody.insertRow(); row.insertCell().textContent = h.fecha ? new Date(h.fecha.includes('/') ? h.fecha.split('/').reverse().join('-') : h.fecha + 'T00:00:00').toLocaleDateString(navigator.language || 'es-CR', {day:'2-digit', month:'short', year:'numeric'}) : 'N/A'; row.insertCell().textContent = h.km != null ? `${parseFloat(h.km).toLocaleString('es-CR')} km` : '-'; row.insertCell().textContent = h.detalle || '-'; });
+                        itemContainer.appendChild(tabla); detallesContainer.appendChild(itemContainer);
+                    }
+                });
+            }
+            
+            if (itemsConHistorialMostrados === 0 && !motoDataFound) { // Si no hay NADA que mostrar
+                 detallesContainer.innerHTML = '<p style="text-align:center;">No hay datos de motocicleta ni mantenimientos con historial para mostrar.</p>';
+            } else if (itemsConHistorialMostrados === 0 && motoDataFound) { // Si hay datos de moto pero no mantenimientos con historial
+                 detallesContainer.innerHTML = '<p style="text-align:center;">No hay mantenimientos con historial registrado para esta motocicleta.</p>';
+            }
+
+
+            // Mostrar botones si hay algo que exportar/imprimir
+            if (motoDataFound || itemsConHistorialMostrados > 0) {
+                if (printButton) {
+                    printButton.style.display = '';
+                    const newPrintButton = printButton.cloneNode(true); // Para limpiar listeners viejos
+                    printButton.parentNode.replaceChild(newPrintButton, printButton);
+                    newPrintButton.addEventListener('click', () => window.print());
+                }
+                if (saveJsonButton) {
+                    saveJsonButton.style.display = ''; // Mostrar botón JSON
+                }
+            } else {
+                if(printButton) printButton.style.display = 'none';
+                if(saveJsonButton) saveJsonButton.style.display = 'none';
+            }
+
+            // --- Funcionalidad Botón Guardar JSON ---
+            if(saveJsonButton){
+                saveJsonButton.addEventListener('click', function() {
+                    if (!matricula) {
+                        showStatus("No hay matrícula para generar el archivo JSON.", "error");
+                        return;
+                    }
+
+                    // Crear el objeto de datos para descargar
+                    const dataToDownload = {
+                        matricula: matricula,
+                        fechaReporteJSON: new Date().toISOString(),
+                        motoInfo: motoDataFound ? motoData : { mensaje: "Datos de la moto no encontrados o no cargados." },
+                        // Usar mantenimientosDataFiltrados para asegurar que solo se exportan los que tienen historial y se muestran
+                        mantenimientos: mantenimientosDataFiltrados.length > 0 ? mantenimientosDataFiltrados : [] 
+                    };
+
+                    if (dataToDownload.mantenimientos.length === 0 && !motoDataFound) {
+                        showStatus("No hay datos significativos para guardar en JSON.", "info");
+                        return;
+                    }
+
+                    const jsonString = JSON.stringify(dataToDownload, null, 2); // El '2' es para indentación
+                    const blob = new Blob([jsonString], { type: "application/json" });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `reporte_mantenimiento_${matricula}_${new Date().toISOString().slice(0,10)}.json`;
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    URL.revokeObjectURL(url);
+                    showStatus("Archivo JSON generado para descarga.", "success");
+                });
+            }
+            console.log("Reporte generado y listo para mostrar.");
+        });
+    </script>
+</body>
+</html>

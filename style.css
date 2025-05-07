@@ -1,0 +1,957 @@
+/* === Variables de Color === */
+:root {
+    --color-background-light: #F0F2F5;    /* Gris Pálido Fresco */
+    --color-text-on-light: #023047;        /* Azul Oscuro Profundo */
+    --color-primary-accent: #FB8500;       /* Naranja Quemado */
+    --color-primary-accent-hover: #E67E22; /* Naranja Quemado más oscuro */
+    --color-secondary-accent: #FFCB2E;     /* Amarillo Limpio */
+    --color-card-background: #FFFFFF;       /* Blanco Puro */
+    --color-border: #BDC3C7;               /* Gris Suave */
+    --color-text-on-accent: #FFFFFF;       /* Blanco Puro */
+    --color-error: #E74C3C;                /* Rojo */
+    --color-error-background: #FADBD8;     /* Rojo muy claro */
+    --color-error-text: #C0392B;           /* Rojo oscuro */
+    --color-success: #2ECC71;              /* Verde */
+    --color-success-background: #D5F5E3;   /* Verde muy claro */
+    --color-success-text: #239B56;         /* Verde oscuro */
+    --color-disabled: #BDC3C7;             /* Gris Suave */
+    --color-disabled-text: #7F8C8D;        /* Gris Medio */
+    --font-main: 'Roboto', sans-serif;
+}
+
+/* === Estilos Generales === */
+body {
+    font-family: var(--font-main);
+    margin: 0;
+    padding: 0;
+    background-color: var(--color-background-light);
+    color: var(--color-text-on-light);
+    position: relative;
+    min-height: 100vh;
+    padding-bottom: 70px; /* Espacio para .bottom-bar */
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+}
+
+.container, .course-container {
+    max-width: 700px;
+    margin: 20px auto;
+    padding: 0 16px;
+    background-color: transparent;
+    flex-grow: 1;
+    box-sizing: border-box;
+}
+
+.course-container {
+    padding: 20px;
+    background-color: var(--color-card-background);
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* === Tipografía === */
+h1 {
+    text-align: center;
+    color: var(--color-primary-accent);
+    margin-top: 20px;
+    margin-bottom: 20px;
+    padding: 10px 16px;
+    background-color: transparent;
+    font-size: 1.8em;
+    font-weight: 700;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+h1 small { /* Estilo general para small dentro de h1 */
+    display: block;
+    font-size: 0.7em;
+    color: var(--color-text-on-light);
+    opacity: 0.8;
+    font-weight: 400;
+    margin-top: 5px;
+}
+
+h1#main-title small { /* Estilo específico para small dentro de #main-title */
+    font-size: 0.65em; /* Diferente de h1 small general */
+    opacity: 0.85;     /* Diferente de h1 small general */
+    /* Las otras propiedades son heredadas o iguales a h1 small */
+}
+
+h2 {
+    color: var(--color-text-on-light);
+    margin-top: 20px;
+    margin-bottom: 15px;
+    font-size: 1.5em;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--color-border);
+    font-weight: 500;
+}
+
+/* h2 específico para .motorcycle-item y .modal-header */
+.motorcycle-item h2, .modal-header h2 {
+    color: var(--color-primary-accent);
+    margin-top: 0;
+    margin-bottom: 10px; /* Para .motorcycle-item h2 */
+    font-size: 1.3em;    /* Para .motorcycle-item h2 */
+    border-bottom: none;
+    padding-bottom: 0;
+}
+/* .modal-header h2 puede tener sus propias anulaciones si son diferentes y más específicas */
+.modal-header h2 {
+    font-size: 1.4em;    /* Anulación para modal header */
+    margin-bottom: 15px; /* Anulación para modal header */
+}
+
+
+h3 {
+    color: var(--color-primary-accent-hover);
+    margin-top: 20px;
+    margin-bottom: 10px;
+    font-size: 1.1em;
+    font-weight: 500;
+}
+
+p {
+    line-height: 1.7;
+    margin-bottom: 12px;
+    color: var(--color-text-on-light);
+    font-size: 1em;
+}
+
+ul, ol {
+    list-style-position: outside;
+    margin-left: 20px;
+    padding-left: 10px;
+    margin-bottom: 15px;
+}
+
+ul ul, ol ol, ul ol, ol ul {
+    margin-left: 15px;
+    margin-top: 5px;
+    margin-bottom: 10px;
+}
+
+li {
+    margin-bottom: 10px;
+    color: var(--color-text-on-light);
+}
+
+strong {
+    color: var(--color-primary-accent);
+    font-weight: 500;
+}
+
+.subsection-title {
+    font-weight: 500;
+    margin-top: 20px;
+    color: var(--color-primary-accent-hover);
+    display: block;
+    margin-bottom: 8px;
+}
+
+/* === Formularios === */
+.form-group, .modal-form-group, .input-group {
+    margin-bottom: 16px;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+label {
+    display: block;
+    margin-bottom: 8px;
+    color: var(--color-text-on-light);
+    opacity: 0.9;
+    font-weight: 500;
+    font-size: 0.9em;
+}
+
+input[type="text"],
+input[type="number"],
+input[type="tel"],
+input[type="file"],
+input[type="date"],
+select,
+.info-label {
+    width: 100%;
+    padding: 12px 16px;
+    margin: 0;
+    border: 1px solid var(--color-border);
+    border-radius: 4px;
+    box-sizing: border-box;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    font-size: 1em;
+    background-color: var(--color-card-background);
+    color: var(--color-text-on-light);
+}
+
+.info-label {
+    background-color: var(--color-background-light);
+    border: none;
+}
+
+input[type="text"]:focus,
+input[type="number"]:focus,
+input[type="tel"]:focus,
+input[type="file"]:focus,
+input[type="date"]:focus,
+select:focus {
+    outline: none;
+    border-color: var(--color-primary-accent);
+    box-shadow: 0 0 5px rgba(251, 133, 0, 0.3);
+}
+
+select {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23023047'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 24px;
+}
+
+.input-row {
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+/* === Botones === */
+/* Base para varios tipos de botones */
+.edit-button, .maintenance-button, .delete-button, .modal-button, .nav-button, #fabActionModal .modal-actions .button {
+    padding: 10px 16px; /* Padding base, #fabActionModal .button tenía 12px 15px */
+    margin: 5px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+    font-size: 0.95em; /* #fabActionModal .button tenía 1em */
+    text-decoration: none;
+    text-align: center;
+    box-sizing: border-box;
+    font-weight: 500;
+    border: 1px solid transparent; /* Para normalizar y luego especificar */
+}
+/* Ajuste específico para botones dentro de #fabActionModal si el padding/font-size es crítico */
+#fabActionModal .modal-actions .button {
+    padding: 12px 15px;
+    font-size: 1em;
+    width: 100%;
+}
+
+
+/* Botones con fondo de acento (principales) */
+.modal-button, .nav-button, .form-consumo button { /* .form-consumo button añadido aquí */
+    background-color: var(--color-primary-accent);
+    border-color: var(--color-primary-accent); /* Asegurar borde con color primario */
+    color: var(--color-text-on-accent);
+    width: 100%; /* Por defecto, ancho completo en modales */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+.modal-button:hover, .nav-button:hover, .form-consumo button:hover {
+    background-color: var(--color-primary-accent-hover);
+    border-color: var(--color-primary-accent-hover);
+    color: var(--color-text-on-accent);
+    box-shadow: 0 3px 7px rgba(0, 0, 0, 0.2);
+}
+.nav-button { width: auto; } /* Botones de navegación no necesitan ser full-width */
+.form-consumo button { /* Estilos específicos de .form-consumo button */
+    padding: 12px 15px; /* Heredado de .modal-button si se agrupa, sino especificar */
+    font-size: 1em;
+    border: none; /* Heredado de .modal-button si se agrupa, sino especificar */
+    height: fit-content;
+    margin-top:10px; /* Si no es 5px como el general */
+}
+
+
+/* Botones con borde (secundarios o de acciones específicas) */
+.edit-button, .maintenance-button {
+    background-color: transparent;
+    border: 1px solid var(--color-primary-accent);
+    color: var(--color-primary-accent);
+}
+.edit-button:hover, .maintenance-button:hover {
+    background-color: var(--color-primary-accent);
+    color: var(--color-text-on-accent);
+    border-color: var(--color-primary-accent); /* Asegurar el borde al hacer hover */
+}
+
+/* Botón de eliminar (outline danger) */
+.delete-button {
+    background-color: transparent; /* Asegurar que sea transparente por defecto */
+    border: 1px solid var(--color-error);
+    color: var(--color-error);
+}
+.delete-button:hover {
+    background-color: var(--color-error);
+    color: var(--color-text-on-accent);
+    border-color: var(--color-error); /* Asegurar el borde al hacer hover */
+}
+
+/* Botón secundario específico (ej. "Cargar desde archivo" en FAB Modal o "Cancelar" en Confirm Modal) */
+.button.secondary { /* Para #fabActionModal */
+    background-color: #e0e0e0;
+    color: #333;
+    border: 1px solid #ccc;
+}
+.button.secondary:hover { background-color: #d5d5d5; }
+
+/* Botones secundarios y de peligro en modales de confirmación */
+.modal-button.secondary { /* Para #confirmDeleteModal - Estilo diferente al .button.secondary anterior */
+    background-color: #6c757d; /* Gris más oscuro */
+    color: white;
+    border: 1px solid #6c757d; /* Asegurar borde */
+}
+.modal-button.secondary:hover {
+    background-color: #5a6268;
+    border-color: #5a6268;
+}
+
+.modal-button.danger { /* Para #confirmDeleteModal - Sólido */
+    background-color: var(--color-error);
+    color: white; /* o var(--color-text-on-accent) */
+    border: 1px solid var(--color-error); /* Asegurar borde */
+}
+.modal-button.danger:hover {
+    background-color: #c82333; /* Rojo más oscuro */
+    border-color: #c82333;
+}
+
+
+/* Botones deshabilitados */
+.nav-button:disabled { /* Aplicable a cualquier botón con :disabled */
+    background-color: var(--color-disabled);
+    border-color: var(--color-disabled);
+    color: var(--color-disabled-text);
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+/* === Mensajes de Estado === */
+/* Base para todos los mensajes de estado */
+#mensaje-error, #mensaje-exito, #modal-mensaje-error, #fab-action-modal-error {
+    padding: 12px 16px;
+    margin: 16px 0;
+    border-radius: 4px;
+    font-size: 0.9em;
+    display: none; /* Mostrar con JS */
+    text-align: center;
+    border: 1px solid transparent; /* Base para border-color */
+}
+
+/* Estilos para mensajes de error */
+#mensaje-error, #modal-mensaje-error, #fab-action-modal-error {
+    background-color: var(--color-error-background);
+    color: var(--color-error-text);
+    border-color: var(--color-error);
+}
+
+/* Ajustes específicos para #fab-action-modal-error */
+#fab-action-modal-error {
+    padding: 10px;      /* Padding específico */
+    margin-top: 15px;   /* Margin-top específico */
+    margin-bottom: 0;   /* Para evitar doble margen si está en un modal */
+}
+
+/* Ajustes específicos para #modal-mensaje-error */
+#modal-mensaje-error {
+    margin-top: 10px; /* Margin-top específico */
+}
+
+/* Estilos para mensajes de éxito */
+#mensaje-exito {
+    background-color: var(--color-success-background);
+    color: var(--color-success-text);
+    border-color: var(--color-success);
+}
+/* Si #mensaje-error y #mensaje-exito (generales) necesitan padding:10px y margin:15px 0 */
+/* Se pueden añadir aquí como anulaciones si es necesario, aunque la base es 12px/16px y 16px 0 */
+/* Ejemplo:
+#mensaje-error, #mensaje-exito {
+    padding: 10px;
+    margin: 15px 0;
+}
+*/
+
+
+/* === Tarjetas (Cards) === */
+.card, .motorcycle-item {
+    background-color: var(--color-card-background);
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+    margin-bottom: 16px;
+    padding: 16px;
+    position: relative;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.card-actions { /* Acciones generales de la tarjeta, ej. botones Editar/Borrar Moto */
+    margin-top: 10px;
+    display: flex;
+    justify-content: flex-end;
+    width: 100%;
+}
+
+.motorcycle-item p {
+    margin: 3px 0 6px 0;
+    font-size: 1em;
+    width: 100%;
+    text-align: left;
+    color: var(--color-text-on-light);
+}
+
+.motorcycle-item p strong {
+    color: var(--color-primary-accent-hover);
+    font-weight: 500;
+    margin-right: 8px;
+    min-width: 90px;
+    display: inline-block;
+}
+
+.motorcycle-image {
+    max-width: 100%;
+    height: auto;
+    margin-bottom: 10px;
+    border-radius: 4px;
+}
+
+
+/* === Modales === */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.6);
+    animation: fadeInModal 0.3s ease-out;
+}
+
+.modal-content {
+    background-color: var(--color-card-background);
+    margin: 10% auto; /* Unificado */
+    padding: 25px;    /* Unificado (era 20px 25px y 25px) */
+    border-radius: 8px;
+    max-width: 500px; /* Unificado (era 450px y 500px) */
+    width: 90%;
+    position: relative;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3); /* Unificado (era 0 4px 15px y 0 5px 15px) */
+    text-align:center; /* Añadido de una de las definiciones si es general */
+}
+/* Específico para #fabActionModal .modal-content si necesita max-width: 400px */
+#fabActionModal .modal-content {
+    max-width: 400px;
+    text-align: center;
+}
+
+
+@keyframes fadeInModal { /* Unificada a la versión con translateY */
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px; /* Consistente */
+    padding-bottom: 15px;
+    border-bottom: 1px solid var(--color-border);
+}
+/* .modal-header h2 ya está definido en Tipografía */
+
+.close-button {
+    color: var(--color-text-on-light);
+    opacity: 0.7;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    border: none;
+    background: transparent;
+    padding: 0;
+    line-height: 1;
+    position: absolute;
+    top: 15px;
+    right: 20px;
+}
+
+.close-button:hover, .close-button:focus {
+    color: var(--color-primary-accent);
+    opacity: 1;
+    text-decoration: none;
+}
+
+/* Acciones dentro de modales */
+.modal-actions { /* Base para acciones de modal */
+    display: flex;
+    justify-content: center; /* Default, puede ser sobreescrito */
+    gap: 15px;
+    margin-top: 20px;
+}
+.modal-actions button { /* Estilos para botones dentro de .modal-actions */
+    padding: 10px 20px; /* Puede ser sobreescrito por clases de botón más específicas */
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: 500;
+    font-size: 0.95em;
+    border: none; /* Si todos los botones de modal-actions son sin borde por defecto */
+    transition: background-color 0.2s ease;
+}
+
+/* Específico para #fabActionModal .modal-actions */
+#fabActionModal .modal-actions {
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 15px;
+}
+/* Específico para #confirmDeleteModal */
+#confirmDeleteModal p {
+    margin-bottom: 20px;
+    font-size: 1.05em;
+}
+#confirmDeleteModal .modal-actions { /* Anula el justify-content de .modal-actions base */
+    justify-content: flex-end; /* O center, dependiendo del diseño final */
+    gap: 10px; /* O 15px como el base */
+}
+
+
+/* === Floating Action Button (FAB) === */
+.fab {
+    position: fixed;
+    bottom: 80px;
+    right: 20px;
+    background-color: var(--color-primary-accent);
+    color: var(--color-text-on-accent);
+    border: none;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    font-size: 24px;
+    line-height: 56px;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
+    z-index: 500;
+    text-decoration: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.fab:hover {
+    background-color: var(--color-primary-accent-hover);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+    transform: scale(1.05);
+}
+
+.fab-icon {
+    transform: rotate(0deg);
+    transition: transform 0.3s ease;
+    display: inline-block;
+}
+.fab:hover .fab-icon {
+    transform: rotate(45deg);
+}
+.fab-icon-export::before {
+    content: "↑";
+    font-weight: bold;
+}
+.fab-icon-add { /* Para el + del FAB */
+    font-weight: bold;
+    font-size: 1.8em;
+    line-height: 1;
+}
+
+/* Estilos del modal de selección de categoría del FAB */
+#fab-category-list button {
+    display: block;
+    width: 100%;
+    padding: 12px 16px;
+    margin-bottom: 8px;
+    text-align: left;
+    background-color: var(--color-card-background);
+    color: var(--color-text-on-light);
+    border: 1px solid var(--color-border);
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1em;
+    transition: all 0.3s ease;
+}
+#fab-category-list button:hover {
+    background-color: var(--color-background-light);
+    border-color: var(--color-primary-accent);
+    color: var(--color-primary-accent);
+}
+
+
+/* === Bottom Navigation Bar === */
+.bottom-bar {
+    background-color: var(--color-card-background);
+    padding: 5px 0;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    box-shadow: 0px -2px 5px rgba(0, 0, 0, 0.1);
+    border-radius: 12px 12px 0 0;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    box-sizing: border-box;
+    z-index: 600;
+    height: 65px;
+}
+
+.bottom-bar a {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: transparent;
+    border: none;
+    color: var(--color-text-on-light);
+    opacity: 0.8;
+    text-align: center;
+    text-decoration: none;
+    font-size: 12px;
+    border-radius: 4px;
+    padding: 8px 4px;
+    flex: 1;
+    max-width: 90px;
+    transition: background-color 0.3s ease, color 0.3s ease, opacity 0.3s ease;
+    height: 100%;
+    box-sizing: border-box;
+}
+
+.bottom-bar a:hover {
+    background-color: rgba(251, 133, 0, 0.1);
+    color: var(--color-primary-accent);
+    opacity: 1;
+}
+
+.bottom-bar a.active,
+.bottom-bar a[href*="moto.html"]:not([href*="?"]),
+.bottom-bar a[href*="mantenimiento.html"] { /* Ejemplo, ajustar selectores si es necesario */
+    color: var(--color-primary-accent);
+    font-weight: bold;
+    opacity: 1;
+}
+
+/* === Listas Específicas (Motos, Mantenimiento) === */
+#motorcycle-list, #maintenance-list {
+    margin-top: 20px;
+}
+
+#maintenance-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    justify-content: center;
+}
+
+.maintenance-item { /* Hereda de .card */
+    flex: 1 1 100%;
+    min-width: 280px;
+    /* .maintenance-item.card especificaba display:flex, width:100% que ya están en .card o .maintenance-item */
+}
+/* .maintenance-item.card h2 ya está cubierto por .motorcycle-item h2 o se puede especializar si es diferente */
+.maintenance-item.card h2 {
+    width: 100%; /* Asegura que el h2 ocupe todo el ancho si es necesario */
+    /* Resto de estilos de h2 ya definidos */
+}
+
+/* --- Estilos para el Último Registro en Tarjetas de Mantenimiento --- */
+.last-record { /* Unificado */
+    padding-bottom: 5px;
+    width: 100%;
+    font-size: 1em; /* O 0.9em como en la original */
+}
+.last-record h3 { /* Título como "Último Registro:" */
+    margin-bottom: 8px;
+    font-size: 1em; /* O 1.1em si es un h3 real */
+    font-weight: 500;
+    color: var(--color-text-on-light);
+    opacity: 0.9;
+    /* Podría heredar de h3 general si se usa <h3> o .subsection-title */
+}
+.last-record p {
+    margin-bottom: 4px;
+    font-size: 1em; /* O 0.9em */
+    line-height: 1.4;
+    display: flex;
+    color: var(--color-text-on-light);
+    opacity: 0.9;
+}
+.last-record p strong {
+    color: var(--color-primary-accent-hover);
+    min-width: 70px;
+    display: inline-block;
+    font-weight: 500;
+    margin-right: 5px;
+}
+.last-record span { /* El valor del registro */
+    flex-grow: 1;
+}
+
+/* Acciones específicas para el último registro (ej. editar/borrar último mantenimiento) */
+.card-actions-last-record {
+    margin-top: 12px;
+    padding-top: 10px;
+    border-top: 1px solid var(--color-border);
+    display: flex;
+    gap: 10px;
+    justify-content: flex-start; /* O flex-end */
+}
+
+/* Contenedor para botones de icono en la tarjeta (Unificado) */
+.card-item-actions {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 10px; /* Unificado (era 8px y 10px) */
+    margin-top: 15px;
+    padding-top: 12px; /* Unificado (era 10px y 12px) */
+    border-top: 1px solid var(--color-border);
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* Estilo base para todos los botones de icono (Unificado) */
+.icon-button {
+    background-color: transparent;
+    border: none;
+    color: var(--color-text-on-light);
+    opacity: 0.65;
+    padding: 0; /* Ajustar si el padding de 5px de consumos-table era global */
+    font-size: 1.2em;
+    line-height: 1;
+    cursor: pointer;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    transition: background-color 0.2s ease, color 0.2s ease, opacity 0.2s ease, transform 0.1s ease;
+}
+.icon-button:hover {
+    opacity: 1;
+    transform: scale(1.1);
+}
+.icon-button:active {
+    transform: scale(0.95);
+}
+
+/* Especializaciones de icon-button */
+.consumos-table .icon-button { /* Para la tabla de consumos */
+    color: var(--color-error);
+    opacity: 0.7; /* Opacidad específica */
+    padding: 5px; /* Padding específico */
+    width: auto; height: auto; /* Si no son 40x40 */
+    border-radius: 0; /* Si no es circular */
+}
+.consumos-table .icon-button:hover {
+    opacity: 1;
+    color: var(--color-error); /* Mantiene color error en hover */
+    /* transform: scale(1.1); heredado */
+}
+
+.icon-button.add-maint-button,
+.icon-button.edit-last-record-button {
+    font-size: 1.1em; /* Ligeramente más pequeño */
+}
+.icon-button.add-maint-button:hover,
+.icon-button.edit-last-record-button:hover {
+    background-color: rgba(251, 133, 0, 0.1);
+    color: var(--color-primary-accent);
+}
+
+.icon-button.delete-last-record-button {
+    font-size: 1.1em;
+}
+.icon-button.delete-last-record-button:hover {
+    background-color: rgba(231, 76, 60, 0.1);
+    color: var(--color-error);
+}
+
+
+/* === Contenido de Curso (Lessons) === */
+.lesson {
+    display: none;
+    background-color: var(--color-card-background);
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+    border: 1px solid var(--color-border);
+}
+.lesson.active {
+    display: block;
+}
+
+/* Botones de Navegación de Lecciones */
+.navigation-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 30px;
+    margin-bottom: 20px;
+    padding-top: 20px;
+    border-top: 1px solid var(--color-border);
+}
+
+/* === Tablas === */
+.table-responsive { overflow-x: auto; }
+
+/* Estilos generales para tablas */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px; /* Ajustado desde 20px para consumos-table */
+    margin-bottom: 20px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05); /* Añadido de la definición de tabla general */
+}
+th, td {
+    border: 1px solid var(--color-border);
+    padding: 10px 12px; /* Unificado */
+    text-align: left;
+    font-size: 0.9em;
+}
+th { /* Cabecera general de tabla */
+    background-color: var(--color-background-light); /* Fondo claro general */
+    color: var(--color-primary-accent-hover); /* Texto naranja oscuro general */
+    font-weight: 500;
+}
+td { /* Celda general de tabla */
+    color: var(--color-text-on-light);
+}
+
+/* Tabla específica de Consumos */
+.consumos-table th { /* Anula th general si es necesario */
+    background-color: #E8ECEF; /* Fondo específico */
+    /* font-weight: 500; heredado */
+}
+/* .consumos-table td hereda de td general */
+.consumos-table tbody tr:nth-child(odd) {
+    background-color: #f9f9fc;
+}
+.consumos-table td.actions-cell {
+    text-align: center;
+    width: 50px;
+}
+/* .consumos-table .icon-button ya definido en la sección de icon-buttons */
+.consumos-table tfoot td {
+    font-weight: bold;
+    background-color: #E8ECEF;
+}
+
+/* === Elementos Específicos (Stats, Form Consumo, Export) === */
+.stats-container {
+    background-color: #f8f9fa;
+    border: 1px solid var(--color-border);
+    border-radius: 6px;
+    padding: 15px;
+    margin-bottom: 20px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+}
+.stat-item {
+    background-color: var(--color-card-background);
+    padding: 10px;
+    border-radius: 4px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    text-align: center;
+}
+.stat-item strong {
+    display: block;
+    font-size: 1.2em;
+    color: var(--color-primary-accent);
+    margin-bottom: 5px;
+}
+.stat-item span {
+    font-size: 0.9em;
+    color: #555;
+}
+
+.form-consumo {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 15px;
+    align-items: flex-end;
+    padding: 15px;
+    border: 1px solid var(--color-border);
+    border-radius: 6px;
+    margin-bottom: 25px;
+    background-color: #fdfdfd;
+}
+.form-consumo .form-group { /* Ya definido por .form-group general */
+    /* display: flex; flex-direction: column; */
+}
+.form-consumo label { /* Ya definido por label general, ajustar si es diferente */
+    margin-bottom: 5px;
+    font-size: 0.9em; /* Igual que label general */
+    font-weight: 500; /* Igual que label general */
+}
+.form-consumo input[type="date"], .form-consumo input[type="number"] { /* Hereda de input general */
+    /* width: 100%; padding: 10px; border: 1px solid var(--color-border); ... */
+    padding: 10px; /* Específico si es diferente del padding general de inputs (12px 16px) */
+    font-size: 0.95em; /* Específico si es diferente */
+}
+.form-consumo input:focus { /* Hereda de input:focus general */
+    /* outline: none; border-color: var(--color-primary-accent); ... */
+    box-shadow: 0 0 0 2px rgba(251,133,0,0.2); /* Sombra de focus específica */
+}
+/* .form-consumo button ya está agrupado con .modal-button y .nav-button */
+
+/* --- Botón de Exportar --- */
+.export-button-wrapper {
+    text-align: center;
+    margin: 30px 0 25px 0;
+}
+a.button-export-content {
+    display: inline-block;
+    padding: 12px 28px;
+    background-color: var(--color-secondary-accent);
+    color: var(--color-text-on-light);
+    border: 1px solid var(--color-secondary-accent);
+    border-radius: 5px;
+    text-align: center;
+    text-decoration: none;
+    font-size: 1em;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+}
+a.button-export-content:hover {
+    background-color: #F4A600; /* Color específico para hover */
+    box-shadow: 0 3px 7px rgba(0,0,0,0.12);
+    transform: translateY(-1px);
+}
+a.button-export-content:active {
+    transform: translateY(0px);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+
+/* === Media Queries === */
+@media (min-width: 640px) {
+    .maintenance-item {
+        flex-basis: calc(50% - 8px); /* (gap / 2) */
+    }
+}
+@media (min-width: 920px) {
+    .maintenance-item {
+        flex-basis: calc(33.333% - 10.66px); /* (gap * 2/3) */
+    }
+    .container, .course-container {
+        max-width: 900px; /* Aumentar ancho para 3 columnas */
+    }
+}

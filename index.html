@@ -1,59 +1,312 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
-  <title>Clubes de Costa Rica</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-  <style>
-    div.fixed {
-    position: fixed;
-    bottom: 10px;
-    right: 10px;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SBKR - Tu Asistente Motociclista Personal</title>
+    <link rel="stylesheet" href="style.css"> <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        /* Estilos adicionales mínimos y específicos para esta página si son necesarios */
+        body {
+            background-color: var(--color-background-light);
+            color: var(--color-text-on-light);
+            font-family: var(--font-main);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px; /* Este padding se aplica al body globalmente */
+            box-sizing: border-box;
+        }
+
+        /* Navbar Styles */
+        .top-navbar {
+            max-width: 700px; /* Alineado con intro-container */
+            width: 100%;      /* Ocupa el ancho disponible hasta el max-width */
+            margin-left: auto;
+            margin-right: auto;
+            background-color: var(--color-card-background);
+            padding: 10px 0; /* Padding vertical, horizontal manejado por los items */
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 25px; /* Espacio antes del intro-container */
+            border-radius: 8px;
+            box-sizing: border-box;
+        }
+
+        .top-navbar ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center; /* Centra los items de la navbar */
+            align-items: center;
+        }
+
+        .top-navbar li {
+            margin: 0 5px; /* Espacio entre cada item del menú */
+        }
+
+        .top-navbar a {
+            text-decoration: none;
+            color: var(--color-primary-accent);
+            font-weight: 500;
+            font-size: 0.95em; /* Ligeramente más pequeño para que quepan bien */
+            padding: 10px 12px; /* Área clickeable */
+            border-radius: 4px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            display: block; /* Para que el padding funcione correctamente */
+            white-space: nowrap; /* Evita que el texto del enlace se parta en dos líneas */
+        }
+
+        .top-navbar a:hover,
+        .top-navbar a.active { /* Clase 'active' para la página actual (opcional, manejar con JS) */
+            background-color: var(--color-primary-accent-hover);
+            color: var(--color-text-on-accent);
+        }
+
+
+        .intro-container {
+            max-width: 700px;
+            width: 100%;
+            text-align: center;
+            padding: 20px;
+            background-color: var(--color-card-background);
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .logo-container {
+            margin-bottom: 30px;
+        }
+
+        .logo-container img {
+            max-width: 150px; /* Ajusta según el tamaño de tu logo */
+            height: auto;
+            border-radius: 8px; /* Opcional, si el logo tiene fondo */
+        }
+
+        .intro-container h1 {
+            color: var(--color-primary-accent);
+            margin-bottom: 15px;
+            font-size: 2.2em;
+        }
+
+        .intro-container p {
+            font-size: 1.1em;
+            line-height: 1.7;
+            margin-bottom: 25px;
+            color: var(--color-text-on-light);
+        }
+
+        .intro-container .tagline {
+            font-size: 1.3em;
+            font-weight: 500;
+            color: var(--color-primary-accent-hover);
+            margin-bottom: 30px;
+        }
+
+        .terms-button {
+            background-color: var(--color-primary-accent);
+            color: var(--color-text-on-accent);
+            padding: 12px 25px;
+            border: none;
+            border-radius: 4px;
+            font-size: 1em;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            text-decoration: none;
+        }
+
+        .terms-button:hover {
+            background-color: var(--color-primary-accent-hover);
+        }
+
+        /* Estilos del Modal (usando clases del CSS provisto) */
+        .modal {
+            /* Estilos base ya en style.css */
+        }
+
+        .modal-content {
+            /* Estilos base ya en style.css */
+            text-align: left; /* Ajustar para T&C */
+            max-width: 600px; /* Un poco más ancho para T&C */
+        }
+
+        .modal-header {
+            /* Estilos base ya en style.css */
+        }
+        .modal-header h2 {
+            font-size: 1.6em; /* Ajustar tamaño si es necesario */
+        }
+
+        .modal-body {
+            padding-top: 15px;
+            max-height: 60vh; /* Permitir scroll si el contenido es largo */
+            overflow-y: auto;
+        }
+        .modal-body h3 {
+            color: var(--color-primary-accent-hover);
+            font-size: 1.2em;
+            margin-top: 15px;
+            margin-bottom: 8px;
+        }
+        .modal-body p, .modal-body ul {
+            font-size: 0.95em;
+            line-height: 1.6;
+            margin-bottom: 10px;
+            color: var(--color-text-on-light);
+        }
+        .modal-body ul {
+            padding-left: 20px;
+        }
+        .modal-body li {
+            margin-bottom: 5px;
+        }
+
+        .modal-footer {
+            margin-top: 20px;
+            text-align: right;
+        }
+        .modal-footer .modal-button { /* Usando la clase .modal-button del CSS provisto */
+            width: auto; /* Para que no ocupe todo el ancho */
+            padding: 10px 20px;
+        }
+
+        footer {
+            margin-top: 40px;
+            padding: 15px;
+            font-size: 0.9em;
+            color: var(--color-text-on-light);
+            opacity: 0.8;
+        }
+    </style>
 </head>
 <body>
 
-<div class="w3-container">
+    <nav class="top-navbar">
+        <ul>
+            <li><a href="personal.html">Info Personal</a></li>
+            <li><a href="moto.html">Mis Motos</a></li>
+            <li><a href="curso.html">Curso</a></li>
+            <li><a href="eventos.html">Descubre</a></li>
+        </ul>
+    </nav>
 
-  <input class="w3-input w3-border w3-padding" type="text" placeholder="Ingresa un criterio de búsqueda" id="myInput" onkeyup="myFunction()">
-  <ul class="w3-ul w3-margin-top" id="myUL">
-    <li>
-      <div class="w3-card-4 w3-blue-gray">
-        <div class=" w3-animate-zoom w3-container w3-center">
-          <h4 class="w3-animate-zoom">Club Apache Costa Rica</h4>
-          <img class="w3-animate-zoom w3-round-xxlarge" src="images/descarga.jpg" alt="logo club" style="width:20%">
-          <p>Club con ambiente familiar, no permitimos alcohol ni irresponsabilidad al conducir</p>
-          <div class="w3-section">
-            <button  class="w3-round-xxlarge w3-button w3-green w3-animate-zoom"><a href="https://api.whatsapp.com/send?phone=+50660465688"target="_blank">WhatsApp</button>
-            <button  class="w3-round-xxlarge w3-button w3-blue w3-animate-zoom"><a href="https://m.facebook.com/clubapachecostarica"target="_blank">Facebook</button>
-          </div>
+    <div class="intro-container">
+        <div class="logo-container">
+            <img src="https://placehold.co/300x300/FB8500/FFFFFF?text=SBKR" alt="Logo de SBKR">
         </div>
-  </div>
-    </li>
-  </ul>
-</div>
-  <div class="fixed">
-  <button class="w3-button w3-ripple-black"><a href="https://goo.gl/forms/EPDV6u9Z4zYtOMM72"target="_blank">+</button>
-</div>
 
-<script>
-function myFunction() {
-  var input, filter, ul, li, a, i;
-  input = document.getElementById("myInput");
-  filter = input.value.toUpperCase();
-  ul = document.getElementById("myUL");
-  li = ul.getElementsByTagName("li");
-  for (i = 0; i < li.length; i++) {
-    txtValue = li[i].textContent || li[i].innerText;
-    if (txtValue.toUpperCase().indexOf(filter) > -1) {
-      li[i].style.display = "";
-    } else {
-      li[i].style.display = "none";
-    }
-  }
-}
-</script>
+        <h1>Bienvenido a SBKR</h1>
+        <p class="tagline">Tu compañero digital para la gestión integral de tus motocicletas.</p>
+
+        <p>
+            Con SBKR, lleva el control total de tus compañeras de ruta directamente en tu dispositivo.
+            Registra tu información personal esencial, como nombre, cédula, tipo de sangre y contacto de emergencia,
+            para tenerla siempre a mano.
+        </p>
+        <p>
+            Añade todas tus motocicletas detallando placa, marca, modelo, año, VIN, color y kilometraje actual.
+            No pierdas de vista ningún mantenimiento: registra cada servicio, cambio de aceite, revisión de frenos y más.
+            Además, lleva un seguimiento preciso del consumo de combustible de cada una de tus motos.
+        </p>
+        <p>
+            <strong>Toda tu información se almacena de forma segura y local en tu dispositivo.</strong>
+            Genera reportes en PDF para tus archivos o exporta tus datos en formato JSON para compartirlos,
+            hacer copias de seguridad o cargarlos fácilmente en SBKR en otro dispositivo.
+        </p>
+        <p>
+            Recuerda: al ser almacenamiento local, si desinstalas la aplicación, la información no exportada
+            previamente se eliminará. ¡Tú tienes el control!
+        </p>
+
+        <button id="openTermsModal" class="terms-button">Términos y Condiciones</button>
+    </div>
+
+    <div id="termsModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Términos y Condiciones de Uso - SBKR</h2>
+                <span class="close-button" id="closeTermsModal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <p>Última actualización: 6 de mayo de 2025</p>
+
+                <p>Bienvenido/a a SBKR (en adelante, "la Aplicación"), desarrollada por CRAD Studios. Estos Términos y Condiciones (en adelante, "Términos") rigen el uso que usted haga de la Aplicación. Al descargar, instalar o utilizar la Aplicación, usted acepta estar sujeto/a a estos Términos.</p>
+
+                <h3>1. Descripción de la Aplicación</h3>
+                <p>SBKR es una aplicación móvil diseñada para ayudar a los usuarios a registrar y gestionar información personal relevante para motociclistas, así como información detallada de sus motocicletas, incluyendo mantenimientos, consumos de combustible y la capacidad de generar reportes.</p>
+
+                <h3>2. Almacenamiento de Datos</h3>
+                <p><strong>Almacenamiento Local:</strong> Toda la información que usted ingrese en SBKR, incluyendo datos personales (nombre, cédula, tipo de sangre, contacto de emergencia) e información de motocicletas (placa, marca, modelo, año, VIN, color, kilometraje, registros de mantenimiento, registros de consumo), se almacena exclusivamente de forma local en el dispositivo donde la Aplicación está instalada. CRAD Studios no tiene acceso a, ni almacena, ninguno de sus datos personales o de sus motocicletas en servidores externos o en la nube.</p>
+                <p><strong>Responsabilidad del Usuario:</strong> Usted es el único responsable de la información que ingresa y gestiona a través de la Aplicación, así como de la seguridad de su dispositivo.</p>
+
+                <h3>3. Exportación e Importación de Datos</h3>
+                <p>SBKR le permite exportar sus datos en formato PDF o JSON. Esta función está diseñada para que pueda realizar copias de seguridad de su información, compartirla según su criterio o transferirla a otro dispositivo donde tenga instalada la Aplicación. Usted es responsable de la gestión y seguridad de los archivos exportados.</p>
+
+                <h3>4. Pérdida de Datos</h3>
+                <p><strong>Eliminación de la Aplicación:</strong> Dado que todos los datos se almacenan localmente, si usted desinstala la Aplicación de su dispositivo, toda la información contenida en ella (que no haya sido previamente exportada) se eliminará permanentemente. CRAD Studios no se hace responsable por la pérdida de datos resultante de la desinstalación de la Aplicación, fallos del dispositivo, pérdida o robo del mismo, o cualquier otra circunstancia ajena al funcionamiento normal de la Aplicación.</p>
+                <p><strong>Sin Copias de Seguridad Automáticas en la Nube:</strong> La Aplicación no realiza copias de seguridad automáticas de sus datos en la nube. Le recomendamos encarecidamente utilizar la función de exportación regularmente para salvaguardar su información.</p>
+
+                <h3>5. Uso Previsto</h3>
+                <p>La Aplicación está destinada para uso personal, con el fin de organizar y llevar un registro de la información relacionada con sus motocicletas y su perfil como motociclista. Cualquier uso indebido de la aplicación es responsabilidad exclusiva del usuario.</p>
+
+                <h3>6. Propiedad Intelectual</h3>
+                <p>La Aplicación, incluyendo su diseño, código fuente, logotipos y contenido (excluyendo los datos ingresados por el usuario), es propiedad de CRAD Studios y está protegida por las leyes de propiedad intelectual.</p>
+
+                <h3>7. Limitación de Responsabilidad</h3>
+                <p>La Aplicación se proporciona "tal cual" y "según disponibilidad". CRAD Studios no ofrece garantías de ningún tipo, expresas o implícitas, sobre el funcionamiento de la Aplicación o la información, contenido o materiales incluidos en la misma. En la máxima medida permitida por la ley aplicable, CRAD Studios declina toda responsabilidad por cualquier daño directo, indirecto, incidental, especial o consecuente que surja del uso o la imposibilidad de uso de la Aplicación.</p>
+
+                <h3>8. Modificaciones a los Términos</h3>
+                <p>CRAD Studios se reserva el derecho de modificar estos Términos en cualquier momento. Se le notificará de cualquier cambio mediante una actualización en la descripción de la Aplicación en la tienda de aplicaciones o a través de un aviso dentro de la propia Aplicación. El uso continuado de la Aplicación después de dichas modificaciones constituirá su aceptación de los nuevos Términos.</p>
+
+                <h3>9. Contacto</h3>
+                <p>Si tiene alguna pregunta o inquietud sobre estos Términos o la Aplicación, puede contactarnos en: <a href="mailto:desarrolloandroidcr@gmail.com" style="color: var(--color-primary-accent);">desarrolloandroidcr@gmail.com</a>.</p>
+
+                <p>Al utilizar SBKR, usted reconoce que ha leído, entendido y aceptado estos Términos y Condiciones.</p>
+            </div>
+            <div class="modal-footer">
+                <button id="acceptTermsButton" class="modal-button">Entendido</button>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; <span id="currentYear"></span> SBKR por CRAD Studios. Todos los derechos reservados.</p>
+        <p>Contacto: <a href="mailto:desarrolloandroidcr@gmail.com" style="color: var(--color-primary-accent);">desarrolloandroidcr@gmail.com</a></p>
+    </footer>
+
+    <script>
+        // Script para el Modal
+        const termsModal = document.getElementById('termsModal');
+        const openTermsModalButton = document.getElementById('openTermsModal');
+        const closeTermsModalButton = document.getElementById('closeTermsModal');
+        const acceptTermsButton = document.getElementById('acceptTermsButton');
+
+        openTermsModalButton.onclick = function() {
+            termsModal.style.display = "block";
+        }
+
+        closeTermsModalButton.onclick = function() {
+            termsModal.style.display = "none";
+        }
+
+        acceptTermsButton.onclick = function() {
+            termsModal.style.display = "none";
+        }
+
+        // Cerrar el modal si se hace clic fuera de su contenido
+        window.onclick = function(event) {
+            if (event.target == termsModal) {
+                termsModal.style.display = "none";
+            }
+        }
+
+        // Año actual en el footer
+        document.getElementById('currentYear').textContent = new Date().getFullYear();
+    </script>
 
 </body>
 </html>

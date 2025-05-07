@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Consumos de Combustible</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="style.css" rel="stylesheet">
+    <style>
+
+</style>
+</head>
+<body>
+    <div class="container">
+        <h1>Consumos de Combustible <small id="moto-placa-titulo">N/A</small></h1>
+
+        <div id="stats-container" class="stats-container">
+            <div class="stat-item">
+                <strong>Consumo Promedio</strong>
+                <span id="stat-kmlts">-- km/L</span>
+            </div>
+            <div class="stat-item">
+                <strong>Costo Promedio</strong>
+                <span id="stat-costoKm">-- por km</span>
+            </div>
+            <div class="stat-item">
+                <strong>Distancia Total</strong>
+                <span id="stat-distanciaTotal">-- km</span>
+            </div>
+        </div>
+
+        <h2>Registrar Nuevo Consumo</h2>
+        <p>Para cálculos correctos de consumo, el primer registro y el último deben ser al momento de llenar el tanque, completamente.</p>
+        <form id="formConsumo" class="form-consumo">
+            <div class="form-group">
+                <label for="fecha">Fecha:</label>
+                <input type="date" id="fecha" required>
+            </div>
+            <div class="form-group">
+                <label for="km">Kilometraje (Odómetro):</label>
+                <input type="number" id="km" placeholder="Ej: 12345" required inputmode="numeric" pattern="[0-9]*">
+            </div>
+            <div class="form-group">
+                <label for="litros">Litros Recargados:</label>
+                <input type="number" id="litros" placeholder="Ej: 10.5" step="0.01" required inputmode="decimal">
+            </div>
+            <div class="form-group">
+                <label for="costo">Costo Total Recarga:</label>
+                <input type="number" id="costo" placeholder="Ej: ¢5000" step="0.01" required inputmode="decimal">
+            </div>
+            <button type="submit">Guardar Consumo</button>
+        </form>
+
+        <div id="mensaje-exito" style="display:none;"></div>
+        <div id="mensaje-error" style="display:none;"></div>
+
+        <h2>Historial de Consumos</h2>
+        <div class="table-responsive">
+            <table class="consumos-table">
+                <thead>
+                    <tr>
+                        <th>Fecha</th>
+                        <th>Kilometraje</th>
+                        <th>Litros</th>
+                        <th>Costo</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody id="tablaConsumosBody">
+                    </tbody>
+                <tfoot id="tablaConsumosFoot">
+                    <tr>
+                        <td><strong>TOTALES:</strong></td>
+                        <td></td> <td id="total-litros"><strong>-- L</strong></td>
+                        <td id="total-costo"><strong>--</strong></td>
+                        <td></td> </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+
+
+    <div id="confirmDeleteModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Confirmar Eliminación</h2>
+            </div>
+            <p id="confirmDeleteModalMessage"></p>
+            <div class="modal-actions">
+                <button type="button" id="confirmDeleteModalNo" class="modal-button secondary">Cancelar</button>
+                <button type="button" id="confirmDeleteModalYes" class="modal-button danger">Eliminar</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log("Consumos Script (v5.6 - Tabla Simplificada) Cargado");
+
+        const placaTituloSpan = document.getElementById('moto-placa-titulo');
+        const formConsumo = document.getElementById('formConsumo');
+        const tablaConsumosBody = document.getElementById('tablaConsumosBody');
+        const tablaConsumosFoot = document.getElementById('tablaConsumosFoot'); // Referencia al tfoot
+        const mensajeExitoDiv = document.getElementById('mensaje-exito');
+        const mensajeErrorDiv = document.getElementById('mensaje-error');
+        const statLts100km = document.getElementById('stat-lts100km');
+        const statKmPorLts = document.getElementById('stat-kmlts');
+        const statCostoKm = document.getElementById('stat-costoKm');
+        const statDistanciaTotal = document.getElementById('stat-distanciaTotal');
+        const totalLitrosTd = document.getElementById('total-litros');
+        const totalCostoTd = document.getElementById('total-costo');
+        // totalDistanciaTramosTd ya no se usa en el tfoot, pero el valor se usa para stats
+
+        const confirmDeleteModal = document.getElementById('confirmDeleteModal');
+        const confirmDeleteModalMessage = document.getElementById('confirmDeleteModalMessage');
+        const confirmDeleteModalYesButton = document.getElementById('confirmDeleteModalYes');
+        const confirmDeleteModalNoButton = document.getElementById('confirmDeleteModalNo');
+        let deleteCallback = null;
+
+        const navLinkMoto = document.querySelector('.bottom-bar a[href*="moto.html"]');
+        const navLinkMantenimiento = document.querySelector('.bottom-bar a[href*="mantenimiento.html"]');
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const matricula = urlParams.get('matricula')?.toUpperCase().trim();
+        const CONSUMOS_PREFIX = 'CONSUMOS_';
+        const consumosKey = matricula ? `${CONSUMOS_PREFIX}${matricula}` : null;
+
+        if (!matricula) {
+            mostrarMensaje("Error: No se especificó matrícula en la URL.", false);
+            if(placaTituloSpan) placaTituloSpan.textContent = "Error";
+            if(formConsumo) formConsumo.style.display = 'none';
+            document.querySelectorAll('.bottom-bar a').forEach(a => {
+                if(!a.href.includes('index.html')) { a.style.pointerEvents='none'; a.style.opacity='0.5';}
+            });
+            return;
+        }
+
+        if(placaTituloSpan) placaTituloSpan.textContent = matricula;
+        if(navLinkMoto) navLinkMoto.href = `moto.html?matricula=${matricula}`;
+        if(navLinkMantenimiento) navLinkMantenimiento.href = `mantenimiento.html?matricula=${matricula}`;
+        const activeLink = document.querySelector('.bottom-bar a[href*="consumos.html"]');
+        if(activeLink) activeLink.classList.add('active');
+
+
+        function mostrarMensaje(texto, esExito = true) {
+            const div = esExito ? mensajeExitoDiv : mensajeErrorDiv;
+            const otroDiv = esExito ? mensajeErrorDiv : mensajeExitoDiv;
+            if (div) {
+                div.textContent = texto;
+                div.style.display = 'block';
+                if (otroDiv) otroDiv.style.display = 'none';
+                setTimeout(() => { div.style.display = 'none'; }, 5000);
+            }
+        }
+
+        function obtenerConsumos() {
+            if (!consumosKey) return [];
+            try {
+                const data = localStorage.getItem(consumosKey);
+                return data ? JSON.parse(data) : [];
+            } catch (e) {
+                console.error("Error obteniendo consumos:", e);
+                mostrarMensaje("Error al cargar datos de consumos.", false);
+                return [];
+            }
+        }
+
+        function guardarConsumos(consumos) {
+            if (!consumosKey) return;
+            consumos.sort((a, b) => {
+                if (parseFloat(b.km) !== parseFloat(a.km)) {
+                    return parseFloat(b.km) - parseFloat(a.km);
+                }
+                const dateA = new Date(a.fecha);
+                const dateB = new Date(b.fecha);
+                if (dateA.getTime() !== dateB.getTime()) {
+                    return dateB - dateA;
+                }
+                return b.id - a.id; // Para desempate si KM y fecha son idénticos
+            });
+            localStorage.setItem(consumosKey, JSON.stringify(consumos));
+        }
+
+        function renderizarTablaYStats() {
+            const consumos = obtenerConsumos();
+            const consumosOrdenadosParaCalculo = [...consumos].sort((a, b) => {
+                 if (parseFloat(a.km) !== parseFloat(b.km)) {
+                    return parseFloat(a.km) - parseFloat(b.km);
+                }
+                return new Date(a.fecha) - new Date(b.fecha);
+            });
+
+            tablaConsumosBody.innerHTML = '';
+            let totalLitrosGeneral = 0;
+            let totalCostoGeneral = 0;
+            let totalKmRecorridosTramos = 0;
+            let totalLitrosParaPromedio = 0; 
+            let totalCostoParaPromedio = 0; // Para el costo/km promedio
+            let tramosValidosParaPromedio = 0;
+
+            const consumosParaTabla = [...consumosOrdenadosParaCalculo].reverse(); 
+
+            consumosParaTabla.forEach((consumo) => {
+                totalLitrosGeneral += consumo.litros;
+                totalCostoGeneral += consumo.costo;
+
+                // Para cálculos de tramo, encontrar el índice en la lista ordenada ascendentemente
+                const indiceOriginalAsc = consumosOrdenadosParaCalculo.findIndex(c => c.id === consumo.id);
+                if (indiceOriginalAsc > 0) {
+                    const prevConsumo = consumosOrdenadosParaCalculo[indiceOriginalAsc - 1];
+                    const kmRecorridosEnTramo = consumo.km - prevConsumo.km;
+                    
+                    if (kmRecorridosEnTramo > 0 && consumo.litros > 0) {
+                        totalKmRecorridosTramos += kmRecorridosEnTramo;
+                        totalLitrosParaPromedio += consumo.litros; // Litros de la recarga actual usados para este tramo
+                        totalCostoParaPromedio += consumo.costo; // Costo de la recarga actual para este tramo
+                        tramosValidosParaPromedio++;
+                    }
+                }
+
+                const row = tablaConsumosBody.insertRow();
+                row.insertCell().textContent = new Date(consumo.fecha + 'T00:00:00').toLocaleDateString('es-CR', {day:'2-digit', month:'short', year:'numeric'});
+                row.insertCell().textContent = `${consumo.km.toLocaleString('es-CR')} km`;
+                row.insertCell().textContent = `${consumo.litros.toFixed(2)} L`;
+                row.insertCell().textContent = consumo.costo.toLocaleString('es-CR', { style: 'currency', currency: 'CRC' }); // Ajustar moneda
+                
+                const actionsCell = row.insertCell();
+                actionsCell.className = 'actions-cell';
+                const deleteBtn = document.createElement('button');
+                deleteBtn.className = 'icon-button';
+                deleteBtn.innerHTML = '❌';
+                deleteBtn.title = 'Eliminar registro';
+                deleteBtn.onclick = () => confirmarEliminacion(consumo.id);
+                actionsCell.appendChild(deleteBtn);
+            });
+
+            if(totalLitrosTd) totalLitrosTd.innerHTML = `<strong>${totalLitrosGeneral.toFixed(2)} L</strong>`;
+            if(totalCostoTd) totalCostoTd.innerHTML = `<strong>${totalCostoGeneral.toLocaleString('es-CR', { style: 'currency', currency: 'CRC' })}</strong>`;
+            
+            // Estadísticas globales
+            if (tramosValidosParaPromedio > 0 && totalKmRecorridosTramos > 0 && totalLitrosParaPromedio > 0) {
+                const promedioL100Km = (totalLitrosParaPromedio / totalKmRecorridosTramos) * 100;
+                const promedioKmPorLts = totalKmRecorridosTramos / totalLitrosParaPromedio;
+                // Para el costo promedio por KM, usamos el costo total de las recargas que generaron tramos válidos
+                const promedioCostoKm = totalCostoParaPromedio / totalKmRecorridosTramos;
+
+
+                if(statLts100km) statLts100km.textContent = `${promedioL100Km.toFixed(2)} L/100km`;
+                if(statKmPorLts) statKmPorLts.textContent = `${promedioKmPorLts.toFixed(2)} km/L`;
+                if(statCostoKm) statCostoKm.textContent = `¢${promedioCostoKm.toLocaleString('es-CR', {minimumFractionDigits: 2, maximumFractionDigits: 2})}/km`;
+            } else {
+                if(statLts100km) statLts100km.textContent = '-- L/100km';
+                if(statKmPorLts) statKmPorLts.textContent = '-- km/L';
+                if(statCostoKm) statCostoKm.textContent = '-- /km';
+            }
+
+            // Distancia total registrada basada en el odómetro del primer y último registro de consumo
+            let kmTotalOdometro = 0;
+            if (consumosOrdenadosParaCalculo.length > 1) {
+                kmTotalOdometro = consumosOrdenadosParaCalculo[consumosOrdenadosParaCalculo.length - 1].km - consumosOrdenadosParaCalculo[0].km;
+            } else if (consumosOrdenadosParaCalculo.length === 1 && totalKmRecorridosTramos === 0) {
+                // Si solo hay un registro, la distancia de tramos es 0, pero podemos mostrar el KM de ese registro
+                // O dejarlo en 0 si "Distancia Total (Tramos)" se refiere estrictamente a tramos calculados.
+                // Optaré por mostrar la distancia cubierta por los tramos válidos.
+            }
+             if(statDistanciaTotal) statDistanciaTotal.textContent = `${totalKmRecorridosTramos.toLocaleString('es-CR')} km`;
+        }
+        
+        if(formConsumo){
+            formConsumo.addEventListener('submit', function(event) {
+                event.preventDefault();
+                const fecha = document.getElementById('fecha').value;
+                const km = parseFloat(document.getElementById('km').value);
+                const litros = parseFloat(document.getElementById('litros').value);
+                const costo = parseFloat(document.getElementById('costo').value);
+
+                if (!fecha || isNaN(km) || km <= 0 || isNaN(litros) || litros <= 0 || isNaN(costo) || costo < 0) {
+                    mostrarMensaje("Todos los campos son obligatorios y deben ser valores válidos.", false);
+                    return;
+                }
+                const consumos = obtenerConsumos();
+                if (consumos.length > 0) {
+                    const ultimoKmRegistrado = Math.max(...consumos.map(c => c.km));
+                     // Permitir KM igual si es para corregir/añadir una recarga en el mismo punto pero diferente fecha/litros/costo,
+                     // pero no si es exactamente el mismo KM y misma fecha.
+                    if (km < ultimoKmRegistrado) {
+                         mostrarMensaje(`El kilometraje ingresado (${km.toLocaleString('es-CR')}) no puede ser menor que el último registrado (${ultimoKmRegistrado.toLocaleString('es-CR')}).`, false);
+                         return;
+                    }
+                    if (consumos.some(c => c.km === km && c.fecha === fecha)) {
+                        mostrarMensaje(`Ya existe un registro con el mismo kilometraje (${km.toLocaleString('es-CR')}) y fecha.`, false);
+                        return;
+                    }
+                }
+
+                const nuevoConsumo = { id: Date.now(), fecha, km, litros, costo };
+                consumos.push(nuevoConsumo);
+                guardarConsumos(consumos);
+                renderizarTablaYStats();
+                mostrarMensaje("Consumo guardado exitosamente.", true);
+                formConsumo.reset();
+                if(document.getElementById('fecha')) document.getElementById('fecha').valueAsDate = new Date();
+            });
+        }
+
+        function confirmarEliminacion(consumoId) {
+            const consumos = obtenerConsumos();
+            const consumoAEliminar = consumos.find(c => c.id === consumoId);
+            if (!consumoAEliminar) return;
+            if(confirmDeleteModalMessage) confirmDeleteModalMessage.textContent = `¿Está seguro de eliminar el registro de consumo del ${new Date(consumoAEliminar.fecha + 'T00:00:00').toLocaleDateString('es-CR', {day:'2-digit', month:'short', year:'numeric'})} con ${consumoAEliminar.km.toLocaleString('es-CR')} km?`;
+            
+            deleteCallback = () => {
+                let consumosActualizados = consumos.filter(c => c.id !== consumoId);
+                guardarConsumos(consumosActualizados);
+                renderizarTablaYStats();
+                mostrarMensaje("Registro eliminado.", true);
+                closeConfirmDeleteModal();
+            };
+            if(confirmDeleteModal) confirmDeleteModal.style.display = 'block';
+        }
+
+        function closeConfirmDeleteModal() {
+            if(confirmDeleteModal) confirmDeleteModal.style.display = 'none';
+            deleteCallback = null;
+        }
+
+        if(confirmDeleteModalYesButton) confirmDeleteModalYesButton.addEventListener('click', () => {
+            if (typeof deleteCallback === 'function') {
+                deleteCallback();
+            }
+        });
+        if(confirmDeleteModalNoButton) confirmDeleteModalNoButton.addEventListener('click', closeConfirmDeleteModal);
+        
+        window.addEventListener('click', (event) => {
+            if (event.target === confirmDeleteModal) {
+                closeConfirmDeleteModal();
+            }
+        });
+        
+        if(document.getElementById('fecha')) document.getElementById('fecha').valueAsDate = new Date();
+        renderizarTablaYStats();
+    });
+    </script>
+</body>
+</html>

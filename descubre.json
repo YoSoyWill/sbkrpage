@@ -1,0 +1,32 @@
+[
+    {
+        "titulo": "Guía de Mantenimiento Básico",
+        "descripcion": "Aprende los chequeos esenciales que puedes hacerle a tu moto para mantenerla en óptimas condiciones y asegurar tu seguridad en cada viaje.",
+        "enlace": "https://www.ejemplomotos.com/mantenimiento-basico",
+        "texto_boton": "Leer Guía"
+    },
+    {
+        "titulo": "Equipamiento Esencial para Motociclistas",
+        "descripcion": "Descubre el equipamiento de protección indispensable para todo motociclista, desde cascos hasta guantes y chaquetas.",
+        "enlace": "https://www.ejemplomotos.com/equipamiento-esencial",
+        "texto_boton": "Ver Equipamiento"
+    },
+    {
+        "titulo": "Rutas Escénicas en Costa Rica",
+        "descripcion": "Explora algunas de las rutas más impresionantes para recorrer en moto en Costa Rica, llenas de paisajes increíbles y aventuras.",
+        "enlace": "https://www.ejemplomotos.com/rutas-costa-rica",
+        "texto_boton": "Descubrir Rutas"
+    },
+    {
+        "titulo": "Consejos para Conducción Segura",
+        "descripcion": "Refuerza tus conocimientos sobre técnicas de conducción defensiva y consejos para una mayor seguridad en carretera.",
+        "enlace": "https://www.ejemplomotos.com/conduccion-segura",
+        "texto_boton": "Aprender Más"
+    },
+    {
+        "titulo": "Novedades del Mundo SBKR",
+        "descripcion": "Mantente al día con las últimas actualizaciones, nuevas funcionalidades y noticias importantes de la aplicación SBKR.",
+        "enlace": "https://www.ejemplosbkr.com/novedades",
+        "texto_boton": "Ver Novedades"
+    }
+]
