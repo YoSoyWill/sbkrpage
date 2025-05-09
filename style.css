@@ -1,23 +1,29 @@
 /* === Variables de Color === */
 :root {
-    --color-background-light: #F0F2F5;    /* Gris Pálido Fresco */
-    --color-text-on-light: #023047;        /* Azul Oscuro Profundo */
-    --color-primary-accent: #FB8500;       /* Naranja Quemado */
-    --color-primary-accent-hover: #E67E22; /* Naranja Quemado más oscuro */
-    --color-secondary-accent: #FFCB2E;     /* Amarillo Limpio */
-    --color-card-background: #FFFFFF;       /* Blanco Puro */
-    --color-border: #BDC3C7;               /* Gris Suave */
-    --color-text-on-accent: #FFFFFF;       /* Blanco Puro */
-    --color-error: #E74C3C;                /* Rojo */
-    --color-error-background: #FADBD8;     /* Rojo muy claro */
-    --color-error-text: #C0392B;           /* Rojo oscuro */
-    --color-success: #2ECC71;              /* Verde */
-    --color-success-background: #D5F5E3;   /* Verde muy claro */
-    --color-success-text: #239B56;         /* Verde oscuro */
-    --color-disabled: #BDC3C7;             /* Gris Suave */
-    --color-disabled-text: #7F8C8D;        /* Gris Medio */
+    --color-background-light: #F0FAFF;           /* Azul cielo muy claro */
+    --color-text-on-light: #101010;              /* Casi negro */
+    --color-primary-accent: #00B8D4;             /* Cian profundo brillante */
+    --color-primary-accent-hover: #008BA3;       /* Cian oscuro */
+    --color-secondary-accent: #FF6D00;           /* Naranja neón eléctrico */
+    --color-card-background: #FFFFFF;            /* Blanco puro */
+    --color-border: #CFEFFF;                     /* Azul muy pálido */
+    --color-text-on-accent: #000000;             /* Negro */
+    --color-error: #D50000;                      /* Rojo neón oscuro */
+    --color-error-background: #FFEBEE;           /* Rosa claro */
+    --color-error-text: #B71C1C;                 /* Rojo sangre */
+    --color-success: #00E5FF;                    /* Azul neón brillante */
+    --color-success-background: #E0F7FA;         /* Azul muy claro */
+    --color-success-text: #006064;               /* Azul petróleo */
+    --color-disabled: #BBBBBB;                   /* Gris claro */
+    --color-disabled-text: #555555;              /* Gris oscuro */
     --font-main: 'Roboto', sans-serif;
 }
+
+
+
+
+
+
 
 /* === Estilos Generales === */
 body {
@@ -63,6 +69,7 @@ h1 {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    overflow-wrap: break-word; /* Ayuda a prevenir desbordamiento por texto largo */
 }
 
 h1 small { /* Estilo general para small dentro de h1 */
@@ -75,9 +82,8 @@ h1 small { /* Estilo general para small dentro de h1 */
 }
 
 h1#main-title small { /* Estilo específico para small dentro de #main-title */
-    font-size: 0.65em; /* Diferente de h1 small general */
-    opacity: 0.85;     /* Diferente de h1 small general */
-    /* Las otras propiedades son heredadas o iguales a h1 small */
+    font-size: 0.65em;
+    opacity: 0.85;
 }
 
 h2 {
@@ -88,21 +94,20 @@ h2 {
     padding-bottom: 8px;
     border-bottom: 1px solid var(--color-border);
     font-weight: 500;
+    overflow-wrap: break-word; /* Ayuda a prevenir desbordamiento por texto largo */
 }
 
-/* h2 específico para .motorcycle-item y .modal-header */
 .motorcycle-item h2, .modal-header h2 {
     color: var(--color-primary-accent);
     margin-top: 0;
-    margin-bottom: 10px; /* Para .motorcycle-item h2 */
-    font-size: 1.3em;    /* Para .motorcycle-item h2 */
+    margin-bottom: 10px;
+    font-size: 1.3em;
     border-bottom: none;
     padding-bottom: 0;
 }
-/* .modal-header h2 puede tener sus propias anulaciones si son diferentes y más específicas */
 .modal-header h2 {
-    font-size: 1.4em;    /* Anulación para modal header */
-    margin-bottom: 15px; /* Anulación para modal header */
+    font-size: 1.4em;
+    margin-bottom: 15px;
 }
 
 
@@ -112,6 +117,7 @@ h3 {
     margin-bottom: 10px;
     font-size: 1.1em;
     font-weight: 500;
+    overflow-wrap: break-word; /* Ayuda a prevenir desbordamiento por texto largo */
 }
 
 p {
@@ -119,6 +125,7 @@ p {
     margin-bottom: 12px;
     color: var(--color-text-on-light);
     font-size: 1em;
+    overflow-wrap: break-word; /* Ayuda a prevenir desbordamiento por texto largo */
 }
 
 ul, ol {
@@ -219,34 +226,30 @@ select {
 }
 
 /* === Botones === */
-/* Base para varios tipos de botones */
 .edit-button, .maintenance-button, .delete-button, .modal-button, .nav-button, #fabActionModal .modal-actions .button {
-    padding: 10px 16px; /* Padding base, #fabActionModal .button tenía 12px 15px */
+    padding: 10px 16px;
     margin: 5px;
     border-radius: 4px;
     cursor: pointer;
     transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
-    font-size: 0.95em; /* #fabActionModal .button tenía 1em */
+    font-size: 0.95em;
     text-decoration: none;
     text-align: center;
     box-sizing: border-box;
     font-weight: 500;
-    border: 1px solid transparent; /* Para normalizar y luego especificar */
+    border: 1px solid transparent;
 }
-/* Ajuste específico para botones dentro de #fabActionModal si el padding/font-size es crítico */
 #fabActionModal .modal-actions .button {
     padding: 12px 15px;
     font-size: 1em;
     width: 100%;
 }
 
-
-/* Botones con fondo de acento (principales) */
-.modal-button, .nav-button, .form-consumo button { /* .form-consumo button añadido aquí */
+.modal-button, .nav-button, .form-consumo button {
     background-color: var(--color-primary-accent);
-    border-color: var(--color-primary-accent); /* Asegurar borde con color primario */
+    border-color: var(--color-primary-accent);
     color: var(--color-text-on-accent);
-    width: 100%; /* Por defecto, ancho completo en modales */
+    width: 100%;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 .modal-button:hover, .nav-button:hover, .form-consumo button:hover {
@@ -255,17 +258,15 @@ select {
     color: var(--color-text-on-accent);
     box-shadow: 0 3px 7px rgba(0, 0, 0, 0.2);
 }
-.nav-button { width: auto; } /* Botones de navegación no necesitan ser full-width */
-.form-consumo button { /* Estilos específicos de .form-consumo button */
-    padding: 12px 15px; /* Heredado de .modal-button si se agrupa, sino especificar */
+.nav-button { width: auto; }
+.form-consumo button {
+    padding: 12px 15px;
     font-size: 1em;
-    border: none; /* Heredado de .modal-button si se agrupa, sino especificar */
+    border: none;
     height: fit-content;
-    margin-top:10px; /* Si no es 5px como el general */
+    margin-top:10px;
 }
 
-
-/* Botones con borde (secundarios o de acciones específicas) */
 .edit-button, .maintenance-button {
     background-color: transparent;
     border: 1px solid var(--color-primary-accent);
@@ -274,53 +275,48 @@ select {
 .edit-button:hover, .maintenance-button:hover {
     background-color: var(--color-primary-accent);
     color: var(--color-text-on-accent);
-    border-color: var(--color-primary-accent); /* Asegurar el borde al hacer hover */
+    border-color: var(--color-primary-accent);
 }
 
-/* Botón de eliminar (outline danger) */
 .delete-button {
-    background-color: transparent; /* Asegurar que sea transparente por defecto */
+    background-color: transparent;
     border: 1px solid var(--color-error);
     color: var(--color-error);
 }
 .delete-button:hover {
     background-color: var(--color-error);
     color: var(--color-text-on-accent);
-    border-color: var(--color-error); /* Asegurar el borde al hacer hover */
+    border-color: var(--color-error);
 }
 
-/* Botón secundario específico (ej. "Cargar desde archivo" en FAB Modal o "Cancelar" en Confirm Modal) */
-.button.secondary { /* Para #fabActionModal */
+.button.secondary {
     background-color: #e0e0e0;
     color: #333;
     border: 1px solid #ccc;
 }
 .button.secondary:hover { background-color: #d5d5d5; }
 
-/* Botones secundarios y de peligro en modales de confirmación */
-.modal-button.secondary { /* Para #confirmDeleteModal - Estilo diferente al .button.secondary anterior */
-    background-color: #6c757d; /* Gris más oscuro */
+.modal-button.secondary {
+    background-color: #6c757d;
     color: white;
-    border: 1px solid #6c757d; /* Asegurar borde */
+    border: 1px solid #6c757d;
 }
 .modal-button.secondary:hover {
     background-color: #5a6268;
     border-color: #5a6268;
 }
 
-.modal-button.danger { /* Para #confirmDeleteModal - Sólido */
+.modal-button.danger {
     background-color: var(--color-error);
-    color: white; /* o var(--color-text-on-accent) */
-    border: 1px solid var(--color-error); /* Asegurar borde */
+    color: white;
+    border: 1px solid var(--color-error);
 }
 .modal-button.danger:hover {
-    background-color: #c82333; /* Rojo más oscuro */
+    background-color: #c82333;
     border-color: #c82333;
 }
 
-
-/* Botones deshabilitados */
-.nav-button:disabled { /* Aplicable a cualquier botón con :disabled */
+.nav-button:disabled {
     background-color: var(--color-disabled);
     border-color: var(--color-disabled);
     color: var(--color-disabled-text);
@@ -329,51 +325,37 @@ select {
 }
 
 /* === Mensajes de Estado === */
-/* Base para todos los mensajes de estado */
 #mensaje-error, #mensaje-exito, #modal-mensaje-error, #fab-action-modal-error {
     padding: 12px 16px;
     margin: 16px 0;
     border-radius: 4px;
     font-size: 0.9em;
-    display: none; /* Mostrar con JS */
+    display: none;
     text-align: center;
-    border: 1px solid transparent; /* Base para border-color */
+    border: 1px solid transparent;
 }
 
-/* Estilos para mensajes de error */
 #mensaje-error, #modal-mensaje-error, #fab-action-modal-error {
     background-color: var(--color-error-background);
     color: var(--color-error-text);
     border-color: var(--color-error);
 }
 
-/* Ajustes específicos para #fab-action-modal-error */
 #fab-action-modal-error {
-    padding: 10px;      /* Padding específico */
-    margin-top: 15px;   /* Margin-top específico */
-    margin-bottom: 0;   /* Para evitar doble margen si está en un modal */
+    padding: 10px;
+    margin-top: 15px;
+    margin-bottom: 0;
 }
 
-/* Ajustes específicos para #modal-mensaje-error */
 #modal-mensaje-error {
-    margin-top: 10px; /* Margin-top específico */
+    margin-top: 10px;
 }
 
-/* Estilos para mensajes de éxito */
 #mensaje-exito {
     background-color: var(--color-success-background);
     color: var(--color-success-text);
     border-color: var(--color-success);
 }
-/* Si #mensaje-error y #mensaje-exito (generales) necesitan padding:10px y margin:15px 0 */
-/* Se pueden añadir aquí como anulaciones si es necesario, aunque la base es 12px/16px y 16px 0 */
-/* Ejemplo:
-#mensaje-error, #mensaje-exito {
-    padding: 10px;
-    margin: 15px 0;
-}
-*/
-
 
 /* === Tarjetas (Cards) === */
 .card, .motorcycle-item {
@@ -389,7 +371,7 @@ select {
     align-items: flex-start;
 }
 
-.card-actions { /* Acciones generales de la tarjeta, ej. botones Editar/Borrar Moto */
+.card-actions {
     margin-top: 10px;
     display: flex;
     justify-content: flex-end;
@@ -422,7 +404,7 @@ select {
 
 /* === Modales === */
 .modal {
-    display: none;
+    display: none; /* Correcto: Oculto por defecto. JS lo cambiará a flex para mostrar. */
     position: fixed;
     z-index: 1000;
     left: 0;
@@ -432,27 +414,33 @@ select {
     overflow: auto;
     background-color: rgba(0,0,0,0.6);
     animation: fadeInModal 0.3s ease-out;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    box-sizing: border-box;
 }
 
 .modal-content {
     background-color: var(--color-card-background);
-    margin: 10% auto; /* Unificado */
-    padding: 25px;    /* Unificado (era 20px 25px y 25px) */
+    margin: auto;
+    padding: 25px;
     border-radius: 8px;
-    max-width: 500px; /* Unificado (era 450px y 500px) */
+    max-width: 500px;
     width: 90%;
     position: relative;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.3); /* Unificado (era 0 4px 15px y 0 5px 15px) */
-    text-align:center; /* Añadido de una de las definiciones si es general */
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    text-align:center;
+    max-height: calc(100vh - 40px);
+    overflow-y: auto;
 }
-/* Específico para #fabActionModal .modal-content si necesita max-width: 400px */
+
 #fabActionModal .modal-content {
     max-width: 400px;
     text-align: center;
 }
 
 
-@keyframes fadeInModal { /* Unificada a la versión con translateY */
+@keyframes fadeInModal {
     from { opacity: 0; transform: translateY(-20px); }
     to { opacity: 1; transform: translateY(0); }
 }
@@ -461,11 +449,10 @@ select {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 20px; /* Consistente */
+    margin-bottom: 20px;
     padding-bottom: 15px;
     border-bottom: 1px solid var(--color-border);
 }
-/* .modal-header h2 ya está definido en Tipografía */
 
 .close-button {
     color: var(--color-text-on-light);
@@ -488,37 +475,34 @@ select {
     text-decoration: none;
 }
 
-/* Acciones dentro de modales */
-.modal-actions { /* Base para acciones de modal */
+.modal-actions {
     display: flex;
-    justify-content: center; /* Default, puede ser sobreescrito */
+    justify-content: center;
     gap: 15px;
     margin-top: 20px;
 }
-.modal-actions button { /* Estilos para botones dentro de .modal-actions */
-    padding: 10px 20px; /* Puede ser sobreescrito por clases de botón más específicas */
+.modal-actions button {
+    padding: 10px 20px;
     border-radius: 5px;
     cursor: pointer;
     font-weight: 500;
     font-size: 0.95em;
-    border: none; /* Si todos los botones de modal-actions son sin borde por defecto */
+    border: none;
     transition: background-color 0.2s ease;
 }
 
-/* Específico para #fabActionModal .modal-actions */
 #fabActionModal .modal-actions {
     flex-direction: column;
     gap: 10px;
     margin-top: 15px;
 }
-/* Específico para #confirmDeleteModal */
 #confirmDeleteModal p {
     margin-bottom: 20px;
     font-size: 1.05em;
 }
-#confirmDeleteModal .modal-actions { /* Anula el justify-content de .modal-actions base */
-    justify-content: flex-end; /* O center, dependiendo del diseño final */
-    gap: 10px; /* O 15px como el base */
+#confirmDeleteModal .modal-actions {
+    justify-content: flex-end;
+    gap: 10px;
 }
 
 
@@ -564,13 +548,12 @@ select {
     content: "↑";
     font-weight: bold;
 }
-.fab-icon-add { /* Para el + del FAB */
+.fab-icon-add {
     font-weight: bold;
     font-size: 1.8em;
     line-height: 1;
 }
 
-/* Estilos del modal de selección de categoría del FAB */
 #fab-category-list button {
     display: block;
     width: 100%;
@@ -639,7 +622,7 @@ select {
 
 .bottom-bar a.active,
 .bottom-bar a[href*="moto.html"]:not([href*="?"]),
-.bottom-bar a[href*="mantenimiento.html"] { /* Ejemplo, ajustar selectores si es necesario */
+.bottom-bar a[href*="mantenimiento.html"] {
     color: var(--color-primary-accent);
     font-weight: bold;
     opacity: 1;
@@ -657,34 +640,30 @@ select {
     justify-content: center;
 }
 
-.maintenance-item { /* Hereda de .card */
+.maintenance-item {
     flex: 1 1 100%;
     min-width: 280px;
-    /* .maintenance-item.card especificaba display:flex, width:100% que ya están en .card o .maintenance-item */
 }
-/* .maintenance-item.card h2 ya está cubierto por .motorcycle-item h2 o se puede especializar si es diferente */
 .maintenance-item.card h2 {
-    width: 100%; /* Asegura que el h2 ocupe todo el ancho si es necesario */
-    /* Resto de estilos de h2 ya definidos */
+    width: 100%;
 }
 
 /* --- Estilos para el Último Registro en Tarjetas de Mantenimiento --- */
-.last-record { /* Unificado */
+.last-record {
     padding-bottom: 5px;
     width: 100%;
-    font-size: 1em; /* O 0.9em como en la original */
+    font-size: 1em;
 }
-.last-record h3 { /* Título como "Último Registro:" */
+.last-record h3 {
     margin-bottom: 8px;
-    font-size: 1em; /* O 1.1em si es un h3 real */
+    font-size: 1em;
     font-weight: 500;
     color: var(--color-text-on-light);
     opacity: 0.9;
-    /* Podría heredar de h3 general si se usa <h3> o .subsection-title */
 }
 .last-record p {
     margin-bottom: 4px;
-    font-size: 1em; /* O 0.9em */
+    font-size: 1em;
     line-height: 1.4;
     display: flex;
     color: var(--color-text-on-light);
@@ -697,40 +676,37 @@ select {
     font-weight: 500;
     margin-right: 5px;
 }
-.last-record span { /* El valor del registro */
+.last-record span {
     flex-grow: 1;
 }
 
-/* Acciones específicas para el último registro (ej. editar/borrar último mantenimiento) */
 .card-actions-last-record {
     margin-top: 12px;
     padding-top: 10px;
     border-top: 1px solid var(--color-border);
     display: flex;
     gap: 10px;
-    justify-content: flex-start; /* O flex-end */
+    justify-content: flex-start;
 }
 
-/* Contenedor para botones de icono en la tarjeta (Unificado) */
 .card-item-actions {
     display: flex;
     justify-content: flex-end;
     align-items: center;
-    gap: 10px; /* Unificado (era 8px y 10px) */
+    gap: 10px;
     margin-top: 15px;
-    padding-top: 12px; /* Unificado (era 10px y 12px) */
+    padding-top: 12px;
     border-top: 1px solid var(--color-border);
     width: 100%;
     box-sizing: border-box;
 }
 
-/* Estilo base para todos los botones de icono (Unificado) */
 .icon-button {
     background-color: transparent;
     border: none;
     color: var(--color-text-on-light);
     opacity: 0.65;
-    padding: 0; /* Ajustar si el padding de 5px de consumos-table era global */
+    padding: 0;
     font-size: 1.2em;
     line-height: 1;
     cursor: pointer;
@@ -750,23 +726,21 @@ select {
     transform: scale(0.95);
 }
 
-/* Especializaciones de icon-button */
-.consumos-table .icon-button { /* Para la tabla de consumos */
+.consumos-table .icon-button {
     color: var(--color-error);
-    opacity: 0.7; /* Opacidad específica */
-    padding: 5px; /* Padding específico */
-    width: auto; height: auto; /* Si no son 40x40 */
-    border-radius: 0; /* Si no es circular */
+    opacity: 0.7;
+    padding: 5px;
+    width: auto; height: auto;
+    border-radius: 0;
 }
 .consumos-table .icon-button:hover {
     opacity: 1;
-    color: var(--color-error); /* Mantiene color error en hover */
-    /* transform: scale(1.1); heredado */
+    color: var(--color-error);
 }
 
 .icon-button.add-maint-button,
 .icon-button.edit-last-record-button {
-    font-size: 1.1em; /* Ligeramente más pequeño */
+    font-size: 1.1em;
 }
 .icon-button.add-maint-button:hover,
 .icon-button.edit-last-record-button:hover {
@@ -796,7 +770,6 @@ select {
     display: block;
 }
 
-/* Botones de Navegación de Lecciones */
 .navigation-buttons {
     display: flex;
     justify-content: space-between;
@@ -809,43 +782,40 @@ select {
 /* === Tablas === */
 .table-responsive { overflow-x: auto; }
 
-/* Estilos generales para tablas */
 table {
     width: 100%;
     border-collapse: collapse;
-    margin-top: 15px; /* Ajustado desde 20px para consumos-table */
+    margin-top: 15px;
     margin-bottom: 20px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.05); /* Añadido de la definición de tabla general */
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
 }
 th, td {
     border: 1px solid var(--color-border);
-    padding: 10px 12px; /* Unificado */
+    padding: 10px 12px;
     text-align: left;
     font-size: 0.9em;
+    white-space: nowrap; /* Evita que el contenido de las celdas se rompa en varias líneas */
 }
-th { /* Cabecera general de tabla */
-    background-color: var(--color-background-light); /* Fondo claro general */
-    color: var(--color-primary-accent-hover); /* Texto naranja oscuro general */
+th {
+    background-color: var(--color-background-light);
+    color: var(--color-primary-accent-hover);
     font-weight: 500;
 }
-td { /* Celda general de tabla */
+td {
     color: var(--color-text-on-light);
 }
 
-/* Tabla específica de Consumos */
-.consumos-table th { /* Anula th general si es necesario */
-    background-color: #E8ECEF; /* Fondo específico */
-    /* font-weight: 500; heredado */
+.consumos-table th {
+    background-color: #E8ECEF;
 }
-/* .consumos-table td hereda de td general */
 .consumos-table tbody tr:nth-child(odd) {
     background-color: #f9f9fc;
 }
 .consumos-table td.actions-cell {
     text-align: center;
-    width: 50px;
+    width: 50px; /* Ancho fijo para el botón de eliminar */
+    white-space: normal; /* Permitir que el botón de acción no cause desbordamiento si es necesario */
 }
-/* .consumos-table .icon-button ya definido en la sección de icon-buttons */
 .consumos-table tfoot td {
     font-weight: bold;
     background-color: #E8ECEF;
@@ -891,26 +861,19 @@ td { /* Celda general de tabla */
     margin-bottom: 25px;
     background-color: #fdfdfd;
 }
-.form-consumo .form-group { /* Ya definido por .form-group general */
-    /* display: flex; flex-direction: column; */
-}
-.form-consumo label { /* Ya definido por label general, ajustar si es diferente */
+.form-consumo label {
     margin-bottom: 5px;
-    font-size: 0.9em; /* Igual que label general */
-    font-weight: 500; /* Igual que label general */
+    font-size: 0.9em;
+    font-weight: 500;
 }
-.form-consumo input[type="date"], .form-consumo input[type="number"] { /* Hereda de input general */
-    /* width: 100%; padding: 10px; border: 1px solid var(--color-border); ... */
-    padding: 10px; /* Específico si es diferente del padding general de inputs (12px 16px) */
-    font-size: 0.95em; /* Específico si es diferente */
+.form-consumo input[type="date"], .form-consumo input[type="number"] {
+    padding: 10px;
+    font-size: 0.95em;
 }
-.form-consumo input:focus { /* Hereda de input:focus general */
-    /* outline: none; border-color: var(--color-primary-accent); ... */
-    box-shadow: 0 0 0 2px rgba(251,133,0,0.2); /* Sombra de focus específica */
+.form-consumo input:focus {
+    box-shadow: 0 0 0 2px rgba(251,133,0,0.2);
 }
-/* .form-consumo button ya está agrupado con .modal-button y .nav-button */
 
-/* --- Botón de Exportar --- */
 .export-button-wrapper {
     text-align: center;
     margin: 30px 0 25px 0;
@@ -931,7 +894,7 @@ a.button-export-content {
     box-shadow: 0 2px 4px rgba(0,0,0,0.08);
 }
 a.button-export-content:hover {
-    background-color: #F4A600; /* Color específico para hover */
+    background-color: #F4A600;
     box-shadow: 0 3px 7px rgba(0,0,0,0.12);
     transform: translateY(-1px);
 }
@@ -942,16 +905,175 @@ a.button-export-content:active {
 
 
 /* === Media Queries === */
-@media (min-width: 640px) {
-    .maintenance-item {
-        flex-basis: calc(50% - 8px); /* (gap / 2) */
+@media (max-width: 768px) { /* Ajustes generales para tablets y móviles grandes */
+    .consumos-table th, .consumos-table td {
+        padding: 8px 6px; /* Reducir padding en celdas */
+        font-size: 0.85em; /* Reducir tamaño de fuente en celdas */
+    }
+    .consumos-table td.actions-cell {
+        width: 40px; /* Reducir ancho de celda de acciones */
+    }
+    .icon-button { /* Reducir tamaño de icon-buttons si es necesario */
+        width: 32px;
+        height: 32px;
+        font-size: 1em;
     }
 }
+
+@media (max-width: 600px) {
+    .form-consumo {
+        grid-template-columns: 1fr;
+        align-items: stretch;
+    }
+    .form-consumo button {
+        margin-top: 15px;
+    }
+    .stats-container { /* Apilar stats en una columna en pantallas muy pequeñas */
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (min-width: 640px) { /* Este es el breakpoint original para .maintenance-item */
+    .maintenance-item {
+        flex-basis: calc(50% - 8px);
+    }
+}
+
 @media (min-width: 920px) {
     .maintenance-item {
-        flex-basis: calc(33.333% - 10.66px); /* (gap * 2/3) */
+        flex-basis: calc(33.333% - 10.66px);
     }
     .container, .course-container {
-        max-width: 900px; /* Aumentar ancho para 3 columnas */
+        max-width: 900px;
     }
 }
+        /* Styles for the integrated tire calculator */
+        #calculadoraLlantasApp {
+            font-family: var(--font-main); /* Hereda la fuente principal */
+            line-height: 1.6;
+            margin-top: 20px; 
+        }
+
+        #calculadoraLlantasApp .calculator-content-wrapper {
+            max-width: 560px; 
+            margin: auto;
+            background-color: var(--color-card-background); /* Usa variable para fondo de tarjeta */
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1); /* Mantenemos sombra o se puede ajustar */
+            border: 1px solid var(--color-border); /* Usa variable para borde */
+        }
+
+        #calculadoraLlantasApp h3.calculator-title {
+            color: var(--color-text-on-light); /* Usa variable para texto */
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 1.5em; 
+        }
+        
+        #calculadoraLlantasApp h4.results-title {
+            color: var(--color-text-on-light); /* Usa variable para texto */
+            border-bottom: 1px solid #eeeeee; /* Borde inferior sutil, no hay variable específica para borde extra claro */
+            padding-bottom: 10px;
+            margin-top: 25px; 
+            margin-bottom: 15px;
+            font-size: 1.3em; 
+        }
+
+        #calculadoraLlantasApp fieldset {
+            border: 1px solid var(--color-border); /* Usa variable para borde */
+            margin-bottom: 20px;
+            padding: 15px;
+            border-radius: 4px;
+        }
+
+        #calculadoraLlantasApp legend {
+            font-weight: bold;
+            color: var(--color-text-on-light); /* Usa variable para texto, manteniendo el azul oscuro */
+            padding: 0 10px;
+            font-size: 1.1em;
+        }
+
+        #calculadoraLlantasApp label {
+            display: block;
+            margin-bottom: 5px;
+            color: var(--color-text-on-light); /* Usa variable para texto */
+            font-weight: bold;
+        }
+
+        #calculadoraLlantasApp input[type="number"] {
+            width: calc(100% - 22px);
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid var(--color-border); /* Usa variable para borde */
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 1em;
+            font-family: var(--font-main); /* Hereda la fuente principal */
+            background-color: var(--color-card-background); /* Fondo del input */
+            color: var(--color-text-on-light); /* Color del texto en input */
+        }
+         /* Placeholder color for inputs */
+        #calculadoraLlantasApp input[type="number"]::placeholder {
+            color: var(--color-disabled-text); /* Un gris medio para el placeholder */
+            opacity: 0.7; 
+        }
+
+
+        #calculadoraLlantasApp button {
+            background-color: var(--color-primary-accent); /* Usa variable para color primario */
+            color: var(--color-text-on-accent); /* Usa variable para texto sobre acento */
+            padding: 12px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            display: block;
+            width: 100%;
+            transition: background-color 0.3s ease;
+            font-family: var(--font-main); /* Hereda la fuente principal */
+        }
+
+        #calculadoraLlantasApp button:hover {
+            background-color: var(--color-primary-accent-hover); /* Usa variable para hover */
+        }
+
+        #calculadoraLlantasApp #resultados {
+            margin-top: 20px;
+            background-color: var(--color-background-light); /* Usa variable para fondo claro */
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid var(--color-border); /* Borde para la sección de resultados */
+        }
+
+        #calculadoraLlantasApp #resultados p {
+            margin: 10px 0;
+            font-size: 1em; 
+            color: var(--color-text-on-light); /* Color de texto en resultados */
+        }
+
+        #calculadoraLlantasApp #resultados span {
+            font-weight: bold;
+            color: var(--color-success-text); /* Usa variable para texto de éxito (valores de resultado) */
+        }
+
+        #calculadoraLlantasApp #mensaje_diferencia {
+            font-weight: bold;
+            padding: 12px;
+            border-radius: 4px;
+            text-align: center;
+            margin-top: 15px;
+            font-size: 1em; 
+        }
+
+        #calculadoraLlantasApp .mensaje-precaucion {
+            background-color: var(--color-error-background); /* Usa variable para fondo de error */
+            border: 1px solid var(--color-error); /* Usa variable para borde de error */
+            color: var(--color-error-text); /* Usa variable para texto de error */
+        }
+
+        #calculadoraLlantasApp .mensaje-ok {
+            background-color: var(--color-success-background); /* Usa variable para fondo de éxito */
+            border: 1px solid var(--color-success); /* Usa variable para borde de éxito */
+            color: var(--color-success-text); /* Usa variable para texto de éxito */
+        }

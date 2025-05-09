@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SBKR - Tu Asistente Motociclista Personal</title>
+    <title>PuraMoto - Tu Asistente Motociclista Personal</title>
     <link rel="stylesheet" href="style.css"> <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
         /* Estilos adicionales mínimos y específicos para esta página si son necesarios */
@@ -123,56 +123,49 @@
             background-color: var(--color-primary-accent-hover);
         }
 
-        /* Estilos del Modal (usando clases del CSS provisto) */
-        .modal {
-            /* Estilos base ya en style.css */
+        /* Estilos del Modal (usando clases del CSS provisto en style.css) */
+        /* .modal, .modal-content, .modal-header, etc. deberían estar en style.css */
+        /* Estos son solo ajustes específicos para el contenido del modal de términos si fueran necesarios */
+        #termsModal .modal-content { /* ID específico para el modal de términos */
+            text-align: left;
+            max-width: 600px;
         }
-
-        .modal-content {
-            /* Estilos base ya en style.css */
-            text-align: left; /* Ajustar para T&C */
-            max-width: 600px; /* Un poco más ancho para T&C */
+        #termsModal .modal-header h2 {
+             font-size: 1.6em;
         }
-
-        .modal-header {
-            /* Estilos base ya en style.css */
-        }
-        .modal-header h2 {
-            font-size: 1.6em; /* Ajustar tamaño si es necesario */
-        }
-
-        .modal-body {
+        #termsModal .modal-body {
             padding-top: 15px;
-            max-height: 60vh; /* Permitir scroll si el contenido es largo */
+            max-height: 60vh;
             overflow-y: auto;
         }
-        .modal-body h3 {
+        #termsModal .modal-body h3 {
             color: var(--color-primary-accent-hover);
             font-size: 1.2em;
             margin-top: 15px;
             margin-bottom: 8px;
         }
-        .modal-body p, .modal-body ul {
+        #termsModal .modal-body p,
+        #termsModal .modal-body ul {
             font-size: 0.95em;
             line-height: 1.6;
             margin-bottom: 10px;
             color: var(--color-text-on-light);
         }
-        .modal-body ul {
+        #termsModal .modal-body ul {
             padding-left: 20px;
         }
-        .modal-body li {
+        #termsModal .modal-body li {
             margin-bottom: 5px;
         }
-
-        .modal-footer {
+        #termsModal .modal-footer {
             margin-top: 20px;
             text-align: right;
         }
-        .modal-footer .modal-button { /* Usando la clase .modal-button del CSS provisto */
-            width: auto; /* Para que no ocupe todo el ancho */
+        #termsModal .modal-footer .modal-button {
+            width: auto;
             padding: 10px 20px;
         }
+
 
         footer {
             margin-top: 40px;
@@ -180,6 +173,7 @@
             font-size: 0.9em;
             color: var(--color-text-on-light);
             opacity: 0.8;
+            text-align: center; /* Centrar el texto del footer */
         }
     </style>
 </head>
@@ -196,14 +190,14 @@
 
     <div class="intro-container">
         <div class="logo-container">
-            <img src="https://placehold.co/300x300/FB8500/FFFFFF?text=SBKR" alt="Logo de SBKR">
+            <img src="https://placehold.co/300x300/FB8500/FFFFFF?text=PuraMoto" alt="Logo de PuraMoto">
         </div>
 
-        <h1>Bienvenido a SBKR</h1>
+        <h1>Bienvenido a PuraMoto</h1>
         <p class="tagline">Tu compañero digital para la gestión integral de tus motocicletas.</p>
 
         <p>
-            Con SBKR, lleva el control total de tus compañeras de ruta directamente en tu dispositivo.
+            Con PuraMoto, lleva el control total de tus compañeras de ruta directamente en tu dispositivo.
             Registra tu información personal esencial, como nombre, cédula, tipo de sangre y contacto de emergencia,
             para tenerla siempre a mano.
         </p>
@@ -215,7 +209,7 @@
         <p>
             <strong>Toda tu información se almacena de forma segura y local en tu dispositivo.</strong>
             Genera reportes en PDF para tus archivos o exporta tus datos en formato JSON para compartirlos,
-            hacer copias de seguridad o cargarlos fácilmente en SBKR en otro dispositivo.
+            hacer copias de seguridad o cargarlos fácilmente en PuraMoto en otro dispositivo.
         </p>
         <p>
             Recuerda: al ser almacenamiento local, si desinstalas la aplicación, la información no exportada
@@ -225,30 +219,29 @@
         <button id="openTermsModal" class="terms-button">Términos y Condiciones</button>
     </div>
 
-    <div id="termsModal" class="modal">
-        <div class="modal-content">
+    <div id="termsModal" class="modal"> <div class="modal-content">
             <div class="modal-header">
-                <h2>Términos y Condiciones de Uso - SBKR</h2>
+                <h2>Términos y Condiciones de Uso - PuraMoto</h2>
                 <span class="close-button" id="closeTermsModal">&times;</span>
             </div>
             <div class="modal-body">
-                <p>Última actualización: 6 de mayo de 2025</p>
+                <p>Última actualización: 8 de mayo de 2025</p>
 
-                <p>Bienvenido/a a SBKR (en adelante, "la Aplicación"), desarrollada por CRAD Studios. Estos Términos y Condiciones (en adelante, "Términos") rigen el uso que usted haga de la Aplicación. Al descargar, instalar o utilizar la Aplicación, usted acepta estar sujeto/a a estos Términos.</p>
+                <p>Bienvenido/a a PuraMoto (en adelante, "la Aplicación"), desarrollada por CRAD Studios. Estos Términos y Condiciones (en adelante, "Términos") rigen el uso que usted haga de la Aplicación. Al descargar, instalar o utilizar la Aplicación, usted acepta estar sujeto/a a estos Términos.</p>
 
                 <h3>1. Descripción de la Aplicación</h3>
-                <p>SBKR es una aplicación móvil diseñada para ayudar a los usuarios a registrar y gestionar información personal relevante para motociclistas, así como información detallada de sus motocicletas, incluyendo mantenimientos, consumos de combustible y la capacidad de generar reportes.</p>
+                <p>PuraMoto es una aplicación móvil diseñada para ayudar a los usuarios a registrar y gestionar información personal relevante para motociclistas, así como información detallada de sus motocicletas, incluyendo mantenimientos, consumos de combustible y la capacidad de generar reportes.</p>
 
                 <h3>2. Almacenamiento de Datos</h3>
-                <p><strong>Almacenamiento Local:</strong> Toda la información que usted ingrese en SBKR, incluyendo datos personales (nombre, cédula, tipo de sangre, contacto de emergencia) e información de motocicletas (placa, marca, modelo, año, VIN, color, kilometraje, registros de mantenimiento, registros de consumo), se almacena exclusivamente de forma local en el dispositivo donde la Aplicación está instalada. CRAD Studios no tiene acceso a, ni almacena, ninguno de sus datos personales o de sus motocicletas en servidores externos o en la nube.</p>
+                <p><strong>Almacenamiento Local:</strong> Toda la información que usted ingrese en PuraMoto, incluyendo datos personales (nombre, cédula, tipo de sangre, contacto de emergencia) e información de motocicletas (placa, marca, modelo, año, VIN, color, kilometraje, registros de mantenimiento, registros de consumo), se almacena exclusivamente de forma local en el dispositivo donde la Aplicación está instalada. CRAD Studios no tiene acceso a, ni almacena, ninguno de sus datos personales o de sus motocicletas en servidores externos o en la nube.</p>
                 <p><strong>Responsabilidad del Usuario:</strong> Usted es el único responsable de la información que ingresa y gestiona a través de la Aplicación, así como de la seguridad de su dispositivo.</p>
 
                 <h3>3. Exportación e Importación de Datos</h3>
-                <p>SBKR le permite exportar sus datos en formato PDF o JSON. Esta función está diseñada para que pueda realizar copias de seguridad de su información, compartirla según su criterio o transferirla a otro dispositivo donde tenga instalada la Aplicación. Usted es responsable de la gestión y seguridad de los archivos exportados.</p>
+                <p>PuraMoto le permite exportar sus datos en formato PDF o JSON. Esta función está diseñada para que pueda realizar copias de seguridad de su información, compartirla según su criterio o transferirla a otro dispositivo donde tenga instalada la Aplicación. Usted es responsable de la gestión y seguridad de los archivos exportados.</p>
 
                 <h3>4. Pérdida de Datos</h3>
                 <p><strong>Eliminación de la Aplicación:</strong> Dado que todos los datos se almacenan localmente, si usted desinstala la Aplicación de su dispositivo, toda la información contenida en ella (que no haya sido previamente exportada) se eliminará permanentemente. CRAD Studios no se hace responsable por la pérdida de datos resultante de la desinstalación de la Aplicación, fallos del dispositivo, pérdida o robo del mismo, o cualquier otra circunstancia ajena al funcionamiento normal de la Aplicación.</p>
-                <p><strong>Sin Copias de Seguridad Automáticas en la Nube:</strong> La Aplicación no realiza copias de seguridad automáticas de sus datos en la nube. Le recomendamos encarecidamente utilizar la función de exportación regularmente para salvaguardar su información.</p>
+                <p><strong>Sin Copias de Seguridad Automáticas en la Nube:</strong> La Aplicación no realiza copias de seguridad automáticas de sus datos en la nube. Le recomendamos utilizar la función de exportación regularmente para salvaguardar su información.</p>
 
                 <h3>5. Uso Previsto</h3>
                 <p>La Aplicación está destinada para uso personal, con el fin de organizar y llevar un registro de la información relacionada con sus motocicletas y su perfil como motociclista. Cualquier uso indebido de la aplicación es responsabilidad exclusiva del usuario.</p>
@@ -265,7 +258,7 @@
                 <h3>9. Contacto</h3>
                 <p>Si tiene alguna pregunta o inquietud sobre estos Términos o la Aplicación, puede contactarnos en: <a href="mailto:desarrolloandroidcr@gmail.com" style="color: var(--color-primary-accent);">desarrolloandroidcr@gmail.com</a>.</p>
 
-                <p>Al utilizar SBKR, usted reconoce que ha leído, entendido y aceptado estos Términos y Condiciones.</p>
+                <p>Al utilizar PuraMoto, usted reconoce que ha leído, entendido y aceptado estos Términos y Condiciones.</p>
             </div>
             <div class="modal-footer">
                 <button id="acceptTermsButton" class="modal-button">Entendido</button>
@@ -274,7 +267,7 @@
     </div>
 
     <footer>
-        <p>&copy; <span id="currentYear"></span> SBKR por CRAD Studios. Todos los derechos reservados.</p>
+        <p>&copy; <span id="currentYear"></span> PuraMoto por CRAD Studios. Todos los derechos reservados.</p>
         <p>Contacto: <a href="mailto:desarrolloandroidcr@gmail.com" style="color: var(--color-primary-accent);">desarrolloandroidcr@gmail.com</a></p>
     </footer>
 
@@ -285,16 +278,22 @@
         const closeTermsModalButton = document.getElementById('closeTermsModal');
         const acceptTermsButton = document.getElementById('acceptTermsButton');
 
-        openTermsModalButton.onclick = function() {
-            termsModal.style.display = "block";
+        if (openTermsModalButton && termsModal) { // Verificar que los elementos existan
+            openTermsModalButton.onclick = function() {
+                termsModal.style.display = "block"; // O "flex" si tu CSS lo usa para mostrar
+            }
         }
 
-        closeTermsModalButton.onclick = function() {
-            termsModal.style.display = "none";
+        if (closeTermsModalButton && termsModal) {
+            closeTermsModalButton.onclick = function() {
+                termsModal.style.display = "none";
+            }
         }
 
-        acceptTermsButton.onclick = function() {
-            termsModal.style.display = "none";
+        if (acceptTermsButton && termsModal) {
+            acceptTermsButton.onclick = function() {
+                termsModal.style.display = "none";
+            }
         }
 
         // Cerrar el modal si se hace clic fuera de su contenido
@@ -305,7 +304,10 @@
         }
 
         // Año actual en el footer
-        document.getElementById('currentYear').textContent = new Date().getFullYear();
+        const currentYearSpan = document.getElementById('currentYear');
+        if (currentYearSpan) {
+            currentYearSpan.textContent = new Date().getFullYear();
+        }
     </script>
 
 </body>
