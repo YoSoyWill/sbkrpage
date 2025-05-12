@@ -2,52 +2,59 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Información de Motocicletas</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Información de Vehículos</title> <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
-    <link href="style.css" rel="stylesheet"> 
-
-
+    <link href="style.css" rel="stylesheet">
 </head>
 <body>
     <div class="container">
-        <h1>Información de Motocicletas</h1>
-
-        <div id="mensaje-error" style="display: none;"></div>
+        <h1>Información de Vehículos</h1> <div id="mensaje-error" style="display: none;"></div>
         <div id="mensaje-exito" style="display: none;"></div>
-        
-        <div id="motorcycle-list">
+
+        <div id="category-filter-container" class="filter-container">
+            <h3>Filtrar por Categoría:</h3>
+            <div>
+                <label><input type="checkbox" name="categoryFilter" value="all" checked> Todas</label>
+                <label><input type="checkbox" name="categoryFilter" value="Motocicleta"> Motocicleta</label>
+                <label><input type="checkbox" name="categoryFilter" value="Auto"> Auto</label>
+                <label><input type="checkbox" name="categoryFilter" value="Camión"> Camión</label>
             </div>
+        </div>
         
-        <button id="add-motorcycle" class="fab" title="Añadir Motocicleta">
-            <span class="fab-icon">+</span>
+        <div id="vehicle-list"> </div>
+        
+        <button id="add-vehicle" class="fab" title="Añadir Vehículo"> <span class="fab-icon">+</span>
         </button>
     </div>
-
 
     <div id="fabActionModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h2>Añadir Motocicleta</h2>
-                <button type="button" class="close-button" id="closeFabActionModal">&times;</button>
+                <h2>Añadir Vehículo</h2> <button type="button" class="close-button" id="closeFabActionModal">&times;</button>
             </div>
-            <div id="fab-action-modal-error"></div> <div class="modal-actions" style="margin-top: 10px;">
-                <button type="button" id="btnRegistrarNuevaMoto" class="modal-button">Registrar Moto Nueva</button>
-                <button type="button" id="btnCargarMotoJson" class="button secondary modal-button">Cargar desde Archivo (JSON)</button>
-                <input type="file" id="uploadMotoJsonInput" accept=".json" style="display: none;">
-            </div>
+            <div id="fab-action-modal-error" class="modal-error-message"></div> <div class="modal-actions" style="margin-top: 10px;">
+                <button type="button" id="btnRegistrarNuevoVehiculo" class="modal-button">Registrar Vehículo Nuevo</button> <button type="button" id="btnCargarVehiculoJson" class="button secondary modal-button">Cargar desde Archivo (JSON)</button> <input type="file" id="uploadVehiculoJsonInput" accept=".json" style="display: none;"> </div>
         </div>
     </div>
 
     <div id="editModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h2 id="modal-title-moto">Editar Información</h2>
-                <button type="button" class="close-button" id="closeEditModal">&times;</button> </div>
+                <h2 id="modal-title-vehicle">Editar Información</h2> <button type="button" class="close-button" id="closeEditModal">&times;</button> </div>
             <form id="modalForm">
                 <input type="hidden" id="original-matricula-edit" value="">
+
+                <div class="modal-form-group">
+                    <label for="modal-categoria">Categoría:</label>
+                    <select id="modal-categoria" required>
+                        <option value="" disabled selected>Seleccione una categoría</option>
+                        <option value="Motocicleta">Motocicleta</option>
+                        <option value="Auto">Auto</option>
+                        <option value="Camión">Camión</option>
+                    </select>
+                </div>
 
                 <div class="modal-form-group">
                     <label for="modal-matricula">Matrícula:</label>
@@ -55,12 +62,10 @@
                 </div>
                 <div class="modal-form-group">
                     <label for="modal-marca">Marca:</label>
-                    <input type="text" id="modal-marca" placeholder="Ej: Honda" required>
-                </div>
+                    <input type="text" id="modal-marca" placeholder="Ej: Honda, Toyota" required> </div>
                 <div class="modal-form-group">
                     <label for="modal-modelo">Modelo:</label>
-                    <input type="text" id="modal-modelo" placeholder="Ej: CBR500R" required>
-                </div>             
+                    <input type="text" id="modal-modelo" placeholder="Ej: CBR500R, Corolla" required> </div>                     
                 <div class="modal-form-group">
                     <label for="modal-anio">Año:</label>
                     <input type="number" id="modal-anio" placeholder="Año del modelo" min="1900" max="2099" inputmode="numeric">
@@ -79,39 +84,33 @@
                 </div>
                 <button id="saveModalButton" type="submit" class="modal-button">Guardar</button>
             </form>
-            <div id="modal-mensaje-error" style="display: none; color: red; margin-top: 10px;"></div>
-        </div>
+            <div id="modal-mensaje-error" class="modal-error-message" style="display: none; margin-top: 10px;"></div> </div>
     </div>
     
-    <div id="confirmDeleteMotoModal" class="modal">
-        <div class="modal-content">
+    <div id="confirmDeleteVehicleModal" class="modal"> <div class="modal-content">
             <div class="modal-header">
                 <h2>Confirmar Eliminación</h2>
-                 <button type="button" class="close-button" id="closeConfirmDeleteMotoModal">&times;</button>
-            </div>
-            <p id="confirmDeleteMotoMessage" style="margin: 15px 0;"></p>
-            <div class="modal-actions" style="display:flex; justify-content:flex-end; gap:10px; margin-top:20px;">
-                <button type="button" id="confirmDeleteMotoNo" class="button secondary modal-button" style="width:auto; padding:10px 20px;">Cancelar</button>
-                <button type="button" id="confirmDeleteMotoYes" class="button danger modal-button" style="width:auto; padding:10px 20px;">Eliminar Moto</button>
-            </div>
+                <button type="button" class="close-button" id="closeConfirmDeleteVehicleModal">&times;</button> </div>
+            <p id="confirmDeleteVehicleMessage" style="margin: 15px 0;"></p> <div class="modal-actions" style="display:flex; justify-content:flex-end; gap:10px; margin-top:20px;">
+                <button type="button" id="confirmDeleteVehicleNo" class="button secondary modal-button" style="width:auto; padding:10px 20px;">Cancelar</button> <button type="button" id="confirmDeleteVehicleYes" class="button danger modal-button" style="width:auto; padding:10px 20px;">Eliminar Vehículo</button> </div>
         </div>
     </div>
-
 
     <script>
     document.addEventListener('DOMContentLoaded', function() {
-        console.log("Moto Script (v4.0 - FAB JSON Load Options) Cargado");
+        console.log("Vehiculo Script (v5.0 - Categorías y Filtros) Cargado"); // MODIFICADO
 
-        // Referencias DOM (adaptadas a tu HTML v3 y nuevas adiciones)
-        const motorcycleListDiv = document.getElementById('motorcycle-list');
-        const addMotorcycleButton = document.getElementById('add-motorcycle'); // Este es tu FAB
+        // Referencias DOM
+        const vehicleListDiv = document.getElementById('vehicle-list'); // MODIFICADO
+        const addVehicleButton = document.getElementById('add-vehicle'); // MODIFICADO
         
-        // Modal de Formulario (tu editModal)
-        const formModal = document.getElementById('editModal'); // Renombrado para claridad
-        const closeFormModalButton = formModal?.querySelector('.close-button'); // Asumiendo que tu botón X tiene clase 'close-button'
+        // Modal de Formulario
+        const formModal = document.getElementById('editModal');
+        const closeFormModalButton = formModal?.querySelector('.close-button');
         const modalForm = document.getElementById('modalForm');
         const saveModalButton = document.getElementById('saveModalButton');
-        const modalTitleMoto = document.getElementById('modal-title-moto');
+        const modalTitleVehicle = document.getElementById('modal-title-vehicle'); // MODIFICADO
+        const modalCategoriaSelect = document.getElementById('modal-categoria'); // NUEVO
         const modalMatriculaInput = document.getElementById('modal-matricula');
         const modalMarcaInput = document.getElementById('modal-marca');
         const modalModeloInput = document.getElementById('modal-modelo');
@@ -119,33 +118,35 @@
         const modalColorInput = document.getElementById('modal-color');
         const modalVinInput = document.getElementById('modal-VIN');
         const modalKmInput = document.getElementById('modal-km');
-        const modalMensajeErrorDiv = document.getElementById('modal-mensaje-error'); // Para errores dentro del formModal
-        const originalMatriculaInput = document.getElementById('original-matricula-edit'); // Input hidden que añadiremos
+        const modalMensajeErrorDiv = document.getElementById('modal-mensaje-error');
+        const originalMatriculaInput = document.getElementById('original-matricula-edit');
 
-        // Nuevo Modal de Acción del FAB
+        // Modal de Acción del FAB
         const fabActionModal = document.getElementById('fabActionModal');
         const closeFabActionModalButton = document.getElementById('closeFabActionModal');
-        const btnRegistrarNuevaMoto = document.getElementById('btnRegistrarNuevaMoto');
-        const btnCargarMotoJson = document.getElementById('btnCargarMotoJson');
-        const uploadMotoJsonInput = document.getElementById('uploadMotoJsonInput');
+        const btnRegistrarNuevoVehiculo = document.getElementById('btnRegistrarNuevoVehiculo'); // MODIFICADO
+        const btnCargarVehiculoJson = document.getElementById('btnCargarVehiculoJson'); // MODIFICADO
+        const uploadVehiculoJsonInput = document.getElementById('uploadVehiculoJsonInput'); // MODIFICADO
         const fabActionModalErrorDiv = document.getElementById('fab-action-modal-error');
 
         // Mensajes globales
         const mensajeExitoDiv = document.getElementById('mensaje-exito');
         const mensajeErrorDiv = document.getElementById('mensaje-error');
 
-        // Modal de Confirmación de Eliminación (si lo usas, basado en la v5.5 de mantenimiento)
-        const confirmDeleteMotoModal = document.getElementById('confirmDeleteMotoModal');
-        const confirmDeleteMotoMessage = document.getElementById('confirmDeleteMotoMessage');
-        const confirmDeleteMotoYesButton = document.getElementById('confirmDeleteMotoYes');
-        const confirmDeleteMotoNoButton = document.getElementById('confirmDeleteMotoNo');
-        const closeConfirmDeleteMotoModalButton = document.getElementById('closeConfirmDeleteMotoModal');
-        let matriculaParaEliminarContext = null; // Para el contexto de eliminación
+        // Modal de Confirmación de Eliminación
+        const confirmDeleteVehicleModal = document.getElementById('confirmDeleteVehicleModal'); // MODIFICADO
+        const confirmDeleteVehicleMessage = document.getElementById('confirmDeleteVehicleMessage'); // MODIFICADO
+        const confirmDeleteVehicleYesButton = document.getElementById('confirmDeleteVehicleYes'); // MODIFICADO
+        const confirmDeleteVehicleNoButton = document.getElementById('confirmDeleteVehicleNo'); // MODIFICADO
+        const closeConfirmDeleteVehicleModalButton = document.getElementById('closeConfirmDeleteVehicleModal'); // MODIFICADO
+        let matriculaParaEliminarContext = null;
 
+        // Filtro de Categorías
+        const categoryFilterCheckboxes = document.querySelectorAll('#category-filter-container input[name="categoryFilter"]'); // NUEVO
 
-        const MOTORCYCLES_DB_KEY = 'motorcyclesDB';
+        const VEHICLES_DB_KEY = 'vehiclesDB'; // MODIFICADO
         const MANTENIMIENTOS_PREFIX = 'MANTENIMIENTOS_';
-        const CONSUMOS_PREFIX = 'CONSUMOS_'; // Clave para datos de consumo
+        const CONSUMOS_PREFIX = 'CONSUMOS_';
 
         // --- Funciones de Mensajes ---
         function mostrarMensaje(texto, esExito = true) {
@@ -154,6 +155,7 @@
             if (el) {
                 el.textContent = texto;
                 el.style.display = 'block';
+                el.className = esExito ? 'mensaje exito' : 'mensaje error'; // Asegura clases para styling
                 if (otroEl) otroEl.style.display = 'none';
                 setTimeout(() => { if (el) el.style.display = 'none'; }, 4000);
             }
@@ -176,32 +178,32 @@
             modalForm.reset();
             if (modalMensajeErrorDiv) modalMensajeErrorDiv.style.display = 'none';
             
-            // Guardar la matrícula original para saber si estamos editando o si se cambió
             if(originalMatriculaInput) originalMatriculaInput.value = matriculaOriginal || ""; 
 
             if (matriculaOriginal) { // Modo Editar
-                modalTitleMoto.textContent = "Editar Información de Motocicleta";
+                modalTitleVehicle.textContent = "Editar Información de Vehículo"; // MODIFICADO
                 saveModalButton.textContent = "Actualizar";
-                const motorcycles = obtenerMotos();
-                const motoData = motorcycles[matriculaOriginal];
-                if (motoData) {
-                    modalMatriculaInput.value = motoData.placa || matriculaOriginal;
-                    modalMatriculaInput.readOnly = false; // Permitir editar, pero se validará
-                    modalMarcaInput.value = motoData.marca || '';
-                    modalModeloInput.value = motoData.modelo || '';
-                    modalAnioInput.value = motoData.anio || '';
-                    modalColorInput.value = motoData.color || '';
-                    modalVinInput.value = motoData.vin || '';
-                    modalKmInput.value = motoData.kmActual || '';
+                const vehicles = obtenerVehiculos(); // MODIFICADO
+                const vehiculoData = vehicles[matriculaOriginal]; // MODIFICADO
+                if (vehiculoData) {
+                    modalCategoriaSelect.value = vehiculoData.categoria || ''; // NUEVO
+                    modalMatriculaInput.value = vehiculoData.placa || matriculaOriginal;
+                    modalMatriculaInput.readOnly = false;
+                    modalMarcaInput.value = vehiculoData.marca || '';
+                    modalModeloInput.value = vehiculoData.modelo || '';
+                    modalAnioInput.value = vehiculoData.anio || '';
+                    modalColorInput.value = vehiculoData.color || '';
+                    modalVinInput.value = vehiculoData.vin || '';
+                    modalKmInput.value = vehiculoData.kmActual || '';
                 } else {
                     mostrarMensaje(`Error: No se encontraron datos para la matrícula ${matriculaOriginal}.`, false);
                     return;
                 }
             } else { // Modo Añadir
-                modalTitleMoto.textContent = "Añadir Nueva Motocicleta";
+                modalTitleVehicle.textContent = "Añadir Nuevo Vehículo"; // MODIFICADO
                 saveModalButton.textContent = "Guardar";
                 modalMatriculaInput.readOnly = false;
-                // Limpiar el campo oculto
+                modalCategoriaSelect.value = ""; // NUEVO: Resetear categoría
                 if(originalMatriculaInput) originalMatriculaInput.value = "";
             }
             if(formModal) formModal.style.display = 'block';
@@ -218,74 +220,103 @@
             if(fabActionModal) fabActionModal.style.display = 'none';
         }
         
-        function openConfirmDeleteMotoModal(matricula) {
+        function openConfirmDeleteVehicleModal(matricula) { // MODIFICADO
             matriculaParaEliminarContext = matricula;
-            if(confirmDeleteMotoMessage) confirmDeleteMotoMessage.textContent = `¿Está seguro de eliminar la motocicleta ${matricula} y todos sus datos asociados (mantenimientos, consumos)? Esta acción no es recuperable.`;
-            if(confirmDeleteMotoModal) confirmDeleteMotoModal.style.display = 'block';
+            if(confirmDeleteVehicleMessage) confirmDeleteVehicleMessage.textContent = `¿Está seguro de eliminar el vehículo ${matricula} y todos sus datos asociados (mantenimientos, consumos)? Esta acción no es recuperable.`; // MODIFICADO
+            if(confirmDeleteVehicleModal) confirmDeleteVehicleModal.style.display = 'block'; // MODIFICADO
         }
-        function closeConfirmDeleteMotoModal() {
-            if(confirmDeleteMotoModal) confirmDeleteMotoModal.style.display = 'none';
+        function closeConfirmDeleteVehicleModal() { // MODIFICADO
+            if(confirmDeleteVehicleModal) confirmDeleteVehicleModal.style.display = 'none'; // MODIFICADO
             matriculaParaEliminarContext = null;
         }
 
-
         // --- Funciones de Datos ---
-        function obtenerMotos() {
-            try { const d = localStorage.getItem(MOTORCYCLES_DB_KEY); return d ? JSON.parse(d) : {}; }
-            catch (e) { console.error("Error al obtener motos:", e); return {}; }
+        function obtenerVehiculos() { // MODIFICADO
+            try { const d = localStorage.getItem(VEHICLES_DB_KEY); return d ? JSON.parse(d) : {}; } // MODIFICADO
+            catch (e) { console.error("Error al obtener vehículos:", e); return {}; } // MODIFICADO
         }
-        function guardarMotos(motos) {
-            try { localStorage.setItem(MOTORCYCLES_DB_KEY, JSON.stringify(motos)); }
-            catch (e) { console.error("Error al guardar motos:", e); mostrarMensaje("Error al guardar datos de motocicletas.", false); }
+        function guardarVehiculos(vehiculos) { // MODIFICADO
+            try { localStorage.setItem(VEHICLES_DB_KEY, JSON.stringify(vehiculos)); } // MODIFICADO
+            catch (e) { console.error("Error al guardar vehículos:", e); mostrarMensaje("Error al guardar datos de vehículos.", false); } // MODIFICADO
         }
 
-        // --- Renderizar Lista de Motocicletas ---
-        function renderMotorcycleList() {
-            if (!motorcycleListDiv) return;
-            motorcycleListDiv.innerHTML = '';
-            const motorcycles = obtenerMotos();
-            const keys = Object.keys(motorcycles).sort();
+        // --- Renderizar Lista de Vehículos --- // MODIFICADO
+        function renderVehicleList() { // MODIFICADO
+            if (!vehicleListDiv) return; // MODIFICADO
+            vehicleListDiv.innerHTML = ''; // MODIFICADO
+            
+            const allVehicles = obtenerVehiculos(); // MODIFICADO
+            
+            // NUEVO: Lógica de filtro
+            const activeFilters = [];
+            const allCheckbox = document.querySelector('#category-filter-container input[value="all"]');
+            
+            if (allCheckbox.checked) {
+                categoryFilterCheckboxes.forEach(cb => {
+                    if (cb.value !== 'all') cb.checked = false;
+                });
+            }
 
-            const noMotosMsgElement = document.getElementById('no-motos-mensaje'); // Si tienes este elemento
+            categoryFilterCheckboxes.forEach(checkbox => {
+                if (checkbox.checked) {
+                    activeFilters.push(checkbox.value);
+                }
+            });
+
+            let filteredVehicles = {}; // MODIFICADO
+            if (activeFilters.includes("all") || activeFilters.length === 0) {
+                filteredVehicles = allVehicles;
+            } else {
+                for (const matricula in allVehicles) {
+                    if (activeFilters.includes(allVehicles[matricula].categoria)) {
+                        filteredVehicles[matricula] = allVehicles[matricula];
+                    }
+                }
+            }
+
+            const keys = Object.keys(filteredVehicles).sort(); // MODIFICADO
+
             if (keys.length === 0) {
-                if(noMotosMsgElement) noMotosMsgElement.style.display = 'block';
-                else motorcycleListDiv.innerHTML = '<p style="text-align:center;">No hay motos registradas. Añade la primera con el botón (+).</p>';
+                if (Object.keys(allVehicles).length === 0) { // Si no hay vehículos en total
+                     vehicleListDiv.innerHTML = '<p style="text-align:center;">No hay vehículos registrados. Añade el primero con el botón (+).</p>'; // MODIFICADO
+                } else { // Si hay vehículos pero ninguno coincide con el filtro
+                     vehicleListDiv.innerHTML = '<p style="text-align:center;">No hay vehículos que coincidan con los filtros seleccionados.</p>';
+                }
                 return;
             }
-            if(noMotosMsgElement) noMotosMsgElement.style.display = 'none';
 
             keys.forEach(matricula => {
-                const moto = motorcycles[matricula];
+                const vehiculo = filteredVehicles[matricula]; // MODIFICADO
                 const card = document.createElement('div');
-                card.className = 'motorcycle-item card'; // Usando tus clases
+                card.className = 'vehicle-item card'; // MODIFICADO
                 card.innerHTML = `
-                    <h2>${moto.marca || 'N/A'} ${moto.modelo || ''}</h2>
-                    <p><strong>Matrícula:</strong> ${moto.placa || matricula}</p>
-                    <p><strong>Año:</strong> ${moto.anio || 'N/A'}</p>
-                    <p><strong>KM Actual:</strong> ${moto.kmActual ? parseFloat(moto.kmActual).toLocaleString('es-CR') + ' km' : 'N/A'}</p>
+                    <div class="card-header">
+                        <h2>${vehiculo.marca || 'N/A'} ${vehiculo.modelo || ''}</h2>
+                        <span class="vehicle-category">${vehiculo.categoria || 'Sin Categoría'}</span> </div>
+                    <p><strong>Matrícula:</strong> ${vehiculo.placa || matricula}</p>
+                    <p><strong>Año:</strong> ${vehiculo.anio || 'N/A'}</p>
+                    <p><strong>KM Actual:</strong> ${vehiculo.kmActual ? parseFloat(vehiculo.kmActual).toLocaleString('es-CR') + ' km' : 'N/A'}</p>
                     <div class="card-actions">
-                        <button type="button" class="edit-moto-btn icon-button" data-matricula="${matricula}" title="Editar Moto">✏️</button>
-                        <a href="mantenimiento.html?matricula=${matricula}" class="maint-link icon-button" title="Ver Mantenimientos">🔩</a>
+                        <button type="button" class="edit-vehicle-btn icon-button" data-matricula="${matricula}" title="Editar Vehículo">✏️</button> <a href="mantenimiento.html?matricula=${matricula}" class="maint-link icon-button" title="Ver Mantenimientos">🔩</a>
                         <a href="consumo.html?matricula=${matricula}" class="consumo-link icon-button" title="Ver Consumos">⛽</a>
-                        <button type="button" class="delete-moto-btn icon-button" data-matricula="${matricula}" title="Eliminar Moto">❌</button>
-                    </div>
+                        <button type="button" class="delete-vehicle-btn icon-button" data-matricula="${matricula}" title="Eliminar Vehículo">❌</button> </div>
                 `;
-                // Evento para ir a mantenimiento al hacer clic en la tarjeta (excepto en botones)
                 card.addEventListener('click', (e) => {
-                    if (!e.target.closest('.icon-button')) { // Solo si no se hizo clic en un botón de acción
+                    if (!e.target.closest('.icon-button')) {
                         window.location.href = `mantenimiento.html?matricula=${matricula}`;
                     }
                 });
-                card.querySelector('.edit-moto-btn').addEventListener('click', (e) => { e.stopPropagation(); openFormModal(matricula); });
-                card.querySelector('.delete-moto-btn').addEventListener('click', (e) => { e.stopPropagation(); openConfirmDeleteMotoModal(matricula); });
-                motorcycleListDiv.appendChild(card);
+                card.querySelector('.edit-vehicle-btn').addEventListener('click', (e) => { e.stopPropagation(); openFormModal(matricula); }); // MODIFICADO
+                card.querySelector('.delete-vehicle-btn').addEventListener('click', (e) => { e.stopPropagation(); openConfirmDeleteVehicleModal(matricula); }); // MODIFICADO
+                vehicleListDiv.appendChild(card); // MODIFICADO
             });
         }
 
-        // --- Procesar Formulario de Añadir/Editar Moto ---
+        // --- Procesar Formulario de Añadir/Editar Vehículo --- // MODIFICADO
         if (modalForm) {
             modalForm.addEventListener('submit', function(event) {
                 event.preventDefault();
+                const categoria = modalCategoriaSelect.value; // NUEVO
                 const matriculaActual = modalMatriculaInput.value.trim().toUpperCase();
                 const marca = modalMarcaInput.value.trim();
                 const modelo = modalModeloInput.value.trim();
@@ -293,8 +324,11 @@
                 const color = modalColorInput.value.trim();
                 const vin = modalVinInput.value.trim().toUpperCase();
                 const kmActual = modalKmInput.value.trim();
-                const matriculaOriginal = originalMatriculaInput.value; // La que estaba al abrir en modo edición
+                const matriculaOriginal = originalMatriculaInput.value;
 
+                if (!categoria) { // NUEVO: Validar categoría
+                    mostrarErrorEnModalForm("La Categoría es obligatoria."); return;
+                }
                 if (!matriculaActual || !marca || !modelo) {
                     mostrarErrorEnModalForm("Matrícula, Marca y Modelo son obligatorios."); return;
                 }
@@ -308,54 +342,57 @@
                     mostrarErrorEnModalForm("KM Actual debe ser un número positivo si se ingresa."); return;
                 }
 
-                let motorcycles = obtenerMotos();
+                let vehicles = obtenerVehiculos(); // MODIFICADO
                 let mensajeExito = "";
 
-                // Verificar si la nueva matrícula (si cambió o es nueva) ya existe y no es la original
-                if (matriculaActual !== matriculaOriginal && motorcycles[matriculaActual]) {
-                    mostrarErrorEnModalForm(`La matrícula "${matriculaActual}" ya está registrada para otra moto.`); return;
+                if (matriculaActual !== matriculaOriginal && vehicles[matriculaActual]) {
+                    mostrarErrorEnModalForm(`La matrícula "${matriculaActual}" ya está registrada para otro vehículo.`); return; // MODIFICADO
                 }
 
-                const motoData = {
-                    placa: matriculaActual, marca, modelo,
+                const vehiculoData = { // MODIFICADO
+                    placa: matriculaActual, categoria, marca, modelo, // NUEVO: categoria
                     anio: anio || null, color: color || null, vin: vin || null,
                     kmActual: kmActual ? parseFloat(kmActual) : null
                 };
 
                 if (matriculaOriginal && matriculaOriginal !== matriculaActual) {
-                    // Se cambió la matrícula: eliminar la antigua y sus datos asociados
-                    delete motorcycles[matriculaOriginal];
+                    delete vehicles[matriculaOriginal]; // MODIFICADO
                     localStorage.removeItem(`${MANTENIMIENTOS_PREFIX}${matriculaOriginal}`);
                     localStorage.removeItem(`${CONSUMOS_PREFIX}${matriculaOriginal}`);
-                    mensajeExito = `Moto actualizada: Matrícula cambiada de ${matriculaOriginal} a ${matriculaActual}.`;
-                } else if (matriculaOriginal) { // Editando la misma matrícula
-                    mensajeExito = `Moto ${matriculaActual} actualizada correctamente.`;
-                } else { // Nueva moto
-                    mensajeExito = `Moto ${matriculaActual} registrada exitosamente.`;
-                    // Para nueva moto, crear entradas vacías para mantenimientos y consumos
+                    // Mover datos de mantenimiento y consumo si es necesario
+                    const mantenimientosAntiguos = JSON.parse(localStorage.getItem(`${MANTENIMIENTOS_PREFIX}${matriculaOriginal}`)) || [];
+                    const consumosAntiguos = JSON.parse(localStorage.getItem(`${CONSUMOS_PREFIX}${matriculaOriginal}`)) || [];
+                    localStorage.setItem(`${MANTENIMIENTOS_PREFIX}${matriculaActual}`, JSON.stringify(mantenimientosAntiguos));
+                    localStorage.setItem(`${CONSUMOS_PREFIX}${matriculaActual}`, JSON.stringify(consumosAntiguos));
+
+                    mensajeExito = `Vehículo actualizado: Matrícula cambiada de ${matriculaOriginal} a ${matriculaActual}.`; // MODIFICADO
+                } else if (matriculaOriginal) {
+                    mensajeExito = `Vehículo ${matriculaActual} actualizado correctamente.`; // MODIFICADO
+                } else {
+                    mensajeExito = `Vehículo ${matriculaActual} registrado exitosamente.`; // MODIFICADO
                     localStorage.setItem(`${MANTENIMIENTOS_PREFIX}${matriculaActual}`, JSON.stringify([]));
                     localStorage.setItem(`${CONSUMOS_PREFIX}${matriculaActual}`, JSON.stringify([]));
                 }
                 
-                motorcycles[matriculaActual] = motoData;
-                guardarMotos(motorcycles);
+                vehicles[matriculaActual] = vehiculoData; // MODIFICADO
+                guardarVehiculos(vehicles); // MODIFICADO
                 mostrarMensaje(mensajeExito, true);
                 closeFormModal();
-                renderMotorcycleList();
+                renderVehicleList(); // MODIFICADO
             });
         }
 
-        // --- Lógica para Cargar Moto desde JSON ---
-        if(btnCargarMotoJson) {
-            btnCargarMotoJson.addEventListener('click', () => {
-                if (fabActionModalErrorDiv) fabActionModalErrorDiv.style.display = 'none'; // Limpiar error
-                uploadMotoJsonInput.click();
+        // --- Lógica para Cargar Vehículo desde JSON --- // MODIFICADO
+        if(btnCargarVehiculoJson) { // MODIFICADO
+            btnCargarVehiculoJson.addEventListener('click', () => { // MODIFICADO
+                if (fabActionModalErrorDiv) fabActionModalErrorDiv.style.display = 'none';
+                uploadVehiculoJsonInput.click(); // MODIFICADO
             });
         }
-        if(uploadMotoJsonInput) {
-            uploadMotoJsonInput.addEventListener('change', (event) => {
+        if(uploadVehiculoJsonInput) { // MODIFICADO
+            uploadVehiculoJsonInput.addEventListener('change', (event) => { // MODIFICADO
                 const file = event.target.files[0];
-                if (!file) { uploadMotoJsonInput.value = ''; return; }
+                if (!file) { uploadVehiculoJsonInput.value = ''; return; } // MODIFICADO
 
                 const reader = new FileReader();
                 reader.onload = (e) => {
@@ -363,8 +400,9 @@
                         const jsonData = JSON.parse(e.target.result);
                         if (fabActionModalErrorDiv) fabActionModalErrorDiv.style.display = 'none';
 
-                        if (!jsonData.matricula || !jsonData.motoInfo || !Array.isArray(jsonData.mantenimientos) /*|| !Array.isArray(jsonData.consumos)*/) {
-                            mostrarErrorEnFabActionModal("El archivo JSON no tiene la estructura esperada (falta matricula, motoInfo o mantenimientos).");
+                        // MODIFICADO: jsonData.vehicleInfo y validación de categoría
+                        if (!jsonData.matricula || !jsonData.vehicleInfo || !jsonData.vehicleInfo.categoria || !Array.isArray(jsonData.mantenimientos)) {
+                            mostrarErrorEnFabActionModal("El archivo JSON no tiene la estructura esperada (falta matricula, vehicleInfo con categoria, o mantenimientos).");
                             return;
                         }
                         const matriculaDesdeJson = jsonData.matricula.toUpperCase().trim();
@@ -373,89 +411,113 @@
                             return;
                         }
 
-                        let motos = obtenerMotos();
-                        if (motos[matriculaDesdeJson]) {
+                        let vehicles = obtenerVehiculos(); // MODIFICADO
+                        if (vehicles[matriculaDesdeJson]) {
                             mostrarErrorEnFabActionModal(`La matrícula "${matriculaDesdeJson}" del archivo JSON ya existe. No se puede cargar.`);
                             return;
                         }
 
-                        // Guardar datos de la moto
-                        motos[matriculaDesdeJson] = jsonData.motoInfo;
-                        motos[matriculaDesdeJson].placa = matriculaDesdeJson; // Asegurar consistencia
-                        guardarMotos(motos);
+                        vehicles[matriculaDesdeJson] = jsonData.vehicleInfo; // MODIFICADO
+                        vehicles[matriculaDesdeJson].placa = matriculaDesdeJson;
+                        guardarVehiculos(vehicles); // MODIFICADO
 
-                        // Guardar mantenimientos
                         localStorage.setItem(`${MANTENIMIENTOS_PREFIX}${matriculaDesdeJson}`, JSON.stringify(jsonData.mantenimientos || []));
                         
-                        // Guardar consumos (si existen en el JSON)
                         if (Array.isArray(jsonData.consumos)) {
                             localStorage.setItem(`${CONSUMOS_PREFIX}${matriculaDesdeJson}`, JSON.stringify(jsonData.consumos));
-                        } else { // Si no vienen, crear entrada vacía
+                        } else {
                             localStorage.setItem(`${CONSUMOS_PREFIX}${matriculaDesdeJson}`, JSON.stringify([]));
                         }
 
-                        mostrarMensaje(`Motocicleta "${matriculaDesdeJson}" y sus datos cargados exitosamente desde JSON.`, true);
+                        mostrarMensaje(`Vehículo "${matriculaDesdeJson}" y sus datos cargados exitosamente desde JSON.`, true); // MODIFICADO
                         closeFabActionModal();
-                        renderMotorcycleList();
+                        renderVehicleList(); // MODIFICADO
 
                     } catch (error) {
                         console.error("Error al procesar archivo JSON:", error);
                         mostrarErrorEnFabActionModal("Error al leer el archivo JSON. Formato incorrecto.");
                     } finally {
-                        uploadMotoJsonInput.value = ''; // Limpiar para permitir re-selección
+                        uploadVehiculoJsonInput.value = ''; // MODIFICADO
                     }
                 };
                 reader.onerror = () => {
                     mostrarErrorEnFabActionModal("No se pudo leer el archivo seleccionado.");
-                    uploadMotoJsonInput.value = '';
+                    uploadVehiculoJsonInput.value = ''; // MODIFICADO
                 };
                 reader.readAsText(file);
             });
         }
         
-        // --- Lógica para Eliminar Moto (con modal de confirmación) ---
-        if(confirmDeleteMotoYesButton) confirmDeleteMotoYesButton.addEventListener('click', () => {
+        // --- Lógica para Eliminar Vehículo --- // MODIFICADO
+        if(confirmDeleteVehicleYesButton) confirmDeleteVehicleYesButton.addEventListener('click', () => { // MODIFICADO
             if (matriculaParaEliminarContext) {
-                let motos = obtenerMotos();
-                delete motos[matriculaParaEliminarContext];
-                guardarMotos(motos);
+                let vehicles = obtenerVehiculos(); // MODIFICADO
+                delete vehicles[matriculaParaEliminarContext]; // MODIFICADO
+                guardarVehiculos(vehicles); // MODIFICADO
                 localStorage.removeItem(`${MANTENIMIENTOS_PREFIX}${matriculaParaEliminarContext}`);
                 localStorage.removeItem(`${CONSUMOS_PREFIX}${matriculaParaEliminarContext}`);
-                mostrarMensaje(`Motocicleta ${matriculaParaEliminarContext} y todos sus datos han sido eliminados.`, true);
-                renderMotorcycleList();
+                mostrarMensaje(`Vehículo ${matriculaParaEliminarContext} y todos sus datos han sido eliminados.`, true); // MODIFICADO
+                renderVehicleList(); // MODIFICADO
             }
-            closeConfirmDeleteMotoModal();
+            closeConfirmDeleteVehicleModal(); // MODIFICADO
         });
-        if(confirmDeleteMotoNoButton) confirmDeleteMotoNoButton.addEventListener('click', closeConfirmDeleteMotoModal);
-        if(closeConfirmDeleteMotoModalButton) closeConfirmDeleteMotoModalButton.addEventListener('click', closeConfirmDeleteMotoModal);
+        if(confirmDeleteVehicleNoButton) confirmDeleteVehicleNoButton.addEventListener('click', closeConfirmDeleteVehicleModal); // MODIFICADO
+        if(closeConfirmDeleteVehicleModalButton) closeConfirmDeleteVehicleModalButton.addEventListener('click', closeConfirmDeleteVehicleModal); // MODIFICADO
 
 
         // --- Event Listeners para abrir/cerrar Modales ---
-        if (addMotorcycleButton) { // Este es tu FAB
-            addMotorcycleButton.addEventListener('click', openFabActionModal);
+        if (addVehicleButton) { // MODIFICADO
+            addVehicleButton.addEventListener('click', openFabActionModal); // MODIFICADO
         }
         if (closeFabActionModalButton) {
             closeFabActionModalButton.addEventListener('click', closeFabActionModal);
         }
-        if (btnRegistrarNuevaMoto) {
-            btnRegistrarNuevaMoto.addEventListener('click', () => {
+        if (btnRegistrarNuevoVehiculo) { // MODIFICADO
+            btnRegistrarNuevoVehiculo.addEventListener('click', () => { // MODIFICADO
                 closeFabActionModal();
-                openFormModal(); // Abrir para añadir nueva moto
+                openFormModal();
             });
         }
-        if (closeFormModalButton) { // Botón X del modal de formulario
+        if (closeFormModalButton) {
             closeFormModalButton.addEventListener('click', closeFormModal);
         }
         
+        // NUEVO: Event Listeners para el filtro de categorías
+        categoryFilterCheckboxes.forEach(checkbox => {
+            checkbox.addEventListener('change', () => {
+                if (checkbox.value === 'all' && checkbox.checked) {
+                    // Si "Todas" se marca, desmarcar las otras
+                    categoryFilterCheckboxes.forEach(cb => {
+                        if (cb !== checkbox) cb.checked = false;
+                    });
+                } else if (checkbox.value !== 'all' && checkbox.checked) {
+                    // Si se marca una específica, desmarcar "Todas"
+                    const allCb = document.querySelector('#category-filter-container input[value="all"]');
+                    if (allCb) allCb.checked = false;
+                }
+                
+                // Validar que si ninguna está marcada, se marque "Todas"
+                let anyChecked = false;
+                categoryFilterCheckboxes.forEach(cb => {
+                    if (cb.checked) anyChecked = true;
+                });
+                if (!anyChecked) {
+                    const allCb = document.querySelector('#category-filter-container input[value="all"]');
+                    if (allCb) allCb.checked = true;
+                }
+                renderVehicleList();
+            });
+        });
+
         window.addEventListener('click', (event) => {
             if (event.target === fabActionModal) closeFabActionModal();
             if (event.target === formModal) closeFormModal();
-            if (event.target === confirmDeleteMotoModal) closeConfirmDeleteMotoModal();
+            if (event.target === confirmDeleteVehicleModal) closeConfirmDeleteVehicleModal(); // MODIFICADO
         });
 
         // Carga Inicial
-        renderMotorcycleList();
-        console.log("Moto Script (v4.0) Inicializado.");
+        renderVehicleList(); // MODIFICADO
+        console.log("Vehiculo Script (v5.0) Inicializado."); // MODIFICADO
     });
     </script>
 </body>

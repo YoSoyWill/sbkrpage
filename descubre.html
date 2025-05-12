@@ -4,95 +4,28 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SBKR - Contenido Destacado</title>
-    <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
-    <style>
-        /* Estilos generales del body (pueden estar en style.css) */
-        body {
-            background-color: var(--color-background-light, #F0F2F5);
-            color: var(--color-text-on-light, #023047);
-            font-family: var(--font-main, 'Roboto', sans-serif);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-            padding: 20px;
-            box-sizing: border-box;
-        }
-
-        /* Estilos de la Navbar (copiados de sbkr_intro_page para consistencia) */
-        .top-navbar {
-            max-width: 700px;
-            width: 100%;
-            margin-left: auto;
-            margin-right: auto;
-            background-color: var(--color-card-background, #FFFFFF);
-            padding: 10px 0;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            margin-bottom: 25px;
-            border-radius: 8px;
-            box-sizing: border-box;
-        }
-
-        .top-navbar ul {
-            list-style: none;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .top-navbar li {
-            margin: 0 5px;
-        }
-
-        .top-navbar a {
-            text-decoration: none;
-            color: var(--color-primary-accent, #FB8500);
-            font-weight: 500;
-            font-size: 0.95em;
-            padding: 10px 12px;
-            border-radius: 4px;
-            transition: background-color 0.3s ease, color 0.3s ease;
-            display: block;
-            white-space: nowrap;
-        }
-
-        .top-navbar a:hover,
-        .top-navbar a.active {
-            background-color: var(--color-primary-accent-hover, #E67E22);
-            color: var(--color-text-on-accent, #FFFFFF);
-        }
-
-        /* Contenedor principal para las tarjetas */
-        .page-title {
-            color: var(--color-primary-accent, #FB8500);
-            text-align: center;
-            margin-bottom: 25px;
-            font-size: 2em;
-        }
-
+        <link href="style.css" rel="stylesheet">
+        <style>
+       
         .cards-container {
             display: flex;
-            flex-wrap: wrap; /* Permite que las tarjetas pasen a la siguiente línea */
-            gap: 20px; /* Espacio entre tarjetas */
-            justify-content: center; /* Centra las tarjetas si no llenan toda la fila */
-            max-width: 1000px; /* Ajusta el ancho máximo del contenedor de tarjetas */
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+            max-width: 1000px;
             width: 100%;
-            padding: 0 10px; /* Padding lateral para el contenedor */
+            padding: 0 10px;
             box-sizing: border-box;
         }
 
-        /* Estilo para cada tarjeta individual */
         .card-item {
-            background-color: var(--color-card-background, #FFFFFF);
+            background-color: var(--color-card-background);
             border-radius: 8px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
             padding: 20px;
             box-sizing: border-box;
-            width: 100%; /* Por defecto ocupa todo el ancho en móviles */
+            width: 100%; 
             display: flex;
             flex-direction: column;
             transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
@@ -103,59 +36,57 @@
             box-shadow: 0 4px 10px rgba(0,0,0,0.15);
         }
 
-        .card-item h2 { /* Título de la tarjeta */
+        .card-item h2 {
             font-size: 1.5em;
-            color: var(--color-primary-accent, #FB8500);
+            color: var(--color-primary-accent);
             margin-top: 0;
             margin-bottom: 10px;
-            border-bottom: none; /* Quitar el borde si h2 general lo tiene */
-            padding-bottom: 0;
+            font-weight: 500;
         }
 
-        .card-item p { /* Descripción de la tarjeta */
+        .card-item p {
             font-size: 1em;
             line-height: 1.6;
-            color: var(--color-text-on-light, #023047);
+            color: var(--color-text-on-light);
             margin-bottom: 15px;
-            flex-grow: 1; /* Hace que la descripción ocupe el espacio disponible */
+            flex-grow: 1; 
         }
 
-        .card-item .card-button { /* Botón de la tarjeta */
+        .card-item .card-button {
             display: inline-block;
-            background-color: var(--color-primary-accent, #FB8500);
-            color: var(--color-text-on-accent, #FFFFFF);
+            background-color: var(--color-primary-accent);
+            color: var(--color-text-on-accent);
             padding: 10px 18px;
             border-radius: 4px;
             text-decoration: none;
             text-align: center;
             font-weight: 500;
             transition: background-color 0.3s ease;
-            align-self: flex-start; /* Alinea el botón al inicio si el contenido es corto */
+            align-self: flex-start; 
+            margin-top: auto; /* Empuja el botón hacia abajo */
         }
 
         .card-item .card-button:hover {
-            background-color: var(--color-primary-accent-hover, #E67E22);
+            background-color: var(--color-primary-accent-hover);
         }
 
-        /* Media queries para layout de tarjetas en pantallas más grandes */
         @media (min-width: 600px) {
             .card-item {
-                width: calc(50% - 10px); /* Dos tarjetas por fila, restando la mitad del gap */
+                width: calc(50% - 10px); 
             }
         }
 
         @media (min-width: 900px) {
             .card-item {
-                width: calc(33.333% - 14px); /* Tres tarjetas por fila, ajustando por el gap. (20px * 2/3) ~= 13.33px */
+                width: calc(33.333% - 14px); 
             }
         }
 
-        /* Footer (opcional, para consistencia) */
         footer {
             margin-top: 40px;
             padding: 15px;
             font-size: 0.9em;
-            color: var(--color-text-on-light, #023047);
+            color: var(--color-text-on-light);
             opacity: 0.8;
             text-align: center;
             width: 100%;
@@ -163,36 +94,43 @@
     </style>
 </head>
 <body>
-
-
-
-    <h1 class="page-title">Contenido Destacado</h1>
+    <div class="container">
+    <h1 class="page-title">Descubre y aprende</h1>
 
     <div class="cards-container" id="cardsContainer">
-        </div>
+        <p style="text-align:center;">Cargando contenido...</p>
+    </div>
+   </div>
 
 
     <script>
-        // Función para crear y mostrar las tarjetas desde un JSON externo
         function populateCards() {
             const container = document.getElementById('cardsContainer');
             if (!container) {
                 console.error("El contenedor de tarjetas no fue encontrado.");
                 return;
             }
-            container.innerHTML = ''; // Limpiar el contenedor
-
-            // Obtener los datos del archivo JSON externo
-            fetch('descubre.json') // Asegúrate que este archivo exista en la misma ruta
+            
+            fetch('descubre.json') 
                 .then(response => {
                     if (!response.ok) {
-                        throw new Error('Error al cargar el archivo JSON: ' + response.statusText);
+                        throw new Error('Error al cargar contenido_data.json: ' + response.statusText);
                     }
-                    return response.json(); // Convertir la respuesta a JSON
+                    return response.json(); 
                 })
-                .then(cardData => {
-                    // Iterar sobre los datos y crear las tarjetas
-                    cardData.forEach(data => {
+                .then(cardDataArray => {
+                    container.innerHTML = ''; // Limpiar mensaje de "Cargando..."
+                    if (!Array.isArray(cardDataArray) || cardDataArray.length === 0) {
+                        container.innerHTML = '<p style="text-align:center;">No hay contenido disponible en este momento.</p>';
+                        return;
+                    }
+
+                    cardDataArray.forEach(data => {
+                        if (!data.id || !data.titulo || !data.descripcion || !data.boton) {
+                            console.warn("Elemento de datos incompleto, saltando:", data);
+                            return; // Saltar este elemento si le faltan campos clave
+                        }
+
                         const card = document.createElement('div');
                         card.classList.add('card-item');
 
@@ -204,10 +142,12 @@
 
                         const buttonLink = document.createElement('a');
                         buttonLink.classList.add('card-button');
-                        buttonLink.href = data.enlace;
-                        buttonLink.textContent = data.texto_boton || "Más información";
-                        buttonLink.setAttribute('target', '_blank');
-                        buttonLink.setAttribute('rel', 'noopener noreferrer nofollow');
+                        // Construir el enlace para la página de detalle
+                        buttonLink.href = `detalle_contenido.html?id=${encodeURIComponent(data.id)}`;
+                        buttonLink.textContent = data.boton || "Más información";
+                        // No abrir en nueva pestaña por defecto, para mantener la navegación en el sitio
+                        // buttonLink.setAttribute('target', '_blank'); 
+                        // buttonLink.setAttribute('rel', 'noopener noreferrer nofollow');
 
                         card.appendChild(title);
                         card.appendChild(description);
@@ -218,14 +158,12 @@
                 })
                 .catch(error => {
                     console.error('Hubo un problema con la operación fetch:', error);
-                    container.innerHTML = '<p style="text-align:center; color:var(--color-error-text);">No se pudo cargar el contenido. Verifica tu conexión a internet o intente más tarde.</p>';
+                    container.innerHTML = `<p style="text-align:center; color:var(--color-error-text);">No se pudo cargar el contenido. ${error.message}</p>`;
                 });
         }
 
-        // Llenar las tarjetas cuando el DOM esté listo
         document.addEventListener('DOMContentLoaded', populateCards);
 
-        // Año actual en el footer
         const currentYearElement = document.getElementById('currentYear');
         if (currentYearElement) {
             currentYearElement.textContent = new Date().getFullYear();

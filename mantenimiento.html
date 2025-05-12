@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Mantenimiento de Motocicleta</title>
+    <title>Mantenimiento de Vehículo</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -13,8 +13,8 @@
 
 <body>
     <div class="container">
-        <h1>Mantenimiento <small id="moto-placa-titulo">N/A</small></h1>
-        
+        <h1>Mantenimiento <small id="vehiculo-placa-titulo">N/A</small></h1>
+
         <div id="mensaje-error" style="display: none;"></div>
         <div id="mensaje-exito" style="display: none;"></div>
 
@@ -23,7 +23,7 @@
 
         <div id="export-button-container" class="export-button-wrapper" style="display: none;">
             <a id="export-page-btn" class="button-export-content" href="#"
-                title="Exportar datos de esta motocicleta">Exportar Datos</a>
+                title="Exportar datos de este vehículo">Exportar Datos</a>
         </div>
 
         <a id="add-via-fab" href="#" class="fab" title="Añadir nuevo registro de mantenimiento">
@@ -38,8 +38,8 @@
                 <button type="button" class="close-button" aria-label="Cerrar">&times;</button>
             </div>
             <form id="modalForm">
-                <input type="hidden" id="modal-category-id" value=""> <input type="hidden" id="modal-edit-item-index"
-                    value="-1">
+                <input type="hidden" id="modal-category-id" value="">
+                <input type="hidden" id="modal-edit-item-index" value="-1">
                 <div class="modal-form-group">
                     <label for="modal-fecha-input">Fecha:</label>
                     <input type="date" id="modal-fecha-input" required>
@@ -47,7 +47,7 @@
                 <div class="modal-form-group">
                     <label for="modal-km-input">Kilometraje:</label>
                     <input type="number" id="modal-km-input" placeholder="Ingrese KM" required inputmode="numeric"
-                        pattern="[0-9]*">
+                        pattern="[0-9]*" min="0">
                 </div>
                 <div class="modal-form-group">
                     <label for="modal-detalle-input">Detalle:</label>
@@ -55,25 +55,46 @@
                 </div>
                 <button id="saveModalButton" type="submit" class="modal-button">Guardar Registro</button>
             </form>
-            <div id="modal-mensaje-error"></div>
+            <div id="modal-mensaje-error" class="modal-error-message"></div>
         </div>
     </div>
 
     <div id="selectCategoryFabModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2>Seleccionar Categoría</h2>
-                <button type="button" class="close-button-fab-cat" aria-label="Cerrar">&times;</button>
-            </div>
-            <div id="fab-category-list" class="modal-form-group">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>Seleccionar Categoría de Mantenimiento</h2>
+            <button type="button" class="close-button-fab-cat" aria-label="Cerrar">&times;</button>
+        </div>
+        <p style="font-size: 0.9em; color: #555; margin-bottom: 10px;">Elija una categoría predefinida:</p>
+        <div id="fab-category-list" class="modal-form-group"
+             style="max-height: 200px; overflow-y: auto; margin-bottom: 15px; border: 1px solid #eee; padding:5px;">
             </div>
         </div>
+</div>
+<div id="otroCustomCategoryModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>Mantenimiento personalizado</h2>
+            <button type="button" class="close-button-otro-custom" aria-label="Cerrar">&times;</button>
+        </div>
+        <p style="font-size: 0.9em; color: #555; margin-bottom: 10px;">Ingrese el mantenimiento personalizado</p>
+        <div class="modal-form-group">
+            <label for="otro-custom-task-input" style="font-weight:500;">Tarea de Mantenimiento Personalizada:</label>
+            <input type="text" id="otro-custom-task-input" class="form-control"
+                   placeholder="Ej: Cambio de Bujías" style="margin-top:5px;">
+        </div>
+        <button type="button" id="use-otro-custom-task-button" class="modal-button"
+                style="margin-top:15px; width:100%;">Usar Tarea Especificada</button>
+        <div id="otro-custom-modal-error" class="modal-error-message" style="display:none; margin-top:10px;">
+        </div>
     </div>
+</div>
 
     <div id="confirmDeleteModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
                 <h2 id="confirmDeleteModalTitle">Confirmar Eliminación</h2>
+                <button type="button" class="close-button" id="closeConfirmDeleteModal">&times;</button>
             </div>
             <p id="confirmDeleteModalMessage" style="margin: 20px 0; line-height: 1.6;"></p>
             <div class="modal-actions">
@@ -84,296 +105,441 @@
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            console.log("Mantenimiento Script (v5.5 - Final Integrado) Cargado");
+    document.addEventListener('DOMContentLoaded', function () {
+        console.log("Mantenimiento Script (v5.7.0 - Motor Custom Task Modal) Cargado"); // Version bump
 
-            const CATEGORIAS_PREDEFINIDAS = [
-                { id: 'aceite', name: 'Aceite del Motor' },
-                { id: 'filtro_aceite', name: 'Filtro de Aceite' },
-                { id: 'filtro_aire', name: 'Filtro de Aire' },
-                { id: 'bujias', name: 'Bujías' },
-                { id: 'valvulas', name: 'Ajuste de Válvulas' },
-                { id: 'refrigerante', name: 'Nivel de Refrigerante' },
-                { id: 'bateria', name: 'Batería' },
-                { id: 'freno_delantero', name: 'Freno Delantero' },
-                { id: 'freno_trasero', name: 'Freno Trasero' },
-                { id: 'liquido_frenos', name: 'Líquido de Frenos' },
-                { id: 'clutch', name: 'Clutch (Embrague)' },
-                { id: 'cable_clutch', name: 'Cable o Mando del Clutch' },
-                { id: 'transmision', name: 'Transmisión (Caja / Marchas)' },
-                { id: 'cadena', name: 'Kit de Arrastre (Cadena, Piñón y Catalinas)' },
-                { id: 'tension_cadena', name: 'Tensión de la Cadena' },
-                { id: 'llanta_delantera', name: 'Neumático Delantero' },
-                { id: 'llanta_trasera', name: 'Neumático Trasero' },
-                { id: 'presion_llantas', name: 'Presión de Llantas' },
-                { id: 'amortiguadores', name: 'Amortiguadores (Delanteros y Traseros)' },
-                { id: 'direccion', name: 'Dirección (Holgura, Rodamientos)' },
-                { id: 'suspension', name: 'Suspensión' },
-                { id: 'luces', name: 'Luces (Altas, Bajas, Posición)' },
-                { id: 'intermitentes', name: 'Intermitentes / Direccionales' },
-                { id: 'claxon', name: 'Claxon / Bocina' },
-                { id: 'espejos', name: 'Espejos' },
-                { id: 'instrumental', name: 'Panel de Instrumentos / Testigos' },
-                { id: 'alimentacion', name: 'Sistema de Alimentación (Inyección / Carburador)' },
-                { id: 'fugas', name: 'Fugas de Aceite o Combustible' },
-                { id: 'chasis', name: 'Chasis / Estructura' },
-                { id: 'cadena_lubricacion', name: 'Lubricación de la Cadena' },
-                { id: 'escape', name: 'Sistema de Escape' },
-                { id: 'guardabarros', name: 'Guardabarros' },
-                { id: 'otros', name: 'Otros (Personalizados o Adicionales)' }
-            ].sort((a, b) => a.name.localeCompare(b.name));
+        const CATEGORIAS_PREDEFINIDAS = [
+            { id: 'motor', name: 'Motor' },
+            { id: 'lubricacion', name: 'Lubricación' },
+            { id: 'refrigeracion', name: 'Refrigeración' },
+            { id: 'electricidad', name: 'Electricidad' },
+            { id: 'frenos', name: 'Frenos' },
+            { id: 'clutch', name: 'Clutch / Embrague' },
+            { id: 'transmision', name: 'Transmisión' },
+            { id: 'cadena', name: 'Cadena / Arrastre' },
+            { id: 'neumaticos', name: 'Neumáticos' },
+            { id: 'direccion', name: 'Dirección' },
+            { id: 'suspension', name: 'Suspensión' },
+            { id: 'luces', name: 'Luces' },
+            { id: 'instrumental', name: 'Instrumental' },
+            { id: 'seguridad', name: 'Seguridad / Visibilidad' },
+            { id: 'escape', name: 'Escape' },
+            { id: 'otro', name: 'Otro, personalizado' },
+            { id: 'alimentacion', name: 'Alimentación' },
+        ].sort((a, b) => a.name.localeCompare(b.name));
 
-            const mainTitle = document.getElementById('main-title');
-            const placaTituloSpan = document.getElementById('moto-placa-titulo');
-            const maintenanceListDiv = document.getElementById('maintenance-list');
-            const mensajeExitoDiv = document.getElementById('mensaje-exito');
-            const mensajeErrorDiv = document.getElementById('mensaje-error');
-            const addViaFabButton = document.getElementById('add-via-fab');
-            const selectCategoryFabModal = document.getElementById('selectCategoryFabModal');
-            const closeSelectCategoryFabModalButton = selectCategoryFabModal?.querySelector('.close-button-fab-cat');
-            const fabCategoryListDiv = document.getElementById('fab-category-list');
-            const addRecordModal = document.getElementById('addRecordModal');
-            const closeModalButton = addRecordModal?.querySelector('.close-button');
-            const modalForm = document.getElementById('modalForm');
-            const modalTitle = document.getElementById('modal-title');
-            const modalCategoryIdInput = document.getElementById('modal-category-id');
-            const modalEditItemIndexInput = document.getElementById('modal-edit-item-index');
-            const modalFechaInput = document.getElementById('modal-fecha-input');
-            const modalKmInput = document.getElementById('modal-km-input');
-            const modalDetalleInput = document.getElementById('modal-detalle-input');
-            const saveModalButton = document.getElementById('saveModalButton');
-            const modalMensajeErrorDiv = document.getElementById('modal-mensaje-error');
-            const navLinkMoto = document.querySelector('.bottom-bar a[href*="moto.html"]');
-            const navLinkEventos = document.querySelector('.bottom-bar a[href*="eventos.html"]');
-            const exportButtonContainer = document.getElementById('export-button-container');
-            const exportPageBtn = document.getElementById('export-page-btn');
-            const confirmDeleteModal = document.getElementById('confirmDeleteModal');
-            const confirmDeleteModalMessage = document.getElementById('confirmDeleteModalMessage');
-            const confirmDeleteModalYesButton = document.getElementById('confirmDeleteModalYes');
-            const confirmDeleteModalNoButton = document.getElementById('confirmDeleteModalNo');
-            let onConfirmDeleteCallback = null;
+        let placaTituloSpan = document.getElementById('vehiculo-placa-titulo');
 
-            const essentialElements = [
-                mainTitle, maintenanceListDiv, mensajeExitoDiv, mensajeErrorDiv, addViaFabButton,
-                selectCategoryFabModal, fabCategoryListDiv, addRecordModal, modalForm, modalTitle,
-                modalCategoryIdInput, modalEditItemIndexInput, modalFechaInput, modalKmInput,
-                modalDetalleInput, saveModalButton, modalMensajeErrorDiv, navLinkMoto, navLinkEventos,
-                exportButtonContainer, exportPageBtn, confirmDeleteModal, confirmDeleteModalMessage,
-                confirmDeleteModalYesButton, confirmDeleteModalNoButton
-            ];
-            if (essentialElements.some(el => !el && el !== null)) { // null es aceptable para algunos querySelector si no existen
-                console.error("Error crítico: Faltan elementos HTML esenciales. Verifica los IDs.");
-                if (mainTitle) mainTitle.innerHTML = "Error de Configuración <small>Faltan Elementos Esenciales</small>";
-                return;
+        const maintenanceListDiv = document.getElementById('maintenance-list');
+        const mensajeExitoDiv = document.getElementById('mensaje-exito');
+        const mensajeErrorDiv = document.getElementById('mensaje-error');
+        const addViaFabButton = document.getElementById('add-via-fab');
+
+        // Select Category Modal (for FAB)
+        const selectCategoryFabModal = document.getElementById('selectCategoryFabModal');
+        const closeSelectCategoryFabModalButton = selectCategoryFabModal?.querySelector('.close-button-fab-cat');
+        const fabCategoryListDiv = document.getElementById('fab-category-list');
+        // const customCategoryInput = document.getElementById('custom-category-input'); // Removed from this modal
+        // const addCustomCategoryButton = document.getElementById('add-custom-category-button'); // Removed
+        // const customCategoryModalErrorDiv = document.getElementById('custom-category-modal-error'); // Removed
+
+        // New otro Custom Category Modal Elements
+        const otroCustomCategoryModal = document.getElementById('otroCustomCategoryModal');
+        const closeotroCustomCategoryModalButton = otroCustomCategoryModal?.querySelector('.close-button-otro-custom');
+        const otroCustomTaskInput = document.getElementById('otro-custom-task-input');
+        const useotroCustomTaskButton = document.getElementById('use-otro-custom-task-button');
+        const otroCustomModalErrorDiv = document.getElementById('otro-custom-modal-error');
+
+        // Add/Edit Record Modal
+        const addRecordModal = document.getElementById('addRecordModal');
+        const closeModalButton = addRecordModal?.querySelector('.close-button');
+        const modalForm = document.getElementById('modalForm');
+        const modalTitle = document.getElementById('modal-title');
+        const modalCategoryIdInput = document.getElementById('modal-category-id');
+        const modalEditItemIndexInput = document.getElementById('modal-edit-item-index');
+        const modalFechaInput = document.getElementById('modal-fecha-input');
+        const modalKmInput = document.getElementById('modal-km-input');
+        const modalDetalleInput = document.getElementById('modal-detalle-input');
+        const saveModalButton = document.getElementById('saveModalButton');
+        const modalMensajeErrorDiv = document.getElementById('modal-mensaje-error');
+
+        const exportButtonContainer = document.getElementById('export-button-container');
+        const exportPageBtn = document.getElementById('export-page-btn');
+
+        const confirmDeleteModal = document.getElementById('confirmDeleteModal');
+        const confirmDeleteModalMessage = document.getElementById('confirmDeleteModalMessage');
+        const confirmDeleteModalYesButton = document.getElementById('confirmDeleteModalYes');
+        const confirmDeleteModalNoButton = document.getElementById('confirmDeleteModalNo');
+        const closeConfirmDeleteModalButton = document.getElementById('closeConfirmDeleteModal');
+        let onConfirmDeleteCallback = null;
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const matricula = urlParams.get('matricula')?.toUpperCase().trim();
+        const VEHICLES_DB_KEY = 'vehiclesDB';
+        const MANTENIMIENTOS_PREFIX = 'MANTENIMIENTOS_';
+        const mantenimientosKey = `${MANTENIMIENTOS_PREFIX}${matricula}`;
+
+        function mostrarMensaje(texto, esExito = true, isModalError = false, modalErrorElement = modalMensajeErrorDiv) {
+            const elemento = isModalError ? modalErrorElement : (esExito ? mensajeExitoDiv : mensajeErrorDiv);
+            if (!elemento) return;
+            elemento.textContent = texto;
+            elemento.className = `mensaje ${isModalError ? 'error' : (esExito ? 'exito' : 'error')}`;
+            if (isModalError) elemento.classList.add('modal-error-message');
+            elemento.style.display = 'block';
+            if (!isModalError || esExito) {
+                setTimeout(() => { if (elemento) elemento.style.display = 'none'; }, isModalError && esExito ? 2500 : 4000);
             }
+        }
 
-
-            const urlParams = new URLSearchParams(window.location.search);
-            const matricula = urlParams.get('matricula')?.toUpperCase().trim();
-            const MANTENIMIENTOS_PREFIX = 'MANTENIMIENTOS_';
-            const mantenimientosKey = `${MANTENIMIENTOS_PREFIX}${matricula}`;
-
-            function mostrarMensaje(texto, esExito = true, isModal = false) {
-                const elemento = isModal ? modalMensajeErrorDiv : (esExito ? mensajeExitoDiv : mensajeErrorDiv);
-                if (!elemento) return; elemento.textContent = texto;
-                elemento.className = esExito ? 'mensaje-exito' : 'mensaje-error'; // Siempre re-aplicar clase para modales
-                elemento.style.display = 'block';
-                if (!isModal || esExito) { // Los errores en modal se quedan hasta nueva acción, los éxitos sí desaparecen
-                    setTimeout(() => { if (elemento) elemento.style.display = 'none'; }, isModal && esExito ? 2000 : 5000);
+        function obtenerInfoVehiculo(matriculaVehiculo) {
+            try {
+                const vehiclesData = localStorage.getItem(VEHICLES_DB_KEY);
+                if (vehiclesData) {
+                    const vehicles = JSON.parse(vehiclesData);
+                    return vehicles[matriculaVehiculo] || null;
                 }
+                return null;
+            } catch (e) {
+                console.error("Error al obtener información del vehículo:", e);
+                return null;
             }
+        }
 
-            if (!matricula) {
-                mostrarMensaje("Error: No se especificó matrícula.", false);
-                if (mainTitle) mainTitle.innerHTML = "Error <br/><small>Sin Matrícula</small>";
-                if(placaTituloSpan) placaTituloSpan.textContent = "Error";
-                if (addViaFabButton) addViaFabButton.style.display = 'none';
+        if (!matricula) {
+            mostrarMensaje("Error: No se especificó matrícula de vehículo.", false);
+            if (placaTituloSpan) placaTituloSpan.textContent = "Error";
+            if (addViaFabButton) addViaFabButton.style.display = 'none';
+            if (exportButtonContainer) exportButtonContainer.style.display = 'none';
+        } else {
+            const vehiculoInfo = obtenerInfoVehiculo(matricula);
+            const mainTitleH1 = document.querySelector('.container > h1');
+            if (mainTitleH1) {
+                mainTitleH1.innerHTML = `Mantenimiento: ${vehiculoInfo?.marca || ''} ${vehiculoInfo?.modelo || ''} <small id="vehiculo-placa-titulo">${matricula}</small>`;
+                const newPlacaTituloSpanInstance = document.getElementById('vehiculo-placa-titulo');
+                if (newPlacaTituloSpanInstance) {
+                    placaTituloSpan = newPlacaTituloSpanInstance;
+                } else {
+                    console.warn("vehiculo-placa-titulo not found after H1 update.");
+                    if (placaTituloSpan) placaTituloSpan.textContent = matricula;
+                }
+            } else if (placaTituloSpan) {
+                placaTituloSpan.textContent = matricula;
+            }
+            if (exportPageBtn) exportPageBtn.href = `exportar.html?matricula=${matricula}`;
+        }
+
+        function obtenerMantenimientos() { try { const data = localStorage.getItem(mantenimientosKey); const p = data ? JSON.parse(data) : []; return Array.isArray(p) ? p.filter(i => typeof i === 'object' && i !== null && typeof i.elemento === 'string') : []; } catch (e) { console.error(`Error leer ${mantenimientosKey}:`, e); mostrarMensaje("Error al leer datos de mantenimiento.", false); return []; } }
+        function guardarMantenimientos(mantenimientosArray) { if (!Array.isArray(mantenimientosArray)) { console.error("Intento guardar no-array en mantenimientos."); return; } try { mantenimientosArray.forEach(i => { if (i.historial && Array.isArray(i.historial)) i.historial.sort(compararHistorialDesc); }); localStorage.setItem(mantenimientosKey, JSON.stringify(mantenimientosArray)); } catch (e) { console.error("Error guardar mantenimientos:", e); mostrarMensaje("Error al guardar datos de mantenimiento.", false); } }
+        function compararHistorialDesc(a, b) { let dateA = null, dateB = null; try { const dateA_str = a.fecha?.includes('/') ? a.fecha.split('/').reverse().join('-') : a.fecha; const dateB_str = b.fecha?.includes('/') ? b.fecha.split('/').reverse().join('-') : b.fecha; dateA = dateA_str ? new Date(dateA_str) : null; dateB = dateB_str ? new Date(dateB_str) : null; if (dateA instanceof Date && isNaN(dateA.getTime())) dateA = null; if (dateB instanceof Date && isNaN(dateB.getTime())) dateB = null; } catch (e) { dateA = null; dateB = null; } if (dateA && dateB && dateA.getTime() !== dateB.getTime()) { return dateB.getTime() - dateA.getTime(); } if (dateA && !dateB) return -1; if (!dateA && dateB) return 1; const kmA = parseFloat(a.km); const kmB = parseFloat(b.km); if (!isNaN(kmA) && !isNaN(kmB) && kmA !== kmB) { return kmB - kmA; } return 0; }
+        function formatDate(dateString) { if (!dateString) return 'N/A'; try { const p = dateString.split(/[-/ ]/); let isoDateString = dateString; if (p.length === 3) { if (p[0].length === 4) { isoDateString = `${p[0]}-${p[1].padStart(2, '0')}-${p[2].padStart(2, '0')}`; } else if (p[2].length === 4) { isoDateString = `${p[2]}-${p[1].padStart(2, '0')}-${p[0].padStart(2, '0')}`; } } const date = new Date(isoDateString + 'T00:00:00'); if (isNaN(date.getTime())) return dateString; return date.toLocaleDateString('es-CR', { day: 'numeric', month: 'short', year: 'numeric' }); } catch (e) { return dateString; } }
+
+        function loadMaintenanceItems() {
+            maintenanceListDiv.innerHTML = '';
+            let todosLosMantenimientos = obtenerMantenimientos();
+            let seHicieronCambiosEstructurales = false;
+            const nombresDeElementosActuales = todosLosMantenimientos.map(m => m.elemento);
+            CATEGORIAS_PREDEFINIDAS.forEach(catPredefinida => {
+                if (!nombresDeElementosActuales.includes(catPredefinida.name)) {
+                    todosLosMantenimientos.push({ elemento: catPredefinida.name, actual: "Sin registros", historial: [] });
+                    seHicieronCambiosEstructurales = true;
+                }
+            });
+            if (seHicieronCambiosEstructurales) {
+                guardarMantenimientos(todosLosMantenimientos);
+                todosLosMantenimientos = obtenerMantenimientos();
+            }
+            const mantenimientosParaMostrar = todosLosMantenimientos.filter(item => item.historial && Array.isArray(item.historial) && item.historial.length > 0);
+            mantenimientosParaMostrar.sort((a, b) => (a.elemento || '').localeCompare(b.elemento || ''));
+
+            if (mantenimientosParaMostrar.length === 0 && todosLosMantenimientos.every(item => !item.historial || item.historial.length === 0)) {
+                maintenanceListDiv.innerHTML = '<p style="text-align:center; padding: 20px 0;">No hay registros de mantenimiento aún. Usa el botón (+) para añadir el primero.</p>';
                 if (exportButtonContainer) exportButtonContainer.style.display = 'none';
-                document.querySelectorAll('.bottom-bar a').forEach(a => {
-                    if (!a.href.includes('index.html')) { a.style.pointerEvents = 'none'; a.style.opacity = '0.5'; }
-                });
                 return;
             } else {
-                if (mainTitle) mainTitle.innerHTML = `Mantenimiento <br/><small>${matricula}</small>`;
-                if(placaTituloSpan) placaTituloSpan.textContent = matricula;
-                if (navLinkMoto) navLinkMoto.href = `moto.html?matricula=${matricula}`;
-                if (navLinkEventos) navLinkEventos.href = `eventos.html?matricula=${matricula}`;
-                if (exportPageBtn) exportPageBtn.href = `exportar.html?matricula=${matricula}`;
-                // exportButtonContainer se muestra/oculta en loadMaintenanceItems
+                if (exportButtonContainer) exportButtonContainer.style.display = 'block';
             }
 
-            function obtenerMantenimientos() { try { const data = localStorage.getItem(mantenimientosKey); const p = data ? JSON.parse(data) : []; return Array.isArray(p) ? p.filter(i => typeof i === 'object' && i !== null && typeof i.elemento === 'string') : []; } catch (e) { console.error(`Error leer ${mantenimientosKey}:`, e); mostrarMensaje("Error al leer datos.", false); return []; } }
-            function guardarMantenimientos(mantenimientosArray) { if (!Array.isArray(mantenimientosArray)) { console.error("Intento guardar no-array."); return; } try { mantenimientosArray.forEach(i => { if (i.historial && Array.isArray(i.historial)) i.historial.sort(compararHistorialDesc); }); localStorage.setItem(mantenimientosKey, JSON.stringify(mantenimientosArray)); console.log(`Datos guardados en ${mantenimientosKey}.`); } catch (e) { console.error("Error guardar:", e); mostrarMensaje("Error al guardar.", false); } }
-            function compararHistorialDesc(a, b) { let dateA = null, dateB = null; try { const dateA_str = a.fecha?.includes('/') ? a.fecha.split('/').reverse().join('-') : a.fecha; const dateB_str = b.fecha?.includes('/') ? b.fecha.split('/').reverse().join('-') : b.fecha; dateA = dateA_str ? new Date(dateA_str) : null; dateB = dateB_str ? new Date(dateB_str) : null; if (dateA instanceof Date && isNaN(dateA)) dateA = null; if (dateB instanceof Date && isNaN(dateB)) dateB = null; } catch (e) { dateA = null; dateB = null; } if (dateA && dateB && dateA.getTime() !== dateB.getTime()) { return dateB - dateA; } if (dateA && !dateB) return -1; if (!dateA && dateB) return 1; const kmA = parseFloat(a.km); const kmB = parseFloat(b.km); if (!isNaN(kmA) && !isNaN(kmB) && kmA !== kmB) { return kmB - kmA; } return 0; }
-            function formatDate(dateString) { if (!dateString) return 'N/A'; try { const p = dateString.split(/[/ -]/); let i = dateString; if (p.length === 3) { if (p[0].length === 4) i = dateString.replace(/[/ ]/g, '-'); else if (p[2].length === 4) i = `${p[2]}-${p[1].padStart(2, '0')}-${p[0].padStart(2, '0')}`; } const d = new Date(i + 'T00:00:00'); if (isNaN(d)) return dateString; return d.toLocaleDateString('es-CR', { day: 'numeric', month: 'short', year: 'numeric' }); } catch (e) { return dateString; } }
+            mantenimientosParaMostrar.forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'maintenance-item card';
+                let ultimoRegHtml = `<p><strong>Fecha:</strong> <span>-</span></p><p><strong>KM:</strong> <span>-</span></p><p><strong>Detalle:</strong> <span>Sin registros</span></p>`;
+                let tieneHistorial = item.historial && Array.isArray(item.historial) && item.historial.length > 0;
 
-            function loadMaintenanceItems() {
-                maintenanceListDiv.innerHTML = '';
-                let todosLosMantenimientos = obtenerMantenimientos();
-                let seHicieronCambiosEstructurales = false;
-                const nombresDeElementosActuales = todosLosMantenimientos.map(m => m.elemento);
-                CATEGORIAS_PREDEFINIDAS.forEach(catPredefinida => {
-                    if (!nombresDeElementosActuales.includes(catPredefinida.name)) {
-                        todosLosMantenimientos.push({ elemento: catPredefinida.name, actual: "Sin registros", historial: [] });
-                        seHicieronCambiosEstructurales = true;
-                    }
-                });
-                if (seHicieronCambiosEstructurales) {
-                    guardarMantenimientos(todosLosMantenimientos);
-                    todosLosMantenimientos = obtenerMantenimientos();
-                }
-                const mantenimientosParaMostrar = todosLosMantenimientos.filter(item => item.historial && Array.isArray(item.historial) && item.historial.length > 0);
-                mantenimientosParaMostrar.sort((a, b) => (a.elemento || '').localeCompare(b.elemento || ''));
-
-                if (mantenimientosParaMostrar.length === 0) {
-                    maintenanceListDiv.innerHTML = '<p style="text-align:center; padding: 20px 0;">No hay registros de mantenimiento aún. Usa el botón (+) para añadir el primero.</p>';
-                    if (exportButtonContainer) exportButtonContainer.style.display = 'none';
-                    return;
-                } else {
-                    if (exportButtonContainer) exportButtonContainer.style.display = 'block';
+                if (tieneHistorial) {
+                    item.historial.sort(compararHistorialDesc);
+                    const ultimoRegistro = item.historial[0];
+                    ultimoRegHtml = `<p><strong>Fecha:</strong> <span>${formatDate(ultimoRegistro?.fecha)}</span></p>
+                                   <p><strong>KM:</strong> <span>${ultimoRegistro?.km != null ? parseFloat(ultimoRegistro.km).toLocaleString('es-CR') + ' km' : '-'}</span></p>
+                                   <p><strong>Detalle:</strong> <span style="word-break: break-word;">${ultimoRegistro?.detalle || '-'}</span></p>`;
                 }
 
-                mantenimientosParaMostrar.forEach(item => {
-                    const card = document.createElement('div');
-                    card.className = 'maintenance-item card';
-                    let ultimoRegHtml = `<p><strong>Fecha:</strong> <span>-</span></p><p><strong>KM:</strong> <span>-</span></p><p><strong>Detalle:</strong> <span>Sin registros</span></p>`;
-                    let tieneHistorial = item.historial && Array.isArray(item.historial) && item.historial.length > 0;
+                let accionesHTML = '<div class="card-item-actions">';
+                accionesHTML += `<button type="button" class="icon-button add-maint-button" data-elemento="${item.elemento}" title="Añadir nuevo registro a ${item.elemento}">➕</button>`;
+                if (tieneHistorial) {
+                    accionesHTML += `<button type="button" class="icon-button edit-last-record-button" data-elemento="${item.elemento}" title="Editar último registro">✏️</button>`;
+                    accionesHTML += `<button type="button" class="icon-button delete-last-record-button" data-elemento="${item.elemento}" title="Eliminar último registro">❌</button>`;
+                }
+                accionesHTML += '</div>';
 
-                    if (tieneHistorial) {
-                        item.historial.sort(compararHistorialDesc);
-                        const ultimoRegistro = item.historial[0];
-                        ultimoRegHtml = `
-                        <p><strong>Fecha:</strong> <span>${formatDate(ultimoRegistro?.fecha)}</span></p>
-                        <p><strong>KM:</strong> <span>${ultimoRegistro?.km != null ? parseFloat(ultimoRegistro.km).toLocaleString('es-CR') + ' km' : '-'}</span></p>
-                        <p><strong>Detalle:</strong> <span style="word-break: break-word;">${ultimoRegistro?.detalle || '-'}</span></p>`;
-                    }
+                card.innerHTML = `<h2>${item.elemento || 'Categoría Desconocida'}</h2>
+                                <div class="last-record">
+                                    <h3>Último Registro:</h3>
+                                    ${ultimoRegHtml}
+                                </div>
+                                ${accionesHTML}`;
 
-                    let accionesHTML = '<div class="card-item-actions">';
-                    accionesHTML += `<button type="button" class="icon-button add-maint-button" data-elemento="${item.elemento}" title="Añadir nuevo registro a ${item.elemento}">➕</button>`;
-                    if (tieneHistorial) {
-                        accionesHTML += `<button type="button" class="icon-button edit-last-record-button" data-elemento="${item.elemento}" title="Editar último registro">✏️</button>`;
-                        accionesHTML += `<button type="button" class="icon-button delete-last-record-button" data-elemento="${item.elemento}" title="Eliminar último registro">❌</button>`;
-                    }
-                    accionesHTML += '</div>';
+                const addBtn = card.querySelector('.add-maint-button');
+                if (addBtn) addBtn.addEventListener('click', () => openAddRecordModal(item.elemento));
 
-                    card.innerHTML = `
-                    <h2>${item.elemento || 'Categoría Desconocida'}</h2>
-                    <div class="last-record">
-                        <h3>Último Registro:</h3>
-                        ${ultimoRegHtml}
-                    </div>
-                    ${accionesHTML}`;
+                if (tieneHistorial) {
+                    const editLastBtn = card.querySelector('.edit-last-record-button');
+                    if (editLastBtn) editLastBtn.addEventListener('click', () => openEditRecordModal(item.elemento));
 
-                    const addBtn = card.querySelector('.add-maint-button');
-                    if (addBtn) addBtn.addEventListener('click', () => openAddRecordModal(item.elemento));
-
-                    if (tieneHistorial) {
-                        const editLastBtn = card.querySelector('.edit-last-record-button');
-                        if (editLastBtn) editLastBtn.addEventListener('click', () => openEditRecordModal(item.elemento));
-
-                        const deleteLastBtn = card.querySelector('.delete-last-record-button');
-                        if (deleteLastBtn) deleteLastBtn.addEventListener('click', () => handleDeleteLastRecord(item.elemento));
-                    }
-                    maintenanceListDiv.appendChild(card);
-                });
-            }
-
-            function openAddRecordModal(elemento) {
-                if (!addRecordModal || !modalForm) return;
-                modalForm.dataset.mode = 'add'; modalEditItemIndexInput.value = '-1'; modalCategoryIdInput.value = elemento; modalTitle.textContent = `Añadir Registro a: ${elemento}`; modalForm.reset(); if (modalFechaInput) modalFechaInput.valueAsDate = new Date(); if (saveModalButton) saveModalButton.textContent = 'Guardar Registro';
-                modalMensajeErrorDiv.style.display = 'none'; addRecordModal.style.display = 'block'; if (modalFechaInput) modalFechaInput.focus();
-            }
-            function openEditRecordModal(elemento) {
-                if (!addRecordModal || !modalForm) return; let mantenimientos = obtenerMantenimientos(); const itemIndex = mantenimientos.findIndex(item => item.elemento === elemento);
-                if (itemIndex > -1 && mantenimientos[itemIndex].historial && mantenimientos[itemIndex].historial.length > 0) {
-                    const recordToEdit = mantenimientos[itemIndex].historial[0]; modalForm.dataset.mode = 'edit'; modalEditItemIndexInput.value = itemIndex.toString(); modalCategoryIdInput.value = elemento;
-                    modalTitle.textContent = `Editar Registro de: ${elemento}`; if (modalFechaInput) modalFechaInput.value = recordToEdit.fecha; if (modalKmInput) modalKmInput.value = recordToEdit.km; if (modalDetalleInput) modalDetalleInput.value = recordToEdit.detalle;
-                    if (saveModalButton) saveModalButton.textContent = 'Actualizar Registro'; modalMensajeErrorDiv.style.display = 'none'; addRecordModal.style.display = 'block'; if (modalFechaInput) modalFechaInput.focus();
-                } else { mostrarMensaje(`No hay registro para editar en "${elemento}".`, false); }
-            }
-            function closeAddRecordModal() { if (addRecordModal) addRecordModal.style.display = 'none'; if (modalForm) modalForm.dataset.mode = 'add'; if (modalEditItemIndexInput) modalEditItemIndexInput.value = '-1'; }
-
-            function openConfirmDeleteModal(message, callback) {
-                if (!confirmDeleteModal || !confirmDeleteModalMessage) return;
-                confirmDeleteModalMessage.textContent = message;
-                onConfirmDeleteCallback = callback;
-                confirmDeleteModal.style.display = 'block';
-            }
-            function closeConfirmDeleteModal() {
-                if (confirmDeleteModal) confirmDeleteModal.style.display = 'none';
-                onConfirmDeleteCallback = null;
-            }
-
-            if (confirmDeleteModalYesButton) {
-                confirmDeleteModalYesButton.addEventListener('click', () => {
-                    if (typeof onConfirmDeleteCallback === 'function') {
-                        onConfirmDeleteCallback(); // Ejecuta la lógica de eliminación
-                    }
-                });
-            }
-            if (confirmDeleteModalNoButton) {
-                confirmDeleteModalNoButton.addEventListener('click', closeConfirmDeleteModal);
-            }
-
-            function handleDeleteLastRecord(elemento) {
-                if (!elemento) return;
-                const message = `¿Está seguro de que desea eliminar el último registro de "${elemento}"? Esta acción no se puede deshacer.`;
-                openConfirmDeleteModal(message, () => {
-                    let mantenimientos = obtenerMantenimientos();
-                    const itemIndex = mantenimientos.findIndex(item => item.elemento === elemento);
-                    if (itemIndex > -1 && mantenimientos[itemIndex].historial && mantenimientos[itemIndex].historial.length > 0) {
-                        mantenimientos[itemIndex].historial.shift();
-                        if (mantenimientos[itemIndex].historial.length > 0) {
-                            const nuevoUltimoRegistro = mantenimientos[itemIndex].historial[0];
-                            mantenimientos[itemIndex].actual = `Último: ${formatDate(nuevoUltimoRegistro.fecha)} (${nuevoUltimoRegistro.km?.toLocaleString('es-CR') || '?'} km)`;
-                        } else {
-                            mantenimientos[itemIndex].actual = "Sin registros";
-                        }
-                        guardarMantenimientos(mantenimientos);
-                        mostrarMensaje(`Último registro de "${elemento}" eliminado correctamente.`, true);
-                        loadMaintenanceItems();
-                    } else {
-                        mostrarMensaje(`No se encontró un último registro para eliminar en "${elemento}".`, false);
-                    }
-                    closeConfirmDeleteModal();
-                });
-            }
-
-            if (modalForm) {
-                modalForm.addEventListener('submit', function (event) {
-                    event.preventDefault(); const elementoNombre = modalCategoryIdInput.value; const fecha = modalFechaInput?.value; const km = modalKmInput?.value.trim(); const detalle = modalDetalleInput?.value.trim(); const currentMode = modalForm.dataset.mode || 'add'; const itemIndexToProcess = parseInt(modalEditItemIndexInput.value, 10);
-                    modalMensajeErrorDiv.style.display = 'none'; if (!elementoNombre) { mostrarMensaje("Error: Falta nombre de categoría.", false, true); return; } if (!fecha) { mostrarMensaje("El campo Fecha es obligatorio.", false, true); modalFechaInput?.focus(); return; } if (!km || isNaN(parseFloat(km)) || parseFloat(km) < 0) { mostrarMensaje("El Kilometraje debe ser un número válido y positivo.", false, true); modalKmInput?.focus(); return; } if (!detalle) { mostrarMensaje("El campo Detalle es obligatorio.", false, true); modalDetalleInput?.focus(); return; }
-                    const recordData = { fecha, km: parseFloat(km), detalle }; let mantenimientos = obtenerMantenimientos(); const actualItemIndex = (currentMode === 'edit' && itemIndexToProcess !== -1) ? itemIndexToProcess : mantenimientos.findIndex(item => item.elemento === elementoNombre);
-                    if (actualItemIndex === -1) { mostrarMensaje(`Error: Categoría "${elementoNombre}" no encontrada.`, false, true); return; }
-                    if (currentMode === 'edit') {
-                        if (mantenimientos[actualItemIndex] && mantenimientos[actualItemIndex].historial && mantenimientos[actualItemIndex].historial.length > 0) { mantenimientos[actualItemIndex].historial[0] = recordData; } else { mostrarMensaje(`Error al encontrar el registro para editar en "${elementoNombre}".`, false, true); return; }
-                    } else { if (!Array.isArray(mantenimientos[actualItemIndex].historial)) { mantenimientos[actualItemIndex].historial = []; } mantenimientos[actualItemIndex].historial.push(recordData); }
-                    mantenimientos[actualItemIndex].historial.sort(compararHistorialDesc); const ultimoRegistro = mantenimientos[actualItemIndex].historial[0];
-                    if (ultimoRegistro) { mantenimientos[actualItemIndex].actual = `Último: ${formatDate(ultimoRegistro.fecha)} (${ultimoRegistro.km?.toLocaleString('es-CR') || '?'} km)`; } else { mantenimientos[actualItemIndex].actual = "Sin registros"; }
-                    guardarMantenimientos(mantenimientos); mostrarMensaje(currentMode === 'edit' ? `Registro de "${elementoNombre}" actualizado.` : `Registro añadido a "${elementoNombre}".`, true);
-                    closeAddRecordModal(); loadMaintenanceItems();
-                });
-            }
-
-            // Listeners para cerrar modales
-            if (closeModalButton) { closeModalButton.addEventListener('click', closeAddRecordModal); }
-            if (closeSelectCategoryFabModalButton) { closeSelectCategoryFabModalButton.addEventListener('click', closeSelectCategoryFabModal); }
-            // (Los listeners de los botones Yes/No del confirmDeleteModal ya están arriba)
-
-            window.addEventListener('click', (event) => {
-                if (event.target === addRecordModal) closeAddRecordModal();
-                if (event.target === selectCategoryFabModal) closeSelectCategoryFabModal();
-                if (event.target === confirmDeleteModal) closeConfirmDeleteModal();
+                    const deleteLastBtn = card.querySelector('.delete-last-record-button');
+                    if (deleteLastBtn) deleteLastBtn.addEventListener('click', () => handleDeleteLastRecord(item.elemento));
+                }
+                maintenanceListDiv.appendChild(card);
             });
+        }
 
-            function openSelectCategoryFabModal() { if (!selectCategoryFabModal || !fabCategoryListDiv) return; fabCategoryListDiv.innerHTML = ''; CATEGORIAS_PREDEFINIDAS.forEach(cat => { const catButton = document.createElement('button'); catButton.type = 'button'; catButton.textContent = cat.name; catButton.dataset.categoryName = cat.name; catButton.addEventListener('click', function () { openAddRecordModal(this.dataset.categoryName); closeSelectCategoryFabModal(); }); fabCategoryListDiv.appendChild(catButton); }); selectCategoryFabModal.style.display = 'block'; }
-            function closeSelectCategoryFabModal() { if (selectCategoryFabModal) selectCategoryFabModal.style.display = 'none'; }
-            if (addViaFabButton) { addViaFabButton.addEventListener('click', function (event) { event.preventDefault(); if (!matricula) { mostrarMensaje("Debe seleccionar una motocicleta primero (Error: No se especificó matrícula).", false); return; } openSelectCategoryFabModal(); }); }
+        function openAddRecordModal(elemento) {
+            if (!addRecordModal || !modalForm) return;
+            modalForm.dataset.mode = 'add';
+            modalEditItemIndexInput.value = '-1';
+            modalCategoryIdInput.value = elemento;
+            modalTitle.textContent = `Añadir Registro a: ${elemento}`;
+            modalForm.reset();
+            if (modalFechaInput) modalFechaInput.valueAsDate = new Date();
+            if (saveModalButton) saveModalButton.textContent = 'Guardar Registro';
+            if (modalMensajeErrorDiv) modalMensajeErrorDiv.style.display = 'none';
+            addRecordModal.style.display = 'block';
+            if (modalFechaInput) modalFechaInput.focus();
+        }
 
-            loadMaintenanceItems();
-            console.log("Mantenimiento Script (v5.5) Inicializado para:", matricula);
+        function openEditRecordModal(elemento) {
+            if (!addRecordModal || !modalForm) return;
+            let mantenimientos = obtenerMantenimientos();
+            const itemIndex = mantenimientos.findIndex(item => item.elemento === elemento);
+            if (itemIndex > -1 && mantenimientos[itemIndex].historial && mantenimientos[itemIndex].historial.length > 0) {
+                const recordToEdit = mantenimientos[itemIndex].historial[0];
+                modalForm.dataset.mode = 'edit';
+                modalEditItemIndexInput.value = itemIndex.toString();
+                modalCategoryIdInput.value = elemento;
+                modalTitle.textContent = `Editar Registro de: ${elemento}`;
+                if (modalFechaInput) modalFechaInput.value = recordToEdit.fecha;
+                if (modalKmInput) modalKmInput.value = recordToEdit.km;
+                if (modalDetalleInput) modalDetalleInput.value = recordToEdit.detalle;
+                if (saveModalButton) saveModalButton.textContent = 'Actualizar Registro';
+                if (modalMensajeErrorDiv) modalMensajeErrorDiv.style.display = 'none';
+                addRecordModal.style.display = 'block';
+                if (modalFechaInput) modalFechaInput.focus();
+            } else {
+                mostrarMensaje(`No hay registro para editar en "${elemento}".`, false);
+            }
+        }
+        function closeAddRecordModal() { if (addRecordModal) addRecordModal.style.display = 'none'; if (modalForm) modalForm.dataset.mode = 'add'; if (modalEditItemIndexInput) modalEditItemIndexInput.value = '-1'; }
+
+        function openConfirmDeleteModal(message, callback) {
+            if (!confirmDeleteModal || !confirmDeleteModalMessage) return;
+            confirmDeleteModalMessage.textContent = message;
+            onConfirmDeleteCallback = callback;
+            confirmDeleteModal.style.display = 'block';
+        }
+        function closeConfirmDeleteModal() {
+            if (confirmDeleteModal) confirmDeleteModal.style.display = 'none';
+            onConfirmDeleteCallback = null;
+        }
+        if (closeConfirmDeleteModalButton) closeConfirmDeleteModalButton.addEventListener('click', closeConfirmDeleteModal);
+
+        if (confirmDeleteModalYesButton) {
+            confirmDeleteModalYesButton.addEventListener('click', () => {
+                if (typeof onConfirmDeleteCallback === 'function') {
+                    onConfirmDeleteCallback();
+                }
+            });
+        }
+        if (confirmDeleteModalNoButton) {
+            confirmDeleteModalNoButton.addEventListener('click', closeConfirmDeleteModal);
+        }
+
+        function handleDeleteLastRecord(elemento) {
+            if (!elemento) return;
+            const message = `¿Está seguro de que desea eliminar el último registro de "${elemento}"? Esta acción no se puede deshacer.`;
+            openConfirmDeleteModal(message, () => {
+                let mantenimientos = obtenerMantenimientos();
+                const itemIndex = mantenimientos.findIndex(item => item.elemento === elemento);
+                if (itemIndex > -1 && mantenimientos[itemIndex].historial && mantenimientos[itemIndex].historial.length > 0) {
+                    mantenimientos[itemIndex].historial.shift();
+                    if (mantenimientos[itemIndex].historial.length > 0) {
+                        const nuevoUltimoRegistro = mantenimientos[itemIndex].historial[0];
+                        mantenimientos[itemIndex].actual = `Último: ${formatDate(nuevoUltimoRegistro.fecha)} (${nuevoUltimoRegistro.km?.toLocaleString('es-CR') || '?'} km)`;
+                    } else {
+                        mantenimientos[itemIndex].actual = "Sin registros";
+                    }
+                    guardarMantenimientos(mantenimientos);
+                    mostrarMensaje(`Último registro de "${elemento}" eliminado correctamente.`, true);
+                    loadMaintenanceItems();
+                } else {
+                    mostrarMensaje(`No se encontró un último registro para eliminar en "${elemento}".`, false);
+                }
+                closeConfirmDeleteModal();
+            });
+        }
+
+        if (modalForm) {
+            modalForm.addEventListener('submit', function (event) {
+                event.preventDefault();
+                const elementoNombre = modalCategoryIdInput.value;
+                const fecha = modalFechaInput?.value;
+                const km = modalKmInput?.value.trim();
+                const detalle = modalDetalleInput?.value.trim();
+                const currentMode = modalForm.dataset.mode || 'add';
+
+                if (modalMensajeErrorDiv) modalMensajeErrorDiv.style.display = 'none';
+                if (!elementoNombre) { mostrarMensaje("Error: Falta nombre de categoría.", false, true, modalMensajeErrorDiv); return; }
+                if (!fecha) { mostrarMensaje("El campo Fecha es obligatorio.", false, true, modalMensajeErrorDiv); modalFechaInput?.focus(); return; }
+                if (!km || isNaN(parseFloat(km)) || parseFloat(km) < 0) { mostrarMensaje("El Kilometraje debe ser un número válido y positivo.", false, true, modalMensajeErrorDiv); modalKmInput?.focus(); return; }
+                if (!detalle) { mostrarMensaje("El campo Detalle es obligatorio.", false, true, modalMensajeErrorDiv); modalDetalleInput?.focus(); return; }
+
+                const recordData = { fecha, km: parseFloat(km), detalle };
+                let mantenimientos = obtenerMantenimientos();
+                let itemParaActualizar;
+                let itemIndice = mantenimientos.findIndex(item => item.elemento === elementoNombre);
+
+                if (itemIndice === -1) {
+                    if (currentMode === 'edit') {
+                        mostrarMensaje(`Error: Intentando editar una categoría "${elementoNombre}" que no existe.`, false, true, modalMensajeErrorDiv);
+                        return;
+                    }
+                    itemParaActualizar = { elemento: elementoNombre, actual: "", historial: [] };
+                    mantenimientos.push(itemParaActualizar);
+                } else {
+                    itemParaActualizar = mantenimientos[itemIndice];
+                }
+
+                if (currentMode === 'edit') {
+                    if (itemParaActualizar && itemParaActualizar.historial && itemParaActualizar.historial.length > 0) {
+                        itemParaActualizar.historial[0] = recordData;
+                    } else {
+                        mostrarMensaje(`Error al encontrar el registro para editar en "${elementoNombre}".`, false, true, modalMensajeErrorDiv);
+                        return;
+                    }
+                } else {
+                    if (!Array.isArray(itemParaActualizar.historial)) {
+                        itemParaActualizar.historial = [];
+                    }
+                    itemParaActualizar.historial.push(recordData);
+                }
+
+                itemParaActualizar.historial.sort(compararHistorialDesc);
+                const ultimoRegistro = itemParaActualizar.historial[0];
+                if (ultimoRegistro) {
+                    itemParaActualizar.actual = `Último: ${formatDate(ultimoRegistro.fecha)} (${ultimoRegistro.km?.toLocaleString('es-CR') || '?'} km)`;
+                } else {
+                    itemParaActualizar.actual = "Sin registros";
+                }
+                guardarMantenimientos(mantenimientos);
+                mostrarMensaje(currentMode === 'edit' ? `Registro de "${elementoNombre}" actualizado.` : `Registro añadido a "${elementoNombre}".`, true);
+                closeAddRecordModal();
+                loadMaintenanceItems();
+            });
+        }
+
+        if (closeModalButton) { closeModalButton.addEventListener('click', closeAddRecordModal); }
+        if (closeSelectCategoryFabModalButton) { closeSelectCategoryFabModalButton.addEventListener('click', closeSelectCategoryFabModal); }
+        // ****** NEW: Add close handler for the new otro custom modal button ******
+        if (closeotroCustomCategoryModalButton) { closeotroCustomCategoryModalButton.addEventListener('click', closeotroCustomCategoryModal); }
+
+
+        window.addEventListener('click', (event) => {
+            if (event.target === addRecordModal) closeAddRecordModal();
+            if (event.target === selectCategoryFabModal) closeSelectCategoryFabModal();
+            if (event.target === confirmDeleteModal) closeConfirmDeleteModal();
+            // ****** NEW: Add window click handler for the new otro custom modal ******
+            if (event.target === otroCustomCategoryModal) closeotroCustomCategoryModal();
         });
-    </script>
+
+        // ****** MODIFIED: openSelectCategoryFabModal function ******
+        function openSelectCategoryFabModal() {
+            if (!selectCategoryFabModal || !fabCategoryListDiv) return;
+            fabCategoryListDiv.innerHTML = '';
+            CATEGORIAS_PREDEFINIDAS.forEach(cat => {
+                const catButton = document.createElement('button');
+                catButton.type = 'button';
+                catButton.className = 'category-select-button';
+                catButton.textContent = cat.name;
+                catButton.dataset.categoryName = cat.name; // Keep for direct use or fallback
+                catButton.dataset.categoryId = cat.id;     // Use ID for specific checks
+
+                catButton.addEventListener('click', function () {
+                    const categoryId = this.dataset.categoryId;
+                    const categoryName = this.dataset.categoryName;
+
+                    if (categoryId === 'otro') {
+                        closeSelectCategoryFabModal();
+                        openotroCustomCategoryModal(); // Open the new modal for otro
+                    } else {
+                        openAddRecordModal(categoryName); // Standard behavior for other categories
+                        closeSelectCategoryFabModal();
+                    }
+                });
+                fabCategoryListDiv.appendChild(catButton);
+            });
+            // Removed custom category input logic from this modal
+            // if (customCategoryInput) customCategoryInput.value = '';
+            // if (customCategoryModalErrorDiv) customCategoryModalErrorDiv.style.display = 'none';
+            selectCategoryFabModal.style.display = 'block';
+        }
+        function closeSelectCategoryFabModal() { if (selectCategoryFabModal) selectCategoryFabModal.style.display = 'none'; }
+
+        // ****** NEW: Functions for otro ******
+        function openotroCustomCategoryModal() {
+            if (!otroCustomCategoryModal) return;
+            if (otroCustomTaskInput) otroCustomTaskInput.value = '';
+            if (otroCustomModalErrorDiv) otroCustomModalErrorDiv.style.display = 'none';
+            otroCustomCategoryModal.style.display = 'block';
+            if (otroCustomTaskInput) otroCustomTaskInput.focus();
+        }
+
+        function closeotroCustomCategoryModal() {
+            if (otroCustomCategoryModal) otroCustomCategoryModal.style.display = 'none';
+        }
+
+        if (addViaFabButton) {
+            addViaFabButton.addEventListener('click', function (event) {
+                event.preventDefault();
+                if (!matricula) {
+                    mostrarMensaje("Debe seleccionar un vehículo primero (Error: No se especificó matrícula).", false);
+                    return;
+                }
+                openSelectCategoryFabModal();
+            });
+        }
+
+        // ****** REMOVED: Old addCustomCategoryButton listener as it's no longer in selectCategoryFabModal ******
+        // if (addCustomCategoryButton) { ... }
+
+        // ****** NEW: Event listener for the button in otro ******
+        if (useotroCustomTaskButton) {
+            useotroCustomTaskButton.addEventListener('click', function () {
+                const customotroTaskName = otroCustomTaskInput.value.trim();
+                if (otroCustomModalErrorDiv) otroCustomModalErrorDiv.style.display = 'none';
+
+                if (customotroTaskName) {
+                    // The customotroTaskName itself will be used as the 'elemento'
+                    openAddRecordModal(customotroTaskName);
+                    closeotroCustomCategoryModal();
+                } else {
+                    mostrarMensaje("Por favor, ingrese un nombre para la tarea de mantenimiento personalizada.", false, true, otroCustomModalErrorDiv);
+                    if (otroCustomTaskInput) otroCustomTaskInput.focus();
+                }
+            });
+        }
+
+        loadMaintenanceItems();
+        console.log("Mantenimiento Script (v5.7.0) Inicializado para:", matricula);
+    });
+</script>
 </body>
 
 </html>

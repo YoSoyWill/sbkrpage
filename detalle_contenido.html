@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalle del Contenido - SBKR</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="style.css" rel="stylesheet">
+
+</head>
+
+<body>
+    <div class="container" id="detailContainer">
+        <p class="loading-message">Cargando detalle del contenido...</p>
+    </div>
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const detailContainer = document.getElementById('detailContainer');
+            if (!detailContainer) {
+                console.error("El contenedor de detalles no fue encontrado.");
+                return;
+            }
+
+            const params = new URLSearchParams(window.location.search);
+            const contentId = params.get('id');
+
+            if (!contentId) {
+                detailContainer.innerHTML = '<p class="error-message">Error: No se especificó un ID de contenido.</p>';
+                return;
+            }
+
+            fetch('descubre.json')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Error al cargar contenido_data.json: ' + response.statusText);
+                    }
+                    return response.json();
+                })
+                .then(dataArray => {
+                    const item = dataArray.find(d => d.id === contentId);
+
+                    if (item && item.titulo && item.detalle) {
+                        detailContainer.innerHTML = `
+                            <h1>${item.titulo}</h1>
+                            <div class="detail-text">${item.detalle.replace(/\n/g, '<br>')}</div>
+
+                        `;
+                    } else {
+                        detailContainer.innerHTML = '<p class="error-message">Contenido no encontrado o datos incompletos.</p> ';
+                    }
+                })
+                .catch(error => {
+                    console.error('Hubo un problema con la operación fetch:', error);
+                    detailContainer.innerHTML = `<p class="error-message">No se pudo cargar el detalle del contenido. ${error.message}</p>`;
+                });
+
+            const currentYearElement = document.getElementById('currentYear');
+            if (currentYearElement) {
+                currentYearElement.textContent = new Date().getFullYear();
+            }
+        });
+    </script>
+</body>
+
+</html>

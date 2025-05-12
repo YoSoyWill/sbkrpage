@@ -116,12 +116,12 @@
 <body>
     <div class="container">
         <h1>Reporte de Mantenimiento</h1>
-        <p class="report-date">Motocicleta: <strong id="moto-placa-titulo">N/A</strong> &nbsp;|&nbsp; Reporte del: <span id="fecha-actual">--</span></p>
+        <p class="report-date"><span id="categoria">N/A</span>: <strong id="moto-placa-titulo">N/A</strong> &nbsp;|&nbsp; Reporte del: <span id="fecha-actual">--</span></p>
 
         <div id="status-message" style="display: none;"></div>
 
         <div class="moto-info">
-            <h2>Datos de la Motocicleta</h2>
+            <h2>Datos de del vehículo</h2>
             <p><strong>Matrícula:</strong> <span id="moto-placa-display">N/A</span></p>
             <p><strong>Marca:</strong> <span id="moto-marca">N/A</span></p>
             <p><strong>Modelo:</strong> <span id="moto-modelo">N/A</span></p>
@@ -159,6 +159,7 @@
             const printButton = document.getElementById('imprimir-btn');
             const saveJsonButton = document.getElementById('guardar-json-btn'); // Nuevo botón
             const placaTituloSpan = document.getElementById('moto-placa-titulo');
+            const categoriaSpan = document.getElementById('categoria');
             const placaDisplaySpan = document.getElementById('moto-placa-display');
             const marcaSpan = document.getElementById('moto-marca');
             const modeloSpan = document.getElementById('moto-modelo');
@@ -169,7 +170,7 @@
             const fechaActualSpan = document.getElementById('fecha-actual');
             const footerFechaSpan = document.getElementById('footer-fecha');
 
-            const essentialElements = [ detallesContainer, printButton, saveJsonButton, placaTituloSpan, fechaActualSpan, footerFechaSpan, placaDisplaySpan, marcaSpan, modeloSpan, anioSpan, colorSpan, vinSpan, kmSpan ];
+            const essentialElements = [ detallesContainer, printButton, saveJsonButton, placaTituloSpan, fechaActualSpan, footerFechaSpan, placaDisplaySpan, categoriaSpan, marcaSpan, modeloSpan, anioSpan, colorSpan, vinSpan, kmSpan ];
             if (essentialElements.some(el => !el)) {
                 console.error("Faltan elementos HTML esenciales para el reporte (incluyendo botón JSON).");
                 if(statusMessageDiv) { statusMessageDiv.textContent="Error de estructura HTML en la página."; statusMessageDiv.className='error'; statusMessageDiv.style.display='block'; }
@@ -195,12 +196,12 @@
                 return; 
             }
 
-            showStatus(`Buscando datos para la motocicleta: ${matricula}`, 'info');
+            showStatus(`Buscando datos para el vehículo: ${matricula}`, 'info');
             detallesContainer.innerHTML = '<p style="text-align:center;">Cargando...</p>';
             placaTituloSpan.textContent = matricula;
             placaDisplaySpan.textContent = matricula;
 
-            const MOTORCYCLES_DB_KEY = 'motorcyclesDB';
+            const MOTORCYCLES_DB_KEY = 'vehiclesDB';
             const MANTENIMIENTOS_PREFIX = 'MANTENIMIENTOS_';
             const mantenimientosKey = `${MANTENIMIENTOS_PREFIX}${matricula}`;
 
@@ -215,7 +216,7 @@
                 const database = dbString ? JSON.parse(dbString) : {}; 
                 if(database[matricula]){ motoData = database[matricula]; motoDataFound = true; }
                 else { console.warn(`Matrícula ${matricula} no encontrada en ${MOTORCYCLES_DB_KEY}`); }
-            } catch(e){ console.error(`Error al leer ${MOTORCYCLES_DB_KEY}:`,e); showStatus(`Error al cargar datos de la motocicleta ${matricula}.`,'error'); }
+            } catch(e){ console.error(`Error al leer ${MOTORCYCLES_DB_KEY}:`,e); showStatus(`Error al cargar datos del vehículo ${matricula}.`,'error'); }
 
             try { 
                 const stored = localStorage.getItem(mantenimientosKey); 
@@ -239,16 +240,16 @@
 
             // --- Procesar y Mostrar Datos ---
             if (!motoDataFound && mantenimientosData.length === 0) { 
-                showStatus(`No se encontró ningún dato para la motocicleta ${matricula}.`, 'error'); 
+                showStatus(`No se encontró ningún dato para el vehículo ${matricula}.`, 'error'); 
                 detallesContainer.innerHTML = `<p style="text-align:center;">Sin datos disponibles.</p>`; 
                 return; 
             } else { 
-                showStatus(`Reporte para la motocicleta: ${matricula}`, 'success'); 
+                showStatus(`Reporte para el vehículo: ${matricula}`, 'success'); 
             }
 
             if (motoDataFound) { /* ... (mostrar datos de moto sin cambios) ... */ 
-                marcaSpan.textContent = motoData.marca || 'N/A'; modeloSpan.textContent = motoData.modelo || 'N/A'; anioSpan.textContent = motoData.anio || 'N/A'; colorSpan.textContent = motoData.color || 'N/A'; vinSpan.textContent = motoData.vin || 'N/A'; kmSpan.textContent = motoData.kmActual ? `${parseFloat(motoData.kmActual).toLocaleString('es-CR')} km` : 'N/A';
-            } else if (marcaSpan) { marcaSpan.textContent='(No encontrados)'; modeloSpan.textContent='(N/R)'; anioSpan.textContent='(N/R)'; colorSpan.textContent='(N/R)'; vinSpan.textContent='(N/R)'; kmSpan.textContent='N/A'; }
+                categoriaSpan.textContent = motoData.categoria || 'N/A';  marcaSpan.textContent = motoData.marca || 'N/A'; modeloSpan.textContent = motoData.modelo || 'N/A'; anioSpan.textContent = motoData.anio || 'N/A'; colorSpan.textContent = motoData.color || 'N/A'; vinSpan.textContent = motoData.vin || 'N/A'; kmSpan.textContent = motoData.kmActual ? `${parseFloat(motoData.kmActual).toLocaleString('es-CR')} km` : 'N/A';
+            } else if (marcaSpan) { categoriaSpan.textContent='(No encontrados)'; marcaSpan.textContent='(No encontrados)'; modeloSpan.textContent='(N/R)'; anioSpan.textContent='(N/R)'; colorSpan.textContent='(N/R)'; vinSpan.textContent='(N/R)'; kmSpan.textContent='N/A'; }
 
             detallesContainer.innerHTML = ''; 
             let itemsConHistorialMostrados = 0;
@@ -278,9 +279,9 @@
             }
             
             if (itemsConHistorialMostrados === 0 && !motoDataFound) { // Si no hay NADA que mostrar
-                 detallesContainer.innerHTML = '<p style="text-align:center;">No hay datos de motocicleta ni mantenimientos con historial para mostrar.</p>';
+                 detallesContainer.innerHTML = '<p style="text-align:center;">No hay datos de vehículo ni mantenimientos con historial para mostrar.</p>';
             } else if (itemsConHistorialMostrados === 0 && motoDataFound) { // Si hay datos de moto pero no mantenimientos con historial
-                 detallesContainer.innerHTML = '<p style="text-align:center;">No hay mantenimientos con historial registrado para esta motocicleta.</p>';
+                 detallesContainer.innerHTML = '<p style="text-align:center;">No hay mantenimientos con historial registrado para este vehículo.</p>';
             }
 
 

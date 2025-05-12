@@ -1077,3 +1077,97 @@ a.button-export-content:active {
             border: 1px solid var(--color-success); /* Usa variable para borde de éxito */
             color: var(--color-success-text); /* Usa variable para texto de éxito */
         }
+
+        .filter-container {
+    margin-bottom: 20px;
+    padding: 15px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+.filter-container h3 {
+    margin-top: 0;
+    margin-bottom: 10px;
+}
+.filter-container div {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+.filter-container label {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+.modal-error-message { /* For consistency in modal error messages */
+    color: red;
+    margin-top: 10px;
+    font-size: 0.9em;
+}
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+.card-header h2 {
+    margin: 0;
+}
+.vehicle-category {
+    font-size: 0.8em;
+    padding: 3px 8px;
+    background-color: #e0e0e0;
+    border-radius: 4px;
+    color: #333;
+}
+.mensaje { /* General styling for success/error messages */
+    padding: 10px 15px;
+    margin-bottom: 15px;
+    border-radius: 4px;
+    font-weight: 500;
+}
+.mensaje.exito {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+.mensaje.error {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+/* style.css */
+.modal-error-message {
+    color: #D8000C; /* Rojo oscuro */
+    background-color: #FFD2D2; /* Rosa claro */
+    border: 1px solid #D8000C;
+    padding: 8px 10px;
+    margin-top: 10px;
+    border-radius: 4px;
+    font-size: 0.9em;
+}
+
+#fab-category-list .category-select-button {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 5px;
+    text-align: left;
+    background-color: #f0f0f0;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    cursor: pointer;
+}
+#fab-category-list .category-select-button:hover {
+    background-color: #e0e0e0;
+}
+
+#custom-category-input.form-control { /* General styling for form inputs if you have a class like this */
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
