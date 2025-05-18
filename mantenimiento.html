@@ -15,8 +15,8 @@
     <div class="container">
         <h1>Mantenimiento <small id="vehiculo-placa-titulo">N/A</small></h1>
 
-        <div id="mensaje-error" style="display: none;"></div>
-        <div id="mensaje-exito" style="display: none;"></div>
+        <div id="mensaje-error" class="mensaje error" style="display: none;"></div>
+        <div id="mensaje-exito" class="mensaje exito" style="display: none;"></div>
 
         <div id="maintenance-list">
         </div>
@@ -228,7 +228,7 @@
             if (exportPageBtn) exportPageBtn.href = `exportar.html?matricula=${matricula}`;
         }
 
-        function obtenerMantenimientos() { try { const data = localStorage.getItem(mantenimientosKey); const p = data ? JSON.parse(data) : []; return Array.isArray(p) ? p.filter(i => typeof i === 'object' && i !== null && typeof i.elemento === 'string') : []; } catch (e) { console.error(`Error leer ${mantenimientosKey}:`, e); mostrarMensaje("Error al leer datos de mantenimiento.", false); return []; } }
+        function obtenerMantenimientos() { try { const d = localStorage.getItem(mantenimientosKey); const p = d ? JSON.parse(d) : []; return Array.isArray(p) ? p.filter(i => typeof i === 'object' && i !== null && typeof i.elemento === 'string') : []; } catch (e) { console.error(`Error leer ${mantenimientosKey}:`, e); mostrarMensaje("Error al leer datos de mantenimiento.", false); return []; } }
         function guardarMantenimientos(mantenimientosArray) { if (!Array.isArray(mantenimientosArray)) { console.error("Intento guardar no-array en mantenimientos."); return; } try { mantenimientosArray.forEach(i => { if (i.historial && Array.isArray(i.historial)) i.historial.sort(compararHistorialDesc); }); localStorage.setItem(mantenimientosKey, JSON.stringify(mantenimientosArray)); } catch (e) { console.error("Error guardar mantenimientos:", e); mostrarMensaje("Error al guardar datos de mantenimiento.", false); } }
         function compararHistorialDesc(a, b) { let dateA = null, dateB = null; try { const dateA_str = a.fecha?.includes('/') ? a.fecha.split('/').reverse().join('-') : a.fecha; const dateB_str = b.fecha?.includes('/') ? b.fecha.split('/').reverse().join('-') : b.fecha; dateA = dateA_str ? new Date(dateA_str) : null; dateB = dateB_str ? new Date(dateB_str) : null; if (dateA instanceof Date && isNaN(dateA.getTime())) dateA = null; if (dateB instanceof Date && isNaN(dateB.getTime())) dateB = null; } catch (e) { dateA = null; dateB = null; } if (dateA && dateB && dateA.getTime() !== dateB.getTime()) { return dateB.getTime() - dateA.getTime(); } if (dateA && !dateB) return -1; if (!dateA && dateB) return 1; const kmA = parseFloat(a.km); const kmB = parseFloat(b.km); if (!isNaN(kmA) && !isNaN(kmB) && kmA !== kmB) { return kmB - kmA; } return 0; }
         function formatDate(dateString) { if (!dateString) return 'N/A'; try { const p = dateString.split(/[-/ ]/); let isoDateString = dateString; if (p.length === 3) { if (p[0].length === 4) { isoDateString = `${p[0]}-${p[1].padStart(2, '0')}-${p[2].padStart(2, '0')}`; } else if (p[2].length === 4) { isoDateString = `${p[2]}-${p[1].padStart(2, '0')}-${p[0].padStart(2, '0')}`; } } const date = new Date(isoDateString + 'T00:00:00'); if (isNaN(date.getTime())) return dateString; return date.toLocaleDateString('es-CR', { day: 'numeric', month: 'short', year: 'numeric' }); } catch (e) { return dateString; } }

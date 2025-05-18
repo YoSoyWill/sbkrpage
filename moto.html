@@ -2,7 +2,8 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Información de Vehículos</title> <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Información de Vehículos</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
@@ -10,8 +11,9 @@
 </head>
 <body>
     <div class="container">
-        <h1>Información de Vehículos</h1> <div id="mensaje-error" style="display: none;"></div>
-        <div id="mensaje-exito" style="display: none;"></div>
+        <h1>Información de Vehículos</h1>
+        <div id="mensaje-error" class="mensaje error" style="display: none;"></div>
+        <div id="mensaje-exito" class="mensaje exito" style="display: none;"></div>
 
         <div id="category-filter-container" class="filter-container">
             <h3>Filtrar por Categoría:</h3>
@@ -22,27 +24,35 @@
                 <label><input type="checkbox" name="categoryFilter" value="Camión"> Camión</label>
             </div>
         </div>
-        
+
         <div id="vehicle-list"> </div>
-        
-        <button id="add-vehicle" class="fab" title="Añadir Vehículo"> <span class="fab-icon">+</span>
+
+        <button id="add-vehicle" class="fab" title="Añadir Vehículo">
+            <span class="fab-icon">+</span>
         </button>
     </div>
 
     <div id="fabActionModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h2>Añadir Vehículo</h2> <button type="button" class="close-button" id="closeFabActionModal">&times;</button>
+                <h2>Añadir Vehículo</h2>
+                <button type="button" class="close-button" id="closeFabActionModal">&times;</button>
             </div>
-            <div id="fab-action-modal-error" class="modal-error-message"></div> <div class="modal-actions" style="margin-top: 10px;">
-                <button type="button" id="btnRegistrarNuevoVehiculo" class="modal-button">Registrar Vehículo Nuevo</button> <button type="button" id="btnCargarVehiculoJson" class="button secondary modal-button">Cargar desde Archivo (JSON)</button> <input type="file" id="uploadVehiculoJsonInput" accept=".json" style="display: none;"> </div>
+            <div id="fab-action-modal-error" class="modal-error-message"></div>
+            <div class="modal-actions" style="margin-top: 10px;">
+                <button type="button" id="btnRegistrarNuevoVehiculo" class="modal-button">Registrar Vehículo Nuevo</button>
+                <button type="button" id="btnCargarVehiculoJson" class="button secondary modal-button">Cargar desde Archivo (JSON)</button>
+                <input type="file" id="uploadVehiculoJsonInput" accept=".json" style="display: none;">
+            </div>
         </div>
     </div>
 
     <div id="editModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h2 id="modal-title-vehicle">Editar Información</h2> <button type="button" class="close-button" id="closeEditModal">&times;</button> </div>
+                <h2 id="modal-title-vehicle">Editar Información</h2>
+                <button type="button" class="close-button" id="closeEditModal">&times;</button>
+            </div>
             <form id="modalForm">
                 <input type="hidden" id="original-matricula-edit" value="">
 
@@ -62,10 +72,12 @@
                 </div>
                 <div class="modal-form-group">
                     <label for="modal-marca">Marca:</label>
-                    <input type="text" id="modal-marca" placeholder="Ej: Honda, Toyota" required> </div>
+                    <input type="text" id="modal-marca" placeholder="Ej: Honda, Toyota" required>
+                </div>
                 <div class="modal-form-group">
                     <label for="modal-modelo">Modelo:</label>
-                    <input type="text" id="modal-modelo" placeholder="Ej: CBR500R, Corolla" required> </div>                     
+                    <input type="text" id="modal-modelo" placeholder="Ej: CBR500R, Corolla" required>
+                </div>
                 <div class="modal-form-group">
                     <label for="modal-anio">Año:</label>
                     <input type="number" id="modal-anio" placeholder="Año del modelo" min="1900" max="2099" inputmode="numeric">
@@ -84,15 +96,21 @@
                 </div>
                 <button id="saveModalButton" type="submit" class="modal-button">Guardar</button>
             </form>
-            <div id="modal-mensaje-error" class="modal-error-message" style="display: none; margin-top: 10px;"></div> </div>
+            <div id="modal-mensaje-error" class="modal-error-message" style="display: none; margin-top: 10px;"></div>
+        </div>
     </div>
-    
-    <div id="confirmDeleteVehicleModal" class="modal"> <div class="modal-content">
+
+    <div id="confirmDeleteVehicleModal" class="modal">
+        <div class="modal-content">
             <div class="modal-header">
                 <h2>Confirmar Eliminación</h2>
-                <button type="button" class="close-button" id="closeConfirmDeleteVehicleModal">&times;</button> </div>
-            <p id="confirmDeleteVehicleMessage" style="margin: 15px 0;"></p> <div class="modal-actions" style="display:flex; justify-content:flex-end; gap:10px; margin-top:20px;">
-                <button type="button" id="confirmDeleteVehicleNo" class="button secondary modal-button" style="width:auto; padding:10px 20px;">Cancelar</button> <button type="button" id="confirmDeleteVehicleYes" class="button danger modal-button" style="width:auto; padding:10px 20px;">Eliminar Vehículo</button> </div>
+                <button type="button" class="close-button" id="closeConfirmDeleteVehicleModal">&times;</button>
+            </div>
+            <p id="confirmDeleteVehicleMessage" style="margin: 15px 0;"></p>
+            <div class="modal-actions" style="display:flex; justify-content:flex-end; gap:10px; margin-top:20px;">
+                <button type="button" id="confirmDeleteVehicleNo" class="button secondary modal-button" style="width:auto; padding:10px 20px;">Cancelar</button>
+                <button type="button" id="confirmDeleteVehicleYes" class="button danger modal-button" style="width:auto; padding:10px 20px;">Eliminar Vehículo</button>
+            </div>
         </div>
     </div>
 
@@ -103,7 +121,7 @@
         // Referencias DOM
         const vehicleListDiv = document.getElementById('vehicle-list'); // MODIFICADO
         const addVehicleButton = document.getElementById('add-vehicle'); // MODIFICADO
-        
+
         // Modal de Formulario
         const formModal = document.getElementById('editModal');
         const closeFormModalButton = formModal?.querySelector('.close-button');
@@ -172,13 +190,13 @@
                 fabActionModalErrorDiv.style.display = 'block';
             }
         }
-        
+
         // --- Funciones para Modales ---
         function openFormModal(matriculaOriginal = null) {
             modalForm.reset();
             if (modalMensajeErrorDiv) modalMensajeErrorDiv.style.display = 'none';
-            
-            if(originalMatriculaInput) originalMatriculaInput.value = matriculaOriginal || ""; 
+
+            if(originalMatriculaInput) originalMatriculaInput.value = matriculaOriginal || "";
 
             if (matriculaOriginal) { // Modo Editar
                 modalTitleVehicle.textContent = "Editar Información de Vehículo"; // MODIFICADO
@@ -219,7 +237,7 @@
         function closeFabActionModal() {
             if(fabActionModal) fabActionModal.style.display = 'none';
         }
-        
+
         function openConfirmDeleteVehicleModal(matricula) { // MODIFICADO
             matriculaParaEliminarContext = matricula;
             if(confirmDeleteVehicleMessage) confirmDeleteVehicleMessage.textContent = `¿Está seguro de eliminar el vehículo ${matricula} y todos sus datos asociados (mantenimientos, consumos)? Esta acción no es recuperable.`; // MODIFICADO
@@ -244,13 +262,13 @@
         function renderVehicleList() { // MODIFICADO
             if (!vehicleListDiv) return; // MODIFICADO
             vehicleListDiv.innerHTML = ''; // MODIFICADO
-            
+
             const allVehicles = obtenerVehiculos(); // MODIFICADO
-            
+
             // NUEVO: Lógica de filtro
             const activeFilters = [];
             const allCheckbox = document.querySelector('#category-filter-container input[value="all"]');
-            
+
             if (allCheckbox.checked) {
                 categoryFilterCheckboxes.forEach(cb => {
                     if (cb.value !== 'all') cb.checked = false;
@@ -292,14 +310,17 @@
                 card.innerHTML = `
                     <div class="card-header">
                         <h2>${vehiculo.marca || 'N/A'} ${vehiculo.modelo || ''}</h2>
-                        <span class="vehicle-category">${vehiculo.categoria || 'Sin Categoría'}</span> </div>
+                        <span class="vehicle-category">${vehiculo.categoria || 'Sin Categoría'}</span>
+                    </div>
                     <p><strong>Matrícula:</strong> ${vehiculo.placa || matricula}</p>
                     <p><strong>Año:</strong> ${vehiculo.anio || 'N/A'}</p>
                     <p><strong>KM Actual:</strong> ${vehiculo.kmActual ? parseFloat(vehiculo.kmActual).toLocaleString('es-CR') + ' km' : 'N/A'}</p>
                     <div class="card-actions">
-                        <button type="button" class="edit-vehicle-btn icon-button" data-matricula="${matricula}" title="Editar Vehículo">✏️</button> <a href="mantenimiento.html?matricula=${matricula}" class="maint-link icon-button" title="Ver Mantenimientos">🔩</a>
+                        <button type="button" class="edit-vehicle-btn icon-button" data-matricula="${matricula}" title="Editar Vehículo">✏️</button>
+                        <a href="mantenimiento.html?matricula=${matricula}" class="maint-link icon-button" title="Ver Mantenimientos">🔩</a>
                         <a href="consumo.html?matricula=${matricula}" class="consumo-link icon-button" title="Ver Consumos">⛽</a>
-                        <button type="button" class="delete-vehicle-btn icon-button" data-matricula="${matricula}" title="Eliminar Vehículo">❌</button> </div>
+                        <button type="button" class="delete-vehicle-btn icon-button" data-matricula="${matricula}" title="Eliminar Vehículo">❌</button>
+                    </div>
                 `;
                 card.addEventListener('click', (e) => {
                     if (!e.target.closest('.icon-button')) {
@@ -373,7 +394,7 @@
                     localStorage.setItem(`${MANTENIMIENTOS_PREFIX}${matriculaActual}`, JSON.stringify([]));
                     localStorage.setItem(`${CONSUMOS_PREFIX}${matriculaActual}`, JSON.stringify([]));
                 }
-                
+
                 vehicles[matriculaActual] = vehiculoData; // MODIFICADO
                 guardarVehiculos(vehicles); // MODIFICADO
                 mostrarMensaje(mensajeExito, true);
@@ -422,7 +443,7 @@
                         guardarVehiculos(vehicles); // MODIFICADO
 
                         localStorage.setItem(`${MANTENIMIENTOS_PREFIX}${matriculaDesdeJson}`, JSON.stringify(jsonData.mantenimientos || []));
-                        
+
                         if (Array.isArray(jsonData.consumos)) {
                             localStorage.setItem(`${CONSUMOS_PREFIX}${matriculaDesdeJson}`, JSON.stringify(jsonData.consumos));
                         } else {
@@ -447,7 +468,7 @@
                 reader.readAsText(file);
             });
         }
-        
+
         // --- Lógica para Eliminar Vehículo --- // MODIFICADO
         if(confirmDeleteVehicleYesButton) confirmDeleteVehicleYesButton.addEventListener('click', () => { // MODIFICADO
             if (matriculaParaEliminarContext) {
@@ -481,7 +502,7 @@
         if (closeFormModalButton) {
             closeFormModalButton.addEventListener('click', closeFormModal);
         }
-        
+
         // NUEVO: Event Listeners para el filtro de categorías
         categoryFilterCheckboxes.forEach(checkbox => {
             checkbox.addEventListener('change', () => {
@@ -495,7 +516,7 @@
                     const allCb = document.querySelector('#category-filter-container input[value="all"]');
                     if (allCb) allCb.checked = false;
                 }
-                
+
                 // Validar que si ninguna está marcada, se marque "Todas"
                 let anyChecked = false;
                 categoryFilterCheckboxes.forEach(cb => {

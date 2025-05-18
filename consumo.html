@@ -8,9 +8,6 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <link href="style.css" rel="stylesheet">
-    <style>
-
-</style>
 </head>
 <body>
     <div class="container">
@@ -53,8 +50,8 @@
             <button type="submit">Guardar Consumo</button>
         </form>
 
-        <div id="mensaje-exito" style="display:none;"></div>
-        <div id="mensaje-error" style="display:none;"></div>
+        <div id="mensaje-exito" class="mensaje exito" style="display:none;"></div>
+        <div id="mensaje-error" class="mensaje error" style="display:none;"></div>
 
         <h2>Historial de Consumos</h2>
         <div class="table-responsive">
@@ -196,11 +193,11 @@
             let totalLitrosGeneral = 0;
             let totalCostoGeneral = 0;
             let totalKmRecorridosTramos = 0;
-            let totalLitrosParaPromedio = 0; 
+            let totalLitrosParaPromedio = 0;
             let totalCostoParaPromedio = 0; // Para el costo/km promedio
             let tramosValidosParaPromedio = 0;
 
-            const consumosParaTabla = [...consumosOrdenadosParaCalculo].reverse(); 
+            const consumosParaTabla = [...consumosOrdenadosParaCalculo].reverse();
 
             consumosParaTabla.forEach((consumo) => {
                 totalLitrosGeneral += consumo.litros;
@@ -211,7 +208,7 @@
                 if (indiceOriginalAsc > 0) {
                     const prevConsumo = consumosOrdenadosParaCalculo[indiceOriginalAsc - 1];
                     const kmRecorridosEnTramo = consumo.km - prevConsumo.km;
-                    
+
                     if (kmRecorridosEnTramo > 0 && consumo.litros > 0) {
                         totalKmRecorridosTramos += kmRecorridosEnTramo;
                         totalLitrosParaPromedio += consumo.litros; // Litros de la recarga actual usados para este tramo
@@ -225,7 +222,7 @@
                 row.insertCell().textContent = `${consumo.km.toLocaleString('es-CR')} km`;
                 row.insertCell().textContent = `${consumo.litros.toFixed(2)} L`;
                 row.insertCell().textContent = consumo.costo.toLocaleString('es-CR', { style: 'currency', currency: 'CRC' }); // Ajustar moneda
-                
+
                 const actionsCell = row.insertCell();
                 actionsCell.className = 'actions-cell';
                 const deleteBtn = document.createElement('button');
@@ -238,7 +235,7 @@
 
             if(totalLitrosTd) totalLitrosTd.innerHTML = `<strong>${totalLitrosGeneral.toFixed(2)} L</strong>`;
             if(totalCostoTd) totalCostoTd.innerHTML = `<strong>${totalCostoGeneral.toLocaleString('es-CR', { style: 'currency', currency: 'CRC' })}</strong>`;
-            
+
             // Estadísticas globales
             if (tramosValidosParaPromedio > 0 && totalKmRecorridosTramos > 0 && totalLitrosParaPromedio > 0) {
                 const promedioL100Km = (totalLitrosParaPromedio / totalKmRecorridosTramos) * 100;
@@ -267,7 +264,7 @@
             }
              if(statDistanciaTotal) statDistanciaTotal.textContent = `${totalKmRecorridosTramos.toLocaleString('es-CR')} km`;
         }
-        
+
         if(formConsumo){
             formConsumo.addEventListener('submit', function(event) {
                 event.preventDefault();
@@ -310,7 +307,7 @@
             const consumoAEliminar = consumos.find(c => c.id === consumoId);
             if (!consumoAEliminar) return;
             if(confirmDeleteModalMessage) confirmDeleteModalMessage.textContent = `¿Está seguro de eliminar el registro de consumo del ${new Date(consumoAEliminar.fecha + 'T00:00:00').toLocaleDateString('es-CR', {day:'2-digit', month:'short', year:'numeric'})} con ${consumoAEliminar.km.toLocaleString('es-CR')} km?`;
-            
+
             deleteCallback = () => {
                 let consumosActualizados = consumos.filter(c => c.id !== consumoId);
                 guardarConsumos(consumosActualizados);
@@ -332,13 +329,13 @@
             }
         });
         if(confirmDeleteModalNoButton) confirmDeleteModalNoButton.addEventListener('click', closeConfirmDeleteModal);
-        
+
         window.addEventListener('click', (event) => {
             if (event.target === confirmDeleteModal) {
                 closeConfirmDeleteModal();
             }
         });
-        
+
         if(document.getElementById('fecha')) document.getElementById('fecha').valueAsDate = new Date();
         renderizarTablaYStats();
     });

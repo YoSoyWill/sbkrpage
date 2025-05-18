@@ -4,185 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PuraMotor - Tu Asistente Motociclista Personal</title>
-    <link rel="stylesheet" href="style.css"> <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
-    <style>
-        /* Estilos adicionales mínimos y específicos para esta página si son necesarios */
-        body {
-            background-color: var(--color-background-light);
-            color: var(--color-text-on-light);
-            font-family: var(--font-main);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-            padding: 20px; /* Este padding se aplica al body globalmente */
-            box-sizing: border-box;
-        }
-
-        /* Navbar Styles */
-        .top-navbar {
-            max-width: 700px; /* Alineado con intro-container */
-            width: 100%;      /* Ocupa el ancho disponible hasta el max-width */
-            margin-left: auto;
-            margin-right: auto;
-            background-color: var(--color-card-background);
-            padding: 10px 0; /* Padding vertical, horizontal manejado por los items */
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            margin-bottom: 25px; /* Espacio antes del intro-container */
-            border-radius: 8px;
-            box-sizing: border-box;
-        }
-
-        .top-navbar ul {
-            list-style: none;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center; /* Centra los items de la navbar */
-            align-items: center;
-        }
-
-        .top-navbar li {
-            margin: 0 5px; /* Espacio entre cada item del menú */
-        }
-
-        .top-navbar a {
-            text-decoration: none;
-            color: var(--color-primary-accent);
-            font-weight: 500;
-            font-size: 0.95em; /* Ligeramente más pequeño para que quepan bien */
-            padding: 10px 12px; /* Área clickeable */
-            border-radius: 4px;
-            transition: background-color 0.3s ease, color 0.3s ease;
-            display: block; /* Para que el padding funcione correctamente */
-            white-space: nowrap; /* Evita que el texto del enlace se parta en dos líneas */
-        }
-
-        .top-navbar a:hover,
-        .top-navbar a.active { /* Clase 'active' para la página actual (opcional, manejar con JS) */
-            background-color: var(--color-primary-accent-hover);
-            color: var(--color-text-on-accent);
-        }
-
-
-        .intro-container {
-            max-width: 700px;
-            width: 100%;
-            text-align: center;
-            padding: 20px;
-            background-color: var(--color-card-background);
-            border-radius: 8px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-        }
-
-        .logo-container {
-            margin-bottom: 30px;
-        }
-
-        .logo-container img {
-            max-width: 150px; /* Ajusta según el tamaño de tu logo */
-            height: auto;
-            border-radius: 8px; /* Opcional, si el logo tiene fondo */
-        }
-
-        .intro-container h1 {
-            color: var(--color-primary-accent);
-            margin-bottom: 15px;
-            font-size: 2.2em;
-        }
-
-        .intro-container p {
-            font-size: 1.1em;
-            line-height: 1.7;
-            margin-bottom: 25px;
-            color: var(--color-text-on-light);
-        }
-
-        .intro-container .tagline {
-            font-size: 1.3em;
-            font-weight: 500;
-            color: var(--color-primary-accent-hover);
-            margin-bottom: 30px;
-        }
-
-        .terms-button {
-            background-color: var(--color-primary-accent);
-            color: var(--color-text-on-accent);
-            padding: 12px 25px;
-            border: none;
-            border-radius: 4px;
-            font-size: 1em;
-            font-weight: 500;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-            text-decoration: none;
-        }
-
-        .terms-button:hover {
-            background-color: var(--color-primary-accent-hover);
-        }
-
-        /* Estilos del Modal (usando clases del CSS provisto en style.css) */
-        /* .modal, .modal-content, .modal-header, etc. deberían estar en style.css */
-        /* Estos son solo ajustes específicos para el contenido del modal de términos si fueran necesarios */
-        #termsModal .modal-content { /* ID específico para el modal de términos */
-            text-align: left;
-            max-width: 600px;
-        }
-        #termsModal .modal-header h2 {
-             font-size: 1.6em;
-        }
-        #termsModal .modal-body {
-            padding-top: 15px;
-            max-height: 60vh;
-            overflow-y: auto;
-        }
-        #termsModal .modal-body h3 {
-            color: var(--color-primary-accent-hover);
-            font-size: 1.2em;
-            margin-top: 15px;
-            margin-bottom: 8px;
-        }
-        #termsModal .modal-body p,
-        #termsModal .modal-body ul {
-            font-size: 0.95em;
-            line-height: 1.6;
-            margin-bottom: 10px;
-            color: var(--color-text-on-light);
-        }
-        #termsModal .modal-body ul {
-            padding-left: 20px;
-        }
-        #termsModal .modal-body li {
-            margin-bottom: 5px;
-        }
-        #termsModal .modal-footer {
-            margin-top: 20px;
-            text-align: right;
-        }
-        #termsModal .modal-footer .modal-button {
-            width: auto;
-            padding: 10px 20px;
-        }
-
-
-        footer {
-            margin-top: 40px;
-            padding: 15px;
-            font-size: 0.9em;
-            color: var(--color-text-on-light);
-            opacity: 0.8;
-            text-align: center; /* Centrar el texto del footer */
-        }
-    </style>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
 </head>
 <body>
 
     <nav class="bottom-bar">
-<a href="personal.html">Info Personal</a>
-<a href="moto.html">Mis Motos</a>
-<a href="descubre.html">Descubre</a>
+        <a href="personal.html">Info Personal</a>
+        <a href="moto.html">Mis Motos</a>
+        <a href="descubre.html">Descubre</a>
     </nav>
 
     <div class="intro-container">
@@ -194,7 +24,7 @@
         <p class="tagline">Tu compañero digital para la gestión integral de tus vehículos.</p>
 
         <p>
-            Con PuraMotor, lleva el control total de tus compañeras de ruta directamente en tu dispositivo.
+            Con PuraMotor, lleva el control total de tus vehículos directamente en tu dispositivo.
             Registra tu información personal esencial, como nombre, cédula, tipo de sangre y contacto de emergencia,
             para tenerla siempre a mano.
         </p>
@@ -215,11 +45,9 @@
 
         <button id="openTermsModal" class="terms-button">Términos y Condiciones</button>
     </div>
-    <foote>
-        <p>CRAD Studios 2025</p>
-    </foote>
 
-    <div id="termsModal" class="modal"> <div class="modal-content">
+    <div id="termsModal" class="modal">
+        <div class="modal-content">
             <div class="modal-header">
                 <h2>Términos y Condiciones de Uso - PuraMotor</h2>
                 <span class="close-button" id="closeTermsModal">&times;</span>

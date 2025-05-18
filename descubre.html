@@ -4,166 +4,137 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SBKR - Contenido Destacado</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
-        <link href="style.css" rel="stylesheet">
-        <style>
-       
-        .cards-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 20px;
-            justify-content: center;
-            max-width: 1000px;
-            width: 100%;
-            padding: 0 10px;
-            box-sizing: border-box;
-        }
-
-        .card-item {
-            background-color: var(--color-card-background);
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            padding: 20px;
-            box-sizing: border-box;
-            width: 100%; 
-            display: flex;
-            flex-direction: column;
-            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
-        }
-
-        .card-item:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-        }
-
-        .card-item h2 {
-            font-size: 1.5em;
-            color: var(--color-primary-accent);
-            margin-top: 0;
-            margin-bottom: 10px;
-            font-weight: 500;
-        }
-
-        .card-item p {
-            font-size: 1em;
-            line-height: 1.6;
-            color: var(--color-text-on-light);
-            margin-bottom: 15px;
-            flex-grow: 1; 
-        }
-
-        .card-item .card-button {
-            display: inline-block;
-            background-color: var(--color-primary-accent);
-            color: var(--color-text-on-accent);
-            padding: 10px 18px;
-            border-radius: 4px;
-            text-decoration: none;
-            text-align: center;
-            font-weight: 500;
-            transition: background-color 0.3s ease;
-            align-self: flex-start; 
-            margin-top: auto; /* Empuja el botón hacia abajo */
-        }
-
-        .card-item .card-button:hover {
-            background-color: var(--color-primary-accent-hover);
-        }
-
-        @media (min-width: 600px) {
-            .card-item {
-                width: calc(50% - 10px); 
-            }
-        }
-
-        @media (min-width: 900px) {
-            .card-item {
-                width: calc(33.333% - 14px); 
-            }
-        }
-
-        footer {
-            margin-top: 40px;
-            padding: 15px;
-            font-size: 0.9em;
-            color: var(--color-text-on-light);
-            opacity: 0.8;
-            text-align: center;
-            width: 100%;
-        }
-    </style>
+    <link href="style.css" rel="stylesheet">
 </head>
 <body>
     <div class="container">
-    <h1 class="page-title">Descubre y aprende</h1>
+        <h1 class="page-title">Descubre y aprende</h1>
 
-    <div class="cards-container" id="cardsContainer">
-        <p style="text-align:center;">Cargando contenido...</p>
+        <div class="cards-container" id="cardsContainer">
+            <p style="text-align:center;">Cargando contenido...</p>
+        </div>
     </div>
-   </div>
-
 
     <script>
-        function populateCards() {
+        async function populateCards() {
             const container = document.getElementById('cardsContainer');
             if (!container) {
                 console.error("El contenedor de tarjetas no fue encontrado.");
                 return;
             }
-            
-            fetch('descubre.json') 
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Error al cargar contenido_data.json: ' + response.statusText);
-                    }
-                    return response.json(); 
-                })
-                .then(cardDataArray => {
-                    container.innerHTML = ''; // Limpiar mensaje de "Cargando..."
-                    if (!Array.isArray(cardDataArray) || cardDataArray.length === 0) {
-                        container.innerHTML = '<p style="text-align:center;">No hay contenido disponible en este momento.</p>';
-                        return;
-                    }
 
-                    cardDataArray.forEach(data => {
-                        if (!data.id || !data.titulo || !data.descripcion || !data.boton) {
-                            console.warn("Elemento de datos incompleto, saltando:", data);
-                            return; // Saltar este elemento si le faltan campos clave
+            container.innerHTML = '<p style="text-align:center;">Cargando contenido...</p>'; // Mostrar mensaje de carga
+
+            let combinedData = [];
+            let isUserInCostaRica = false;
+
+            // Intentar determinar si el usuario está en Costa Rica usando la zona horaria
+            try {
+                const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+                if (userTimeZone && userTimeZone.includes('Costa_Rica')) {
+                    isUserInCostaRica = true;
+                    console.log("Usuario detectado en Costa Rica (zona horaria: " + userTimeZone + ")");
+                } else {
+                    console.log("Usuario no detectado en Costa Rica (zona horaria: " + userTimeZone + ")");
+                }
+            } catch (error) {
+                console.warn("No se pudo determinar la zona horaria del usuario:", error);
+                // Si hay un error, asumimos que no está en CR para no mostrar noticias globalmente por error
+                isUserInCostaRica = false;
+            }
+
+            // Cargar datos de noticias.json PRIMERO si el usuario está en Costa Rica
+            if (isUserInCostaRica) {
+                try {
+                    const responseNoticias = await fetch('noticias.json');
+                     if (!responseNoticias.ok) {
+                        console.warn('Error al cargar noticias.json: ' + responseNoticias.statusText);
+                    } else {
+                        const dataNoticias = await responseNoticias.json();
+                         if (Array.isArray(dataNoticias)) {
+                            // Añadir noticias al principio del array combinado
+                            combinedData = combinedData.concat(dataNoticias);
+                        } else {
+                             console.warn('noticias.json no contiene un array válido.');
                         }
+                    }
+                } catch (error) {
+                    console.warn('Error fetching noticias.json:', error);
+                }
+            } else {
+                console.log("No se cargó noticias.json porque el usuario no está en Costa Rica.");
+            }
 
-                        const card = document.createElement('div');
-                        card.classList.add('card-item');
+            // Siempre cargar datos de descubre.json (se añadirán después de las noticias si se cargaron)
+            try {
+                const responseDescubre = await fetch('descubre.json');
+                if (!responseDescubre.ok) {
+                    console.warn('Error al cargar descubre.json: ' + responseDescubre.statusText);
+                } else {
+                    const dataDescubre = await responseDescubre.json();
+                    if (Array.isArray(dataDescubre)) {
+                        // Añadir contenido de descubre después de las noticias (si las hay)
+                        combinedData = combinedData.concat(dataDescubre);
+                    } else {
+                        console.warn('descubre.json no contiene un array válido.');
+                    }
+                }
+            } catch (error) {
+                console.warn('Error fetching descubre.json:', error);
+            }
 
-                        const title = document.createElement('h2');
-                        title.textContent = data.titulo;
 
-                        const description = document.createElement('p');
-                        description.textContent = data.descripcion;
+            // Opcional: Ordenar los datos combinados si necesitas un orden específico (ej. por fecha, título, etc.)
+            // Si deseas que las noticias SIEMPRE estén ANTES que el contenido de descubre,
+            // incluso si tienen fechas o IDs que las pondrían después, NO apliques un sort general aquí.
+            // Si necesitas ordenar las noticias entre sí, y el contenido de descubre entre sí, podrías hacerlo antes de concatenar.
+            // Ejemplo simple de ordenación por título (alfabético):
+            // combinedData.sort((a, b) => (a.titulo || '').localeCompare(b.titulo || ''));
 
-                        const buttonLink = document.createElement('a');
-                        buttonLink.classList.add('card-button');
-                        // Construir el enlace para la página de detalle
-                        buttonLink.href = `detalle_contenido.html?id=${encodeURIComponent(data.id)}`;
-                        buttonLink.textContent = data.boton || "Más información";
-                        // No abrir en nueva pestaña por defecto, para mantener la navegación en el sitio
-                        // buttonLink.setAttribute('target', '_blank'); 
-                        // buttonLink.setAttribute('rel', 'noopener noreferrer nofollow');
 
-                        card.appendChild(title);
-                        card.appendChild(description);
-                        card.appendChild(buttonLink);
+            container.innerHTML = ''; // Limpiar mensaje de carga
 
-                        container.appendChild(card);
-                    });
-                })
-                .catch(error => {
-                    console.error('Hubo un problema con la operación fetch:', error);
-                    container.innerHTML = `<p style="text-align:center; color:var(--color-error-text);">No se pudo cargar el contenido. ${error.message}</p>`;
-                });
+            if (combinedData.length === 0) {
+                container.innerHTML = '<p style="text-align:center;">No hay contenido disponible en este momento.</p>';
+                return;
+            }
+
+            combinedData.forEach(data => {
+                // Asumiendo que ambos JSON tienen campos 'id', 'titulo', 'descripcion', 'boton'
+                if (!data.id || !data.titulo || !data.descripcion || !data.boton) {
+                    console.warn("Elemento de datos incompleto, saltando:", data);
+                    return; // Saltar este elemento si le faltan campos clave
+                }
+
+                const card = document.createElement('div');
+                card.classList.add('card-item');
+
+                const title = document.createElement('h2');
+                title.textContent = data.titulo;
+
+                const description = document.createElement('p');
+                description.textContent = data.descripcion;
+
+                const buttonLink = document.createElement('a');
+                buttonLink.classList.add('card-button');
+                // Enlace a la página de detalle, pasando el ID del elemento
+                buttonLink.href = `detalle_contenido.html?id=${encodeURIComponent(data.id)}`;
+                buttonLink.textContent = data.boton || "Más información";
+
+                card.appendChild(title);
+                card.appendChild(description);
+                card.appendChild(buttonLink);
+
+                container.appendChild(card);
+            });
         }
 
         document.addEventListener('DOMContentLoaded', populateCards);
 
+        // Año actual en el footer (asumiendo que tienes un footer con este ID)
         const currentYearElement = document.getElementById('currentYear');
         if (currentYearElement) {
             currentYearElement.textContent = new Date().getFullYear();

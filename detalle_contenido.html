@@ -5,6 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Detalle del Contenido - SBKR</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <link href="style.css" rel="stylesheet">
 
@@ -15,9 +17,8 @@
         <p class="loading-message">Cargando detalle del contenido...</p>
     </div>
 
-
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', async function () { // Made function async
             const detailContainer = document.getElementById('detailContainer');
             if (!detailContainer) {
                 console.error("El contenedor de detalles no fue encontrado.");
@@ -32,30 +33,57 @@
                 return;
             }
 
-            fetch('descubre.json')
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Error al cargar contenido_data.json: ' + response.statusText);
-                    }
-                    return response.json();
-                })
-                .then(dataArray => {
-                    const item = dataArray.find(d => d.id === contentId);
+            let combinedData = [];
 
-                    if (item && item.titulo && item.detalle) {
-                        detailContainer.innerHTML = `
-                            <h1>${item.titulo}</h1>
-                            <div class="detail-text">${item.detalle.replace(/\n/g, '<br>')}</div>
-
-                        `;
+            // Fetch data from descubre.json
+            try {
+                const responseDescubre = await fetch('descubre.json');
+                if (!responseDescubre.ok) {
+                    console.warn('Error al cargar descubre.json: ' + responseDescubre.statusText);
+                } else {
+                    const dataDescubre = await responseDescubre.json();
+                     // Only concatenate if it's an array
+                    if (Array.isArray(dataDescubre)) {
+                         combinedData = combinedData.concat(dataDescubre);
                     } else {
-                        detailContainer.innerHTML = '<p class="error-message">Contenido no encontrado o datos incompletos.</p> ';
+                         console.warn('descubre.json no contiene un array válido.');
                     }
-                })
-                .catch(error => {
-                    console.error('Hubo un problema con la operación fetch:', error);
-                    detailContainer.innerHTML = `<p class="error-message">No se pudo cargar el detalle del contenido. ${error.message}</p>`;
-                });
+                }
+            } catch (error) {
+                console.warn('Error fetching descubre.json:', error);
+            }
+
+            // Fetch data from noticias.json
+            try {
+                const responseNoticias = await fetch('noticias.json');
+                 if (!responseNoticias.ok) {
+                    console.warn('Error al cargar noticias.json: ' + responseNoticias.statusText);
+                } else {
+                    const dataNoticias = await responseNoticias.json();
+                    // Only concatenate if it's an array
+                     if (Array.isArray(dataNoticias)) {
+                        combinedData = combinedData.concat(dataNoticias);
+                    } else {
+                         console.warn('noticias.json no contiene un array válido.');
+                    }
+                }
+            } catch (error) {
+                console.warn('Error fetching noticias.json:', error);
+            }
+
+
+            // Find the item in the combined data
+            const item = combinedData.find(d => d.id === contentId);
+
+            if (item && item.titulo && item.detalle) {
+                detailContainer.innerHTML = `
+                    <h1>${item.titulo}</h1>
+                    <div class="detail-text">${item.detalle.replace(/\n/g, '<br>')}</div>
+                `;
+            } else {
+                detailContainer.innerHTML = '<p class="error-message">Contenido no encontrado o datos incompletos.</p> ';
+            }
+
 
             const currentYearElement = document.getElementById('currentYear');
             if (currentYearElement) {
